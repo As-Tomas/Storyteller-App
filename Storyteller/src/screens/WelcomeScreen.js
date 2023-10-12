@@ -23,7 +23,7 @@ export default function WelcomeScreen() {
         </View>
         <View className="flex items-center mb-8">
 
-          <TouchableOpacity onPress={()=> navigation.navigate('Home')} className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
+          <TouchableOpacity onPress={()=> navigation.navigate('Cild')} className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
           style={{width: wp(55)}}>
             <Text className="text-yellow-100 font-semibold"
             style={{fontSize: wp(5)}}>
@@ -31,7 +31,7 @@ export default function WelcomeScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
+          <TouchableOpacity onPress={()=> navigation.navigate('Parent')} className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
           style={{width: wp(55)}}>
             <Text className="text-yellow-100 font-semibold"
             style={{fontSize: wp(5)}}>
