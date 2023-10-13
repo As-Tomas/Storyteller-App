@@ -17,6 +17,7 @@ function AppNavigation() {
         <Stack.Screen name="Cild" component={CildScreen} />
         <Stack.Screen name="Parent" component={ParentScreen} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="Story" component={WelcomeScreen} />
         
       </Stack.Navigator>
     </NavigationContainer>
