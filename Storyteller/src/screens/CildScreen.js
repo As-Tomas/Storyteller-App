@@ -5,15 +5,87 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {useNavigation} from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
+import Voice from '@react-native-community/voice';
 
 export default function CildScreen() {
   const navigation = useNavigation();
+  const [recording, setRecording] = useState(false);
+  const [result, setResult] = useState('');
+
+  const speechStartHandler = e => {
+    console.log('speech start event', e);
+  };
+  const speechEndHandler = e => {
+    setRecording(false);
+    console.log('speech stop event', e);
+  };
+  const speechResultsHandler = e => {
+    console.log('speech event: ',e);
+    const text = e.value[0];
+    setResult(text);
+    
+  };
+  const speechErrorHandler = e=>{
+    console.log('speech error: ',e);
+  }
+
+  const startRecording = async () => {
+    setRecording(true);
+    //Tts.stop(); 
+    try {
+      await Voice.start('en-GB'); // en-US
+
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const stopRecording = async () => {    
+    try {
+      await Voice.stop();
+      setRecording(false);
+      //fetchResponse();
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+  // const clear = () => {
+  //   Tts.stop();
+  //   setSpeaking(false);
+  //   setLoading(false);
+  //   setMessages([]);
+  // };
+
+  const startSpeaking = ()=> {
+    setRecording(true)
+  }
+
+  const stopSpeaking = ()=> {
+    setRecording(false)
+  }
+
+  useEffect(()=>{
+    // voice handler events
+    Voice.onSpeechStart = speechStartHandler;
+    Voice.onSpeechEnd = speechEndHandler;
+    Voice.onSpeechResults = speechResultsHandler;
+    Voice.onSpeechError = speechErrorHandler;
+
+    return () => {
+      // destroy the voice instance after component unmounts
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  },[])
+
+  console.log('result: ',result);
+
   return (
     <View className="flex-1 bg-fuchsia-800 items-center justify-center relative">
       <TouchableOpacity
@@ -34,13 +106,27 @@ export default function CildScreen() {
         Tell what story you would like to hear?
       </Text>
 
-      <TouchableOpacity className="absolute bottom-12">
-        <Image
-          className="rounded-full"
-          source={require('../../assets/elements/micIcon.png')}
-          style={{width: hp(10), height: hp(10)}}
-        />
-      </TouchableOpacity>
+      <View className="absolute bottom-12">
+        {recording ? (
+          <TouchableOpacity
+          onPress={stopRecording}>
+            <FastImage
+              className="rounded-full"
+              source={require('../../assets/elements/micRecording.gif')}
+              style={{width: hp(10), height: hp(10)}}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+          onPress={startRecording}>
+            <Image
+              className="rounded-full"
+              source={require('../../assets/elements/micIcon2.png')}
+              style={{width: hp(10), height: hp(10)}}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 }

@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  
 } from 'react-native';
 import React, {useState} from 'react';
 import {
@@ -16,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 
 export default function StoryScreen() {
   const navigation = useNavigation();
+  const storyRespose = useState('oOo ')
   return (
     <View className="flex-1 bg-fuchsia-800 items-center p-5 pt-8 relative">
       <TouchableOpacity
@@ -36,6 +38,11 @@ export default function StoryScreen() {
           className="text-yellow-100 font-bold mx-auto tracking-widest "
           style={{fontSize: wp(7)}}>
           Story Name
+        </Text>
+        <Text
+         className="text-yellow-100 pt-4"
+        style={{fontSize: wp(4.5)}}>
+            {storyRespose}
         </Text>
       </ScrollView>
     </View>
