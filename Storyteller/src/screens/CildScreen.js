@@ -22,7 +22,7 @@ export default function CildScreen() {
           style={{width: hp(2), height: hp(2)}}
         />
         <Text className="text-yellow-100"
-        tyle={{fontSize: wp(2)}}>Start</Text>
+        style={{fontSize: wp(3.5)}}>Start</Text>
       </TouchableOpacity>
 
       <Text

@@ -43,7 +43,7 @@ export default function ParentScreen() {
           source={require('../../assets/elements/arrow_back.png')}
           style={{width: hp(2), height: hp(2)}}
         />
-        <Text className="text-white" tyle={{fontSize: wp(2)}}>
+        <Text className="text-white" style={{fontSize: wp(3.5)}}>
           Start
         </Text>
       </TouchableOpacity>

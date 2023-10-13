@@ -39,7 +39,7 @@ export default function WelcomeScreen() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex flex-row m-2 py-2 rounded-full items-center justify-center "
+          <TouchableOpacity onPress={()=> navigation.navigate('History')} className="flex flex-row m-2 py-2 rounded-full items-center justify-center "
           style={{width: wp(55)}}>
             <Text className="text-white font-semibold "
             style={{fontSize: wp(5)}}>
