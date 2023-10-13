@@ -16,13 +16,16 @@ export default function CildScreen() {
   const navigation = useNavigation();
   return (
     <View className="flex-1 bg-fuchsia-800 items-center justify-center relative">
-      <TouchableOpacity onPress={()=> navigation.navigate('Welcome')} className="absolute top-6 left-4 flex-row items-center justify-center">
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Welcome')}
+        className="absolute top-6 left-4 flex-row items-center justify-center">
         <Image
           source={require('../../assets/elements/arrow_back.png')}
           style={{width: hp(2), height: hp(2)}}
         />
-        <Text className="text-yellow-100"
-        style={{fontSize: wp(3.5)}}>Start</Text>
+        <Text className="text-yellow-100" style={{fontSize: wp(3.5)}}>
+          Start
+        </Text>
       </TouchableOpacity>
 
       <Text

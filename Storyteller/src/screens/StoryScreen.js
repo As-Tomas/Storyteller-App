@@ -31,11 +31,13 @@ export default function StoryScreen() {
         </Text>
       </TouchableOpacity>
 
-      <Text
-        className="text-yellow-100 font-bold mx-auto tracking-widest "
-        style={{fontSize: wp(7)}}>
-        Story Name
-      </Text>
+      <ScrollView bounces={false}>
+        <Text
+          className="text-yellow-100 font-bold mx-auto tracking-widest "
+          style={{fontSize: wp(7)}}>
+          Story Name
+        </Text>
+      </ScrollView>
     </View>
   );
 }
