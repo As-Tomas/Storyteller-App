@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -21,6 +21,23 @@ export default function CildScreen() {
   const [recording, setRecording] = useState(false);
   const [result, setResult] = useState('');
   const [story, setStory] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+
+  const handleScroll = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const contentHeight = event.nativeEvent.contentSize.height;
+    const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;
+
+    // Check if user has reached the end of the ScrollView
+    if (offsetY + scrollViewHeight >= contentHeight) {
+      // Hide the view
+      setIsVisible(true);
+    } else {
+      // Show the view
+      setIsVisible(false);
+    }
+  };
 
   const speechStartHandler = e => {
     console.log('speech start event', e);
@@ -65,13 +82,13 @@ export default function CildScreen() {
   }
 
   const fetchResponse = (userInput) => {
-    console.log('userInput.length < 0: ', userInput);
     if (userInput.trim().length > 0) {
-      console.log('userInput.trim().length > 0: ', userInput);
+      setLoading(true);
       let newUserRequest = userInput.trim();
       let prompt = generatePrompt(newUserRequest);
   
       chatgptApiCall(prompt).then(res => {
+        setLoading(false);
         if(res.success){
           setStory(res.data);
         }
@@ -128,7 +145,7 @@ export default function CildScreen() {
         Tell what story you would like to hear?
       </Text>
       ) : (
-        <ScrollView>
+        <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
           <Text
         className="text-yellow-100 mx-auto pt-10 text-center"
         style={{fontSize: wp(7)}}>
@@ -139,14 +156,22 @@ export default function CildScreen() {
         style={{fontSize: wp(4.5)}}>
         {story}
       </Text>
+      <View ></View>
         </ScrollView>
         
       ) }
+     
+     {isVisible && (
+      <View disabled={!isVisible} className="absolute bottom-12">
 
-      
-
-      <View className="absolute bottom-12">
-        {recording ? (
+      {loading? (
+        <FastImage 
+        className="rounded-full"
+        source={require('../../assets/elements/loading.gif')}
+        style={{width: hp(10), height: hp(10)}}
+      />
+      ) : (
+         recording? (
           <TouchableOpacity
           onPress={stopRecording}>
             <FastImage
@@ -155,7 +180,7 @@ export default function CildScreen() {
               style={{width: hp(10), height: hp(10)}}
             />
           </TouchableOpacity>
-        ) : (
+          ) : (
           <TouchableOpacity
           onPress={startRecording}>
             <Image
@@ -164,8 +189,12 @@ export default function CildScreen() {
               style={{width: hp(10), height: hp(10)}}
             />
           </TouchableOpacity>
-        )}
+        )
+      )}
+        
       </View>
+     )}
+      
     </View>
   );
 }
