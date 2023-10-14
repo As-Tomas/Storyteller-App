@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Alert
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -55,6 +56,14 @@ export default function CildScreen() {
   };
   const speechErrorHandler = e=>{
     console.log('speech error: ',e);
+    if (e.error.message === '7/No match') {
+      let erMsg = "No words matched, try to say louder and more than one word."
+      Alert.alert('Error', erMsg)
+    } else {
+      Alert.alert('Error', e.error.message)
+
+    }
+    
   }
 
   const startRecording = async () => {
@@ -91,6 +100,8 @@ export default function CildScreen() {
         setLoading(false);
         if(res.success){
           setStory(res.data);
+        } else {
+          Alert.alert('Error', res.msg);
         }
       });
     }
