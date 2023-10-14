@@ -2,6 +2,7 @@ import {
   View,
   Text,
   ImageBackground,
+  ScrollView,
   Image,
   TouchableOpacity,
 } from 'react-native';
@@ -13,17 +14,20 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import Voice from '@react-native-community/voice';
+import { apiCall, chatgptApiCall } from '../api/openAI';
 
 export default function CildScreen() {
   const navigation = useNavigation();
   const [recording, setRecording] = useState(false);
   const [result, setResult] = useState('');
+  const [story, setStory] = useState('');
 
   const speechStartHandler = e => {
     console.log('speech start event', e);
   };
   const speechEndHandler = e => {
     setRecording(false);
+    stopRecording();
     console.log('speech stop event', e);
   };
   const speechResultsHandler = e => {
@@ -50,12 +54,31 @@ export default function CildScreen() {
   const stopRecording = async () => {    
     try {
       await Voice.stop();
-      setRecording(false);
-      //fetchResponse();
+      setRecording(false);       
     } catch (error) {
       console.log('error', error);
     }
   };
+
+  const generatePrompt = (userReq) =>{
+    return `Please tell me a fairy tale about ${userReq}`;
+  }
+
+  const fetchResponse = (userInput) => {
+    console.log('userInput.length < 0: ', userInput);
+    if (userInput.trim().length > 0) {
+      console.log('userInput.trim().length > 0: ', userInput);
+      let newUserRequest = userInput.trim();
+      let prompt = generatePrompt(newUserRequest);
+  
+      chatgptApiCall(prompt).then(res => {
+        if(res.success){
+          setStory(res.data);
+        }
+      });
+    }
+  }
+  
   // const clear = () => {
   //   Tts.stop();
   //   setSpeaking(false);
@@ -63,13 +86,11 @@ export default function CildScreen() {
   //   setMessages([]);
   // };
 
-  const startSpeaking = ()=> {
-    setRecording(true)
-  }
-
-  const stopSpeaking = ()=> {
-    setRecording(false)
-  }
+  useEffect(() => {
+    if (result) {
+      fetchResponse(result);
+    }
+  }, [result]);
 
   useEffect(()=>{
     // voice handler events
@@ -84,7 +105,7 @@ export default function CildScreen() {
     };
   },[])
 
-  console.log('result: ',result);
+  //console.log('result: ', result);
 
   return (
     <View className="flex-1 bg-fuchsia-800 items-center justify-center relative">
@@ -100,11 +121,29 @@ export default function CildScreen() {
         </Text>
       </TouchableOpacity>
 
-      <Text
+      { story === '' ? (
+        <Text
         className="text-yellow-100 mx-10 text-center"
         style={{fontSize: wp(9)}}>
         Tell what story you would like to hear?
       </Text>
+      ) : (
+        <ScrollView>
+          <Text
+        className="text-yellow-100 mx-auto pt-10 text-center"
+        style={{fontSize: wp(7)}}>
+        Once upon a time
+      </Text>
+<Text
+        className="text-yellow-100 mx-2 pb-40 "
+        style={{fontSize: wp(4.5)}}>
+        {story}
+      </Text>
+        </ScrollView>
+        
+      ) }
+
+      
 
       <View className="absolute bottom-12">
         {recording ? (
