@@ -5,7 +5,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  Alert
+  Alert,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -15,7 +15,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import Voice from '@react-native-community/voice';
-import { apiCall, chatgptApiCall } from '../api/openAI';
+import {apiCall, chatgptApiCall} from '../api/openAI';
 
 export default function CildScreen() {
   const navigation = useNavigation();
@@ -25,7 +25,7 @@ export default function CildScreen() {
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  const handleScroll = (event) => {
+  const handleScroll = event => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const contentHeight = event.nativeEvent.contentSize.height;
     const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;
@@ -49,64 +49,65 @@ export default function CildScreen() {
     console.log('speech stop event', e);
   };
   const speechResultsHandler = e => {
-    console.log('speech event: ',e);
+    console.log('speech event: ', e);
     const text = e.value[0];
     setResult(text);
-    
   };
-  const speechErrorHandler = e=>{
-    console.log('speech error: ',e);
+  const speechErrorHandler = e => {
+    console.log('speech error: ', e);
     if (e.error.message === '7/No match') {
-      let erMsg = "No words matched, try to say louder and more than one word."
-      Alert.alert('Error', erMsg)
+      let erMsg = 'No words matched, try to say louder and more than one word.';
+      Alert.alert('Error', erMsg);
+    } 
+    if (e.error.message === '5/Client side error') {
+      //Todo Find out what this er means
+      let erMsg = 'Find out what this er means: 5/Client side error.';
+      Alert.alert('Error', erMsg);
     } else {
-      Alert.alert('Error', e.error.message)
-
+      Alert.alert('Error', e.error.message);
     }
-    
-  }
+  };
 
   const startRecording = async () => {
     setRecording(true);
-    //Tts.stop(); 
+    //Tts.stop();
     try {
       await Voice.start('en-GB'); // en-US
-
     } catch (error) {
       console.log('error', error);
     }
   };
 
-  const stopRecording = async () => {    
+  const stopRecording = async () => {
     try {
       await Voice.stop();
-      setRecording(false);       
+      setRecording(false);
     } catch (error) {
       console.log('error', error);
     }
   };
 
-  const generatePrompt = (userReq) =>{
+  const generatePrompt = userReq => {
     return `Please tell me a fairy tale about ${userReq}`;
-  }
+  };
 
-  const fetchResponse = (userInput) => {
+  const fetchResponse = userInput => {
     if (userInput.trim().length > 0) {
       setLoading(true);
       let newUserRequest = userInput.trim();
       let prompt = generatePrompt(newUserRequest);
-  
+
       chatgptApiCall(prompt).then(res => {
         setLoading(false);
-        if(res.success){
+        if (res.success) {
           setStory(res.data);
         } else {
           Alert.alert('Error', res.msg);
         }
       });
     }
-  }
-  
+  };
+
   // const clear = () => {
   //   Tts.stop();
   //   setSpeaking(false);
@@ -120,7 +121,7 @@ export default function CildScreen() {
     }
   }, [result]);
 
-  useEffect(()=>{
+  useEffect(() => {
     // voice handler events
     Voice.onSpeechStart = speechStartHandler;
     Voice.onSpeechEnd = speechEndHandler;
@@ -131,81 +132,79 @@ export default function CildScreen() {
       // destroy the voice instance after component unmounts
       Voice.destroy().then(Voice.removeAllListeners);
     };
-  },[])
+  }, []);
 
   //console.log('result: ', result);
 
   return (
-    <View className="flex-1 bg-fuchsia-800 items-center justify-center relative">
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Welcome')}
-        className="absolute top-6 left-4 flex-row items-center justify-center">
-        <Image
-          source={require('../../assets/elements/arrow_back.png')}
-          style={{width: hp(2), height: hp(2)}}
-        />
-        <Text className="text-yellow-100" style={{fontSize: wp(3.5)}}>
-          Start
-        </Text>
-      </TouchableOpacity>
+    <ImageBackground
+      source={require('../../assets/img/tomasb_b04_Illustrate_a_starry_night_sky_filled_with_constellat_a29cd721-0d0b-46f8-89f5-671376f1c65c.png')}
+      className="flex-1 "
+      imageStyle={story === '' ? {opacity: 1} : {opacity: 0.7}}
+      style={{backgroundColor: 'black'}}>
+      <View className="flex-1  items-center justify-center relative">
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Welcome')}
+          className="absolute z-10 top-6 left-4 flex-row items-center justify-center">
+          <Image
+            source={require('../../assets/elements/arrow_back.png')}
+            style={{width: hp(2), height: hp(2)}}
+          />
+          <Text className="text-yellow-100" style={{fontSize: wp(3.5)}}>
+            Start
+          </Text>
+        </TouchableOpacity>
 
-      { story === '' ? (
-        <Text
-        className="text-yellow-100 mx-10 text-center"
-        style={{fontSize: wp(9)}}>
-        Tell what story you would like to hear?
-      </Text>
-      ) : (
-        <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
+        {story === '' ? (
           <Text
-        className="text-yellow-100 mx-auto pt-10 text-center"
-        style={{fontSize: wp(7)}}>
-        Once upon a time
-      </Text>
-<Text
-        className="text-yellow-100 mx-2 pb-40 "
-        style={{fontSize: wp(4.5)}}>
-        {story}
-      </Text>
-      <View ></View>
-        </ScrollView>
-        
-      ) }
-     
-     {isVisible && (
-      <View disabled={!isVisible} className="absolute bottom-12">
+            className="text-yellow-100 mx-10 text-center"
+            style={{fontSize: wp(9)}}>
+            Tell what story you would like to hear?
+          </Text>
+        ) : (
+          <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
+            <Text
+              className="text-yellow-100 mx-auto pt-10 text-center"
+              style={{fontSize: wp(7)}}>
+              Once upon a time
+            </Text>
+            <Text
+              className="text-yellow-100 mx-2 pb-40 "
+              style={{fontSize: wp(4.5), textShadowColor: 'black', textShadowRadius: 5}}>
+              {story}
+            </Text>
+            <View></View>
+          </ScrollView>
+        )}
 
-      {loading? (
-        <FastImage 
-        className="rounded-full"
-        source={require('../../assets/elements/loading.gif')}
-        style={{width: hp(10), height: hp(10)}}
-      />
-      ) : (
-         recording? (
-          <TouchableOpacity
-          onPress={stopRecording}>
-            <FastImage
-              className="rounded-full"
-              source={require('../../assets/elements/micRecording.gif')}
-              style={{width: hp(10), height: hp(10)}}
-            />
-          </TouchableOpacity>
-          ) : (
-          <TouchableOpacity
-          onPress={startRecording}>
-            <Image
-              className="rounded-full"
-              source={require('../../assets/elements/micIcon2.png')}
-              style={{width: hp(10), height: hp(10)}}
-            />
-          </TouchableOpacity>
-        )
-      )}
-        
+        {isVisible && (
+          <View disabled={!isVisible} className="absolute bottom-12">
+            {loading ? (
+              <FastImage
+                className="rounded-full"
+                source={require('../../assets/elements/loading.gif')}
+                style={{width: hp(10), height: hp(10)}}
+              />
+            ) : recording ? (
+              <TouchableOpacity onPress={stopRecording}>
+                <FastImage
+                  className="rounded-full"
+                  source={require('../../assets/elements/micRecording.gif')}
+                  style={{width: hp(10), height: hp(10)}}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={startRecording}>
+                <Image
+                  className="rounded-full"
+                  source={require('../../assets/elements/micIcon2.png')}
+                  style={{width: hp(10), height: hp(10)}}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </View>
-     )}
-      
-    </View>
+    </ImageBackground>
   );
 }
