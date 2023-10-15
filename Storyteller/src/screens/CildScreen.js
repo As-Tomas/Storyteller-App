@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import Voice from '@react-native-community/voice';
 import {apiCall, chatgptApiCall} from '../api/openAI';
+import Tts from 'react-native-tts';
 
 export default function CildScreen() {
   const navigation = useNavigation();
@@ -24,6 +25,7 @@ export default function CildScreen() {
   const [story, setStory] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [speaking, setSpeaking] = useState(false);
 
   const handleScroll = event => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -70,7 +72,7 @@ export default function CildScreen() {
 
   const startRecording = async () => {
     setRecording(true);
-    //Tts.stop();
+    Tts.stop();
     try {
       await Voice.start('en-GB'); // en-US
     } catch (error) {
@@ -101,6 +103,7 @@ export default function CildScreen() {
         setLoading(false);
         if (res.success) {
           setStory(res.data);
+          startTextToSpeach(res.data);
         } else {
           Alert.alert('Error', res.msg);
         }
@@ -108,12 +111,21 @@ export default function CildScreen() {
     }
   };
 
-  // const clear = () => {
-  //   Tts.stop();
-  //   setSpeaking(false);
-  //   setLoading(false);
-  //   setMessages([]);
-  // };
+  const startTextToSpeach = story => {
+    setSpeaking(true);
+    Tts.speak(story, {
+      androidParams: {
+        KEY_PARAM_PAN: -1,
+        KEY_PARAM_VOLUME: 0.5,
+        KEY_PARAM_STREAM: 'STREAM_MUSIC',
+      },
+    });
+  }
+
+  const stopSpeaking = () => {
+    Tts.stop();
+    setSpeaking(false);
+  };
 
   useEffect(() => {
     if (result) {
@@ -127,6 +139,15 @@ export default function CildScreen() {
     Voice.onSpeechEnd = speechEndHandler;
     Voice.onSpeechResults = speechResultsHandler;
     Voice.onSpeechError = speechErrorHandler;
+
+    // tts handlers
+    Tts.addEventListener('tts-start', (event) => console.log("start", event));
+    Tts.addEventListener('tts-progress', (event) => console.log("progress", event));
+    Tts.addEventListener('tts-finish', (event) => {
+      console.log("finish", event);
+      setSpeaking(false);
+    });
+    Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
 
     return () => {
       // destroy the voice instance after component unmounts
@@ -144,7 +165,10 @@ export default function CildScreen() {
       style={{backgroundColor: 'black'}}>
       <View className="flex-1  items-center justify-center relative">
         <TouchableOpacity
-          onPress={() => navigation.navigate('Welcome')}
+          onPress={() => {
+            Tts.stop(); // Stop the voice before navigation
+            navigation.navigate('Welcome'); // Navigate to the 'Welcome' screen
+          }}
           className="absolute z-10 top-6 left-4 flex-row items-center justify-center">
           <Image
             source={require('../../assets/elements/arrow_back.png')}
@@ -202,8 +226,16 @@ export default function CildScreen() {
                 />
               </TouchableOpacity>
             )}
+            
           </View>
         )}
+        {speaking && (
+            <TouchableOpacity
+              onPress={stopSpeaking}
+              className="bg-red-400 rounded-3xl p-2 absolute bottom-16  left-10">
+              <Text className="text-white font-semibold">Stop</Text>
+            </TouchableOpacity>
+          )}
       </View>
     </ImageBackground>
   );
