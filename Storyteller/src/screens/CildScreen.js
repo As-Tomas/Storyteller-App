@@ -60,7 +60,7 @@ export default function CildScreen() {
     if (e.error.message === '7/No match') {
       let erMsg = 'No words matched, try to say louder and more than one word.';
       Alert.alert('Error', erMsg);
-    } 
+    }
     if (e.error.message === '5/Client side error') {
       //Todo Find out what this er means
       let erMsg = 'Find out what this er means: 5/Client side error.';
@@ -120,7 +120,7 @@ export default function CildScreen() {
         KEY_PARAM_STREAM: 'STREAM_MUSIC',
       },
     });
-  }
+  };
 
   const stopSpeaking = () => {
     Tts.stop();
@@ -141,13 +141,15 @@ export default function CildScreen() {
     Voice.onSpeechError = speechErrorHandler;
 
     // tts handlers
-    Tts.addEventListener('tts-start', (event) => console.log("start", event));
-    Tts.addEventListener('tts-progress', (event) => console.log("progress", event));
-    Tts.addEventListener('tts-finish', (event) => {
-      console.log("finish", event);
+    Tts.addEventListener('tts-start', event => console.log('start', event));
+    Tts.addEventListener('tts-progress', event =>
+      console.log('progress', event),
+    );
+    Tts.addEventListener('tts-finish', event => {
+      console.log('finish', event);
       setSpeaking(false);
     });
-    Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
+    Tts.addEventListener('tts-cancel', event => console.log('cancel', event));
 
     return () => {
       // destroy the voice instance after component unmounts
@@ -194,7 +196,11 @@ export default function CildScreen() {
             </Text>
             <Text
               className="text-yellow-100 mx-2 pb-40 "
-              style={{fontSize: wp(4.5), textShadowColor: 'black', textShadowRadius: 5}}>
+              style={{
+                fontSize: wp(4.5),
+                textShadowColor: 'black',
+                textShadowRadius: 5,
+              }}>
               {story}
             </Text>
             <View></View>
@@ -226,16 +232,15 @@ export default function CildScreen() {
                 />
               </TouchableOpacity>
             )}
-            
           </View>
         )}
         {speaking && (
-            <TouchableOpacity
-              onPress={stopSpeaking}
-              className="bg-red-400 rounded-3xl p-2 absolute bottom-16  left-10">
-              <Text className="text-white font-semibold">Stop</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            onPress={stopSpeaking}
+            className="bg-red-400 rounded-3xl p-2 absolute bottom-16  left-10">
+            <Text className="text-white font-semibold">Stop</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ImageBackground>
   );
