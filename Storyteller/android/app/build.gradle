@@ -101,6 +101,18 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    
+    // Add this configuration to generate APK 
+    //! just for testing
+    //todo remove before deploy
+    splits {
+        abi {
+            reset()
+            enable true
+            universalApk false
+            include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
+        }
+    }
 }
 
 dependencies {
