@@ -3,6 +3,9 @@ import { View, Text } from 'react-native';
 import AppNavigation from './src/navigation';
 import { apiCall, chatgptApiCall } from './src/api/openAI';
 
+//Todo Ability to cancel request to api while loading
+//Todo change UI for back btn to be more visible
+//Todo change TTS speed
 
 
 function App() {
