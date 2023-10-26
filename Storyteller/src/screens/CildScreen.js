@@ -17,6 +17,8 @@ import FastImage from 'react-native-fast-image';
 import Voice from '@react-native-community/voice';
 import {apiCall, chatgptApiCall} from '../api/openAI';
 import Tts from 'react-native-tts';
+import Config from 'react-native-config';
+import { Midjourney } from "midjourney";
 
 export default function CildScreen() {
   const navigation = useNavigation();
@@ -158,6 +160,51 @@ export default function CildScreen() {
   }, []);
 
   //console.log('result: ', result);
+
+  //--------------------------
+  const nuotrauka = async ()=>{
+    try {
+  const ServerId = Config.SERVER_ID;
+  const ChannelId = Config.CHANNEL_ID;
+  const SalaiToken = Config.SALAI_TOKEN;
+  console.log('SalaiToken', SalaiToken)
+
+  const client = new Midjourney({
+    ServerId,
+    ChannelId,
+    SalaiToken,
+    Debug: true,
+    Ws: true, //enable ws is required for remix mode (and custom zoom)
+  });
+  
+  
+    await client.init();
+
+    const prompt =
+      "Christmas dinner with spaghetti with family in a cozy house, we see interior details, 3d pixar";
+    //imagine
+    const Imagine = await client.Imagine(
+      prompt,
+      (uri: string, progress: string) => {
+        console.log("loading", uri, "progress", progress);
+      }
+    );
+    console.log(Imagine);
+    if (!Imagine) {
+      console.log("no message");
+      return;
+    }
+  }  catch (error) {
+    console.error("Error in nuotrauka function:", error);
+  }
+} 
+useEffect(() => {
+  nuotrauka();
+}, []);
+  
+
+
+  //-------------------------------
 
   return (
     <ImageBackground
