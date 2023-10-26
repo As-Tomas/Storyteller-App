@@ -38,12 +38,12 @@ export default function ParentScreen() {
     <View className="flex-1 bg-fuchsia-800 items-center justify-center relative">
       <TouchableOpacity
         onPress={() => navigation.navigate('Welcome')}
-        className="absolute top-6 left-4 flex-row items-center justify-center">
+        className="absolute top-6 left-4 flex-row items-center justify-center bg-gray-500 rounded-3xl">
         <Image
           source={require('../../assets/elements/arrow_back.png')}
           style={{width: hp(2), height: hp(2)}}
         />
-        <Text className="text-white" style={{fontSize: wp(3.5)}}>
+        <Text className="text-white m-2" style={{fontSize: wp(3.5)}}>
           Start
         </Text>
       </TouchableOpacity>
