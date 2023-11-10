@@ -19,6 +19,8 @@ import {apiCall, chatgptApiCall} from '../api/openAI';
 import Tts from 'react-native-tts';
 import Config from 'react-native-config';
 import { Midjourney } from "midjourney";
+import { EventSourcePolyfill } from 'event-source-polyfill';
+
 
 export default function CildScreen() {
   const navigation = useNavigation();
@@ -161,48 +163,104 @@ export default function CildScreen() {
 
   //console.log('result: ', result);
 
-  //--------------------------
-  const nuotrauka = async ()=>{
-    try {
-  const ServerId = Config.SERVER_ID;
-  const ChannelId = Config.CHANNEL_ID;
-  const SalaiToken = Config.SALAI_TOKEN;
-  console.log('SalaiToken', SalaiToken)
+  // //--------------------------
+  // const nuotrauka = async ()=>{
+  //   try {
+  // const ServerId = Config.SERVER_ID;
+  // const ChannelId = Config.CHANNEL_ID;
+  // const SalaiToken = Config.SALAI_TOKEN;
+  // console.log('SalaiToken', SalaiToken)
 
-  const client = new Midjourney({
-    ServerId,
-    ChannelId,
-    SalaiToken,
-    Debug: true,
-    Ws: true, //enable ws is required for remix mode (and custom zoom)
+  // const client = new Midjourney({
+  //   ServerId,
+  //   ChannelId,
+  //   SalaiToken,
+  //   Debug: true,
+  //   Ws: true, //enable ws is required for remix mode (and custom zoom)
+  // });
+  
+  
+//     await client.init();
+
+//     const prompt =
+//       "Christmas dinner with spaghetti with family in a cozy house, we see interior details, 3d pixar";
+//     //imagine
+//     const Imagine = await client.Imagine(
+//       prompt,
+//       (uri: string, progress: string) => {
+//         console.log("loading", uri, "progress", progress);
+//       }
+//     );
+//     console.log(Imagine);
+//     if (!Imagine) {
+//       console.log("no message");
+//       return;
+//     }
+//   }  catch (error) {
+//     console.error("Error in nuotrauka function:", error);
+//   }
+// } 
+// useEffect(() => {
+//   nuotrauka();
+// }, []);
+  
+function YourComponent() {
+useEffect(() => {
+  console.log('useEffect STARTED')
+  const eventSource = new EventSourcePolyfill('http://10.0.2.2:3000/api/events', {
+    headers: {
+      'X-API-Key': Config.SALAI_TOKEN,
+    },
   });
   
-  
-    await client.init();
+  console.log('EventSource readyState:', eventSource.readyState);
 
-    const prompt =
-      "Christmas dinner with spaghetti with family in a cozy house, we see interior details, 3d pixar";
-    //imagine
-    const Imagine = await client.Imagine(
-      prompt,
-      (uri: string, progress: string) => {
-        console.log("loading", uri, "progress", progress);
-      }
-    );
-    console.log(Imagine);
-    if (!Imagine) {
-      console.log("no message");
-      return;
+// Handle a connection opening
+eventSource.onopen = function(event) {
+  console.log('Connection to server opened.');
+};
+
+  eventSource.onmessage = (event) => {
+    console.log('New message:', event.data);
+    console.log('EventSource readyState:', eventSource.readyState);
+  };
+
+  eventSource.onerror = (error) => {
+    console.error('EventSource failed:', error);
+  };
+
+  const prompt = "Burstner caravan in vinter time in mountains";
+
+  const makeApiCall = async prompt => {
+    try {
+      const response = await fetch('http://10.0.2.2:3000/api/imagine', {
+        method: 'POST', // or 'POST' if you are sending data
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': Config.SALAI_TOKEN,
+        },
+        body: JSON.stringify({prompt}), // Send the prompt if using POST
+      });
+  
+      //     const responseText = await response.text(); // Get the raw response text
+      // console.log('Raw response:', responseText);
+  
+      const jsonResponse = await response.json();
+      console.log('API call response:', jsonResponse);
+    } catch (error) {
+      console.error('API call error:', error);
     }
-  }  catch (error) {
-    console.error("Error in nuotrauka function:", error);
-  }
-} 
-useEffect(() => {
-  nuotrauka();
-}, []);
-  
+  };
+  makeApiCall(prompt);
 
+  return () => {
+    console.log('eventSource.close() excecuted')
+    //eventSource.close();
+  };
+
+  
+}, []);
+}
 
   //-------------------------------
 
@@ -227,6 +285,7 @@ useEffect(() => {
             Start
           </Text>
         </TouchableOpacity>
+        < YourComponent />
 
         {story === '' ? (
           <Text
