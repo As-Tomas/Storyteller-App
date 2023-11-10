@@ -6,6 +6,7 @@ import { apiCall, chatgptApiCall } from './src/api/openAI';
 //Todo Ability to cancel request to api while loading
 //Todo change UI for back btn to be more visible
 //Todo change TTS speed
+//Todo uncoment FlipperOkhttpInterceptor making SSE not working android/app/src/debug/java/com/<projectname>/ReactNativeFlipper.java
 
 
 function App() {

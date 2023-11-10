@@ -38,15 +38,16 @@ public class ReactNativeFlipper {
       client.addPlugin(new SharedPreferencesFlipperPlugin(context));
       client.addPlugin(CrashReporterPlugin.getInstance());
 
-      NetworkFlipperPlugin networkFlipperPlugin = new NetworkFlipperPlugin();
-      NetworkingModule.setCustomClientBuilder(
-          new NetworkingModule.CustomClientBuilder() {
-            @Override
-            public void apply(OkHttpClient.Builder builder) {
-              builder.addNetworkInterceptor(new FlipperOkhttpInterceptor(networkFlipperPlugin));
-            }
-          });
-      client.addPlugin(networkFlipperPlugin);
+      // todo commented because of this issue https://github.com/binaryminds/react-native-sse/issues/3 https://github.com/facebook/flipper/issues/2495 https://github.com/binaryminds/react-native-sse/issues/31
+      // NetworkFlipperPlugin networkFlipperPlugin = new NetworkFlipperPlugin();
+      // NetworkingModule.setCustomClientBuilder(
+      //     new NetworkingModule.CustomClientBuilder() {
+      //       @Override
+      //       public void apply(OkHttpClient.Builder builder) {
+      //         builder.addNetworkInterceptor(new FlipperOkhttpInterceptor(networkFlipperPlugin));
+      //       }
+      //     });
+      // client.addPlugin(networkFlipperPlugin);
       client.start();
 
       // Fresco Plugin needs to ensure that ImagePipelineFactory is initialized
