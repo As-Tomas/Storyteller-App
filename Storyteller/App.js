@@ -7,6 +7,7 @@ import { apiCall, chatgptApiCall } from './src/api/openAI';
 //Todo change UI for back btn to be more visible
 //Todo change TTS speed
 //Todo uncoment FlipperOkhttpInterceptor making SSE not working android/app/src/debug/java/com/<projectname>/ReactNativeFlipper.java
+//Todo change Midjourney api to server api
 
 
 function App() {

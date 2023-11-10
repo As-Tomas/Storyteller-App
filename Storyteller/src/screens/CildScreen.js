@@ -20,6 +20,7 @@ import Tts from 'react-native-tts';
 import Config from 'react-native-config';
 import { Midjourney } from "midjourney";
 import { EventSourcePolyfill } from 'event-source-polyfill';
+import {useSseEventSource} from '../api/SseEventSource';
 
 
 export default function CildScreen() {
@@ -30,6 +31,8 @@ export default function CildScreen() {
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [speaking, setSpeaking] = useState(false);
+  const [eventSource, setEventSource] = useState(null); 
+  const [storyImg, setStoryImg] = useState('');
 
   const handleScroll = event => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -204,63 +207,14 @@ export default function CildScreen() {
 //   nuotrauka();
 // }, []);
   
-function YourComponent() {
+const prompt = "Burstner 2018 year caravan in vinter time in mountains";
+
 useEffect(() => {
-  console.log('useEffect STARTED')
-  const eventSource = new EventSourcePolyfill('http://10.0.2.2:3000/api/events', {
-    headers: {
-      'X-API-Key': Config.SALAI_TOKEN,
-    },
-  });
-  
-  console.log('EventSource readyState:', eventSource.readyState);
+  const cleanup = useSseEventSource(setStoryImg, prompt);
+  return cleanup;
 
-// Handle a connection opening
-eventSource.onopen = function(event) {
-  console.log('Connection to server opened.');
-};
-
-  eventSource.onmessage = (event) => {
-    console.log('New message:', event.data);
-    console.log('EventSource readyState:', eventSource.readyState);
-  };
-
-  eventSource.onerror = (error) => {
-    console.error('EventSource failed:', error);
-  };
-
-  const prompt = "Burstner caravan in vinter time in mountains";
-
-  const makeApiCall = async prompt => {
-    try {
-      const response = await fetch('http://10.0.2.2:3000/api/imagine', {
-        method: 'POST', // or 'POST' if you are sending data
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': Config.SALAI_TOKEN,
-        },
-        body: JSON.stringify({prompt}), // Send the prompt if using POST
-      });
-  
-      //     const responseText = await response.text(); // Get the raw response text
-      // console.log('Raw response:', responseText);
-  
-      const jsonResponse = await response.json();
-      console.log('API call response:', jsonResponse);
-    } catch (error) {
-      console.error('API call error:', error);
-    }
-  };
-  makeApiCall(prompt);
-
-  return () => {
-    console.log('eventSource.close() excecuted')
-    //eventSource.close();
-  };
-
-  
 }, []);
-}
+
 
   //-------------------------------
 
@@ -285,7 +239,8 @@ eventSource.onopen = function(event) {
             Start
           </Text>
         </TouchableOpacity>
-        < YourComponent />
+
+        {storyImg !== '' ? (<Image source={{ uri: storyImg }} style={{width: wp(100), height: hp(80)}} />) : null }
 
         {story === '' ? (
           <Text
