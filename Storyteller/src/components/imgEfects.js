@@ -1,17 +1,16 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Animated, TouchableOpacity, View, Text} from 'react-native';
+import {Animated, View, } from 'react-native';
 import {useSseEventSource} from '../api/SseEventSource';
 
-export const YourComponent = () => {
+export const MidjourneyImg = ({prompt}) => {
   const [storyImg, setStoryImg] = useState('');
   const [currentImage, setCurrentImage] = useState('');
   const [previousImage, setPreviousImage] = useState('');
   const fadeOutPreviousImage = useRef(new Animated.Value(1)).current;
   const fadeInCurrentImage = useRef(new Animated.Value(0)).current;
 
-  const prompt =
-    'Burstner 2018 year futuristic caravan in winter time in mountains --ar 9:16';
-
+  
+    // call Midjourney API
   useEffect(() => {
     const cleanup = useSseEventSource(setStoryImg, prompt);
     return cleanup;
@@ -46,7 +45,7 @@ export const YourComponent = () => {
 
   return (
     <>
-      <View className=" mx-auto my-auto relative  ">
+      <View className="    ">
         <Animated.View>
           {currentImage && (
             <Animated.Image

@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Animated,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -19,7 +20,7 @@ import {apiCall, chatgptApiCall} from '../api/openAI';
 import Tts from 'react-native-tts';
 import Config from 'react-native-config';
 import {useSseEventSource} from '../api/SseEventSource';
-
+import {MidjourneyImg} from '../components/imgEfects';
 
 export default function CildScreen() {
   const navigation = useNavigation();
@@ -28,9 +29,7 @@ export default function CildScreen() {
   const [story, setStory] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [speaking, setSpeaking] = useState(false);
-  const [eventSource, setEventSource] = useState(null); 
-  const [storyImg, setStoryImg] = useState('');
+  const [speaking, setSpeaking] = useState(false);  
 
   const handleScroll = event => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -162,16 +161,7 @@ export default function CildScreen() {
     };
   }, []);
 
-  
-  
-const prompt = "Burstner 2018 year caravan in vinter time in mountains";
-
-useEffect(() => {
-  const cleanup = useSseEventSource(setStoryImg, prompt);
-  return cleanup;
-
-}, []);
-
+  const prompt = 'Futuristic caravan in winter time in mountains --ar 9:16';
 
   //-------------------------------
 
@@ -197,7 +187,12 @@ useEffect(() => {
           </Text>
         </TouchableOpacity>
 
-        {storyImg !== '' ? (<Image source={{ uri: storyImg }} style={{width: wp(100), height: hp(80)}} />) : null }
+        <View className=" ">
+                <MidjourneyImg
+                  prompt={prompt}          
+                />
+
+        </View>
 
         {story === '' ? (
           <Text
