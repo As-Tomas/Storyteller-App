@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Animated,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -17,6 +18,9 @@ import FastImage from 'react-native-fast-image';
 import Voice from '@react-native-community/voice';
 import {apiCall, chatgptApiCall} from '../api/openAI';
 import Tts from 'react-native-tts';
+import Config from 'react-native-config';
+import {useSseEventSource} from '../api/SseEventSource';
+import {MidjourneyImg} from '../components/imgEfects';
 
 export default function CildScreen() {
   const navigation = useNavigation();
@@ -25,7 +29,7 @@ export default function CildScreen() {
   const [story, setStory] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [speaking, setSpeaking] = useState(false);
+  const [speaking, setSpeaking] = useState(false);  
 
   const handleScroll = event => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -157,7 +161,9 @@ export default function CildScreen() {
     };
   }, []);
 
-  //console.log('result: ', result);
+  const prompt = 'Futuristic caravan in winter time in mountains --ar 9:16';
+
+  //-------------------------------
 
   return (
     <ImageBackground
@@ -180,6 +186,13 @@ export default function CildScreen() {
             Start
           </Text>
         </TouchableOpacity>
+
+        <View className=" ">
+                <MidjourneyImg
+                  prompt={prompt}          
+                />
+
+        </View>
 
         {story === '' ? (
           <Text
