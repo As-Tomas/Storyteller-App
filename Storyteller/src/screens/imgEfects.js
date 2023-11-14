@@ -1,13 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {
-  Animated,
-  ImageBackground,
-  TouchableOpacity,
-  View,
-  Text,
-  Image,
-  StyleSheet,
-} from 'react-native';
+import {Animated, TouchableOpacity, View, Text} from 'react-native';
 import {useSseEventSource} from '../api/SseEventSource';
 
 export const YourComponent = () => {
@@ -19,18 +11,6 @@ export const YourComponent = () => {
 
   const prompt =
     'Burstner 2018 year futuristic caravan in winter time in mountains --ar 9:16';
-
-  const changeImages = () => {
-    console.log('firskkt');
-    if (storyImg !== currentImage) {
-      setPreviousImage(currentImage);
-      setCurrentImage(storyImg);
-
-      // Reset the animation values
-      fadeOutPreviousImage.setValue(1);
-      fadeInCurrentImage.setValue(0);
-    }
-  };
 
   useEffect(() => {
     const cleanup = useSseEventSource(setStoryImg, prompt);
@@ -64,37 +44,10 @@ export const YourComponent = () => {
     ]).start();
   }, [currentImage]);
 
-  // const fadeAnim = useRef(new Animated.Value(1)).current;
-
-  // const fadeIn = () => {
-  //     // Will change fadeAnim value to 1 in 5 seconds
-  //     Animated.timing(fadeAnim, {
-  //       toValue: 1,
-  //       duration: 5000,
-  //       useNativeDriver: true,
-  //     }).start();
-  //   };
-
-  //   const fadeOut = () => {
-  //     // Will change fadeAnim value to 0 in 3 seconds
-  //     Animated.timing(fadeAnim, {
-  //       toValue: 0,
-  //       duration: 3000,
-  //       useNativeDriver: true,
-  //     }).start();
-  //   };
-
   return (
     <>
-      <View className=" mx-auto my-auto relative     ">
+      <View className=" mx-auto my-auto relative  ">
         <Animated.View>
-          {/* <Animated.Image
-                     source={{ uri: previousImage }}
-                     style={{ opacity: fadeAnim, width: 100, height: 100 }}
-                     /> */}
-
-          {/* <Animated.Image source={{ uri: storyImg }} style={{ opacity: fadeAnim, width: 100, height: 100 }} /> */}
-
           {currentImage && (
             <Animated.Image
               source={{uri: currentImage}}
@@ -118,14 +71,6 @@ export const YourComponent = () => {
               }}
             />
           )}
-
-          <TouchableOpacity
-            className="w-20 h-20 absolute top-20"
-            onPress={changeImages}>
-            <Text className=" text-white text-xl mx-auto my-auto">
-              Change Images
-            </Text>
-          </TouchableOpacity>
         </Animated.View>
       </View>
     </>
