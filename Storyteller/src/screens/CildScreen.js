@@ -16,7 +16,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import Voice from '@react-native-community/voice';
-import {apiCall, chatgptApiCall} from '../api/openAI';
+import {getImagePrompt, chatgptApiCall} from '../api/openAI';
 import Tts from 'react-native-tts';
 import Config from 'react-native-config';
 import {useSseEventSource} from '../api/SseEventSource';
@@ -29,7 +29,8 @@ export default function CildScreen() {
   const [story, setStory] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [speaking, setSpeaking] = useState(false);  
+  const [speaking, setSpeaking] = useState(false);
+  const [imagePrompt, setImagePrompt] = useState('');
 
   const handleScroll = event => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -97,6 +98,10 @@ export default function CildScreen() {
     return `Please tell me a fairy tale about ${userReq}`;
   };
 
+  const generatePromptForImage = story => {
+    return `Be the prompt an engineer, sumarize this story and create single promt, respond just with prompt text . Here is the story: " ${story} "`;
+  }
+
   const fetchResponse = userInput => {
     if (userInput.trim().length > 0) {
       setLoading(true);
@@ -146,9 +151,9 @@ export default function CildScreen() {
 
     // tts handlers
     Tts.addEventListener('tts-start', event => console.log('start', event));
-    Tts.addEventListener('tts-progress', event =>
-      console.log('progress', event),
-    );
+    // Tts.addEventListener('tts-progress', event =>
+    //   console.log('progress', event),
+    // );
     Tts.addEventListener('tts-finish', event => {
       console.log('finish', event);
       setSpeaking(false);
@@ -161,8 +166,29 @@ export default function CildScreen() {
     };
   }, []);
 
-  const prompt = 'Futuristic caravan in winter time in mountains --ar 9:16';
+  // generate Promt for the next image
+  const fetchPromptForImage = () => {
+    if (story !== '') {
+      let prompt = generatePromptForImage(story);
+      
+      getImagePrompt(prompt).then(res => {
+        //setLoading(false);
+        if (res.success) {
+          console.log('res.data', res.data)
+          setImagePrompt(res.data);
+        } else {
+          Alert.alert('Error', res.msg);
+        }
+      });
 
+    }
+  }
+
+  useEffect(() => {
+    if (story) {
+      fetchPromptForImage();
+    }
+  }, [story]);
   //-------------------------------
 
   return (
@@ -187,13 +213,6 @@ export default function CildScreen() {
           </Text>
         </TouchableOpacity>
 
-        <View className=" ">
-                <MidjourneyImg
-                  prompt={prompt}          
-                />
-
-        </View>
-
         {story === '' ? (
           <Text
             className="text-yellow-100 mx-10 text-center"
@@ -207,6 +226,13 @@ export default function CildScreen() {
               style={{fontSize: wp(7)}}>
               Once upon a time
             </Text>
+
+            {imagePrompt && (
+            <View className=" ">
+              <MidjourneyImg prompt={imagePrompt} />
+            </View>
+            )}
+
             <Text
               className="text-yellow-100 mx-2 pb-40 "
               style={{
