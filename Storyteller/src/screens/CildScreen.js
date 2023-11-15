@@ -98,7 +98,7 @@ export default function CildScreen() {
     return `Please tell me a fairy tale about ${userReq}`;
   };
 
-  const generatePromptForImage = story => {
+  const preparePromptForImage = story => {
     return `Be the prompt an engineer, sumarize this story and create single promt, respond just with prompt text . Here is the story: " ${story} "`;
   }
 
@@ -169,13 +169,13 @@ export default function CildScreen() {
   // generate Promt for the next image
   const fetchPromptForImage = () => {
     if (story !== '') {
-      let prompt = generatePromptForImage(story);
+      let prompt = preparePromptForImage(story);
       
       getImagePrompt(prompt).then(res => {
         //setLoading(false);
         if (res.success) {
           console.log('res.data', res.data)
-          setImagePrompt(res.data);
+          setImagePrompt( `${res.data}  --ar 9:16`);
         } else {
           Alert.alert('Error', res.msg);
         }
