@@ -100,7 +100,7 @@ export default function CildScreen() {
 
   const preparePromptForImage = story => {
     return `Be the prompt an engineer, sumarize this story and create single promt, respond just with prompt text . Here is the story: " ${story} "`;
-  }
+  };
 
   const fetchResponse = userInput => {
     if (userInput.trim().length > 0) {
@@ -170,25 +170,34 @@ export default function CildScreen() {
   const fetchPromptForImage = () => {
     if (story !== '') {
       let prompt = preparePromptForImage(story);
-      
+
       getImagePrompt(prompt).then(res => {
         //setLoading(false);
         if (res.success) {
-          console.log('res.data', res.data)
-          setImagePrompt( `${res.data}  --ar 9:16`);
+          console.log('res.data', res.data);
+          setImagePrompt(`${res.data}  --ar 9:16`);
         } else {
           Alert.alert('Error', res.msg);
         }
       });
-
     }
-  }
+  };
 
   useEffect(() => {
     if (story) {
       fetchPromptForImage();
     }
   }, [story]);
+
+  // Split the story into paragraphs
+  const paragraphs = story.split('\n');
+
+  // Find the middle paragraph
+  const midPoint = Math.floor(paragraphs.length / 2);
+
+  // Join the paragraphs back together
+  const firstHalf = paragraphs.slice(0, midPoint).join('\n');
+  const secondHalf = paragraphs.slice(midPoint).join('\n');
   //-------------------------------
 
   return (
@@ -227,21 +236,32 @@ export default function CildScreen() {
               Once upon a time
             </Text>
 
-            {imagePrompt && (
-            <View className=" ">
-              <MidjourneyImg prompt={imagePrompt} />
-            </View>
-            )}
-
             <Text
-              className="text-yellow-100 mx-2 pb-40 "
+              className="text-yellow-100 mx-2 pb-8 "
               style={{
                 fontSize: wp(4.5),
                 textShadowColor: 'black',
                 textShadowRadius: 5,
               }}>
-              {story}
+              {firstHalf}
             </Text>
+
+            {imagePrompt && (
+              <View style={{alignItems: 'center'}}>
+                <MidjourneyImg prompt={imagePrompt} />
+              </View>
+            )}
+
+            <Text
+              className="text-yellow-100 mx-2 pb-40 pt-8  "
+              style={{
+                fontSize: wp(4.5),
+                textShadowColor: 'black',
+                textShadowRadius: 5,
+              }}>
+              {secondHalf}
+            </Text>
+
             <View></View>
           </ScrollView>
         )}
