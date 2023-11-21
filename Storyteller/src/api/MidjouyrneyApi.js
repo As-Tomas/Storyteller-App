@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Config from 'react-native-config';
 
-export const midjourneyApiImagine = async prompt => {
+export const midjourneyApiImagine = async (prompt, userName) => {
     try {
       const response = await fetch('http://10.0.2.2:3000/api/imagine', {
         method: 'POST', // or 'POST' if you are sending data
@@ -9,7 +9,7 @@ export const midjourneyApiImagine = async prompt => {
           'Content-Type': 'application/json',
           'X-API-Key': Config.SALAI_TOKEN,
         },
-        body: JSON.stringify({prompt}), // Send the prompt if using POST
+        body: JSON.stringify({prompt, userName}), // Send the prompt if using POST
       });
   
       //     const responseText = await response.text(); // Get the raw response text

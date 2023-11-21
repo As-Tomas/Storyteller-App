@@ -6,9 +6,14 @@ import { midjourneyApiImagine } from './MidjouyrneyApi';
 export function useSseEventSource(setStoryImg, prompt) {  
 
   console.log('useEffect STARTED')
+
+  //Todo: add user registration screen and set here userName
+  //Todo: set user name in body not header
+  const userName = 'testUser';
   const eventSource = new EventSourcePolyfill('http://10.0.2.2:3000/api/events', {
     headers: {
       'X-API-Key': Config.SALAI_TOKEN,
+      'userName': userName,
     },
   });
   
@@ -42,7 +47,7 @@ eventSource.onopen = function(event) {
   };
 
   //Call the API to generate the image
-  midjourneyApiImagine(prompt);
+  midjourneyApiImagine(prompt, userName);
 
   return () => {
     console.log('eventSource.close() excecuted')
