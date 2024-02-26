@@ -12,11 +12,11 @@ const settingsData = {
 export async function readData(key) {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
-    const data = JSON.parse(jsonValue);
+    const userSettings = JSON.parse(jsonValue);
 
-    if (data && Object.keys(data).length > 0) {
-      console.log('second', data);
-      return data;
+    if (userSettings && Object.keys(userSettings).length > 0) {
+      console.log('second', userSettings);
+      return userSettings;
     } else {
       // Default values
       await AsyncStorage.setItem(key, JSON.stringify(settingsData));
@@ -28,9 +28,9 @@ export async function readData(key) {
   }
 }
 
-export async function writeData(key, data) {
+export async function writeData(key, userSettings) {
   try {
-    const jsonValue = JSON.stringify(data);
+    const jsonValue = JSON.stringify(userSettings);
     await AsyncStorage.setItem(key, jsonValue);
   } catch (e) {
     console.log('writing Error');

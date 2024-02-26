@@ -14,7 +14,7 @@ import { readData } from '../components/readWriteData';
 const Stack = createNativeStackNavigator();
 
 function AppNavigation() {
-  const [data, setData] = useState(null);       
+  const [userSettings, setUserSettings] = useState(null);       
 
   // if (!data) {
   //   return null; // or a loading spinner
@@ -36,17 +36,17 @@ function AppNavigation() {
 
       const storedData = await readData('userData');
       console.log('storedData1', storedData);
-      setData(storedData);
+      setUserSettings(storedData);
     })();
   }, []);
 
-  const updateData = (newData) => {
-    setData(newData);
+  const updateUserSettings = (newData) => {
+    setUserSettings(newData);
   };
 
   return (
     <NavigationContainer>
-      <DataContext.Provider value={{ data, update: updateData }}>
+      <DataContext.Provider value={{ userSettings, update: updateUserSettings }}>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName="Welcome">

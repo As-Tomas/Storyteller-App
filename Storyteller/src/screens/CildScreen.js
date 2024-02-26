@@ -8,7 +8,7 @@ import {
   Alert,
   Animated,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, useContext} from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -21,6 +21,8 @@ import Tts from 'react-native-tts';
 import Config from 'react-native-config';
 import {useSseEventSource} from '../api/SseEventSource';
 import {MidjourneyImg} from '../components/imgEfects';
+import DataContext from '../components/DataContext';
+import UserTextInput from '../components/TextInput';
 
 export default function CildScreen() {
   const navigation = useNavigation();
@@ -31,6 +33,8 @@ export default function CildScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [speaking, setSpeaking] = useState(false);
   const [imagePrompt, setImagePrompt] = useState('');
+  const {userSettings } = useContext(DataContext);
+  const [userInputText, setUserInputText] = useState('');
 
   const handleScroll = event => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -79,7 +83,7 @@ export default function CildScreen() {
     setRecording(true);
     Tts.stop();
     try {
-      await Voice.start('locale'); // en-GB
+      await Voice.start(userSettings.language); // en-GB
     } catch (error) {
       console.log('error', error);
     }
@@ -200,6 +204,11 @@ export default function CildScreen() {
   const secondHalf = paragraphs.slice(midPoint).join('\n');
   //-------------------------------
 
+  useEffect(() => {
+    console.log('userInputText', userInputText)
+  }, 
+  [userInputText]);
+
   return (
     <ImageBackground
       source={require('../../assets/img/tomasb_b04_Illustrate_a_starry_night_sky_filled_with_constellat_a29cd721-0d0b-46f8-89f5-671376f1c65c.png')}
@@ -283,13 +292,17 @@ export default function CildScreen() {
                 />
               </TouchableOpacity>
             ) : (
+              <View className=" flex-col align-middle items-center ">
               <TouchableOpacity onPress={startRecording}>
                 <Image
                   className="rounded-full"
                   source={require('../../assets/elements/micIcon2.png')}
                   style={{width: hp(10), height: hp(10)}}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity>              
+              <UserTextInput setUserInputText={setUserInputText}/>
+              
+              </View>
             )}
           </View>
         )}

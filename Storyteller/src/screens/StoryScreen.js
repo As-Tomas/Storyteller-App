@@ -16,7 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 
 export default function StoryScreen() {
   const navigation = useNavigation();
-  const storyRespose = useState('oOo ');
+  const [storyResponse, setStoryResponse] = useState('oOo');
   return (
     <View className="flex-1 bg-fuchsia-800 items-center p-5 pt-8 relative">
       <TouchableOpacity
@@ -39,7 +39,7 @@ export default function StoryScreen() {
           Story Name
         </Text>
         <Text className="text-yellow-100 pt-4" style={{fontSize: wp(4.5)}}>
-          {storyRespose}
+          {storyResponse}
         </Text>
       </ScrollView>
     </View>

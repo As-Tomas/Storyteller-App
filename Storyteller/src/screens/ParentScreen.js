@@ -32,19 +32,19 @@ export default function ParentScreen() {
 
   // const settingsData = settingsData;
   // console.log('first', settingsData)
-  const {data, update: updateData} = useContext(DataContext);
-  console.log('data*', data);
+  const {userSettings, update: updateUserSettings} = useContext(DataContext);
+  console.log('userSettings*', userSettings);
 
   useEffect(() => {
     (async () => {
       // const storedData = await readData('userData');
-      if (data) {
-        setName(data.name);
-        setLanguage(data.language);
-        setAge(data.age);
-        setLength(data.length);
-        setMotivation(data.motivation);
-        setStoryComponents(data.storyComponents);
+      if (userSettings) {
+        setName(userSettings.name);
+        setLanguage(userSettings.language);
+        setAge(userSettings.age);
+        setLength(userSettings.length);
+        setMotivation(userSettings.motivation);
+        setStoryComponents(userSettings.storyComponents);
       }
     })();
   }, []);
@@ -60,8 +60,7 @@ export default function ParentScreen() {
         storyComponents,
       };
       await writeData('userData', newData);
-      // data.update({ name, language, age, length, motivation, storyComponents });
-      updateData(newData);
+      updateUserSettings(newData);
     })();
   }, [name, language, age, length, motivation, storyComponents]);
 
@@ -151,28 +150,25 @@ export default function ParentScreen() {
 
         <ScrollView bounces={false} className="absolute top-20 flex-1 w-11/12 ">
           <View className="">
-            {/* Row 1 */}
-            <View className="flex-row justify-evenly ">
+            <View className="flex-row  ">
               <Text className="text-white mb-1" style={{fontSize: wp(4)}}>
                 Child’s name:
               </Text>
-              <Text className="text-white mb-1" style={{fontSize: wp(4)}}>
-                Story language:
-              </Text>
+              <View className="flex-row  ">
+                <TextInput
+                  value={name}
+                  onChangeText={text => setName(text)}
+                  placeholder="Name"
+                  placeholderTextColor="white"
+                  style={{color: 'white'}}
+                  className="w-3/5 px-4  rounded border border-gray-300 "
+                />
+              </View>
             </View>
-
-            {/* Row 2 */}
-            <View className="flex-row justify-evenly ">
-              <TextInput
-                value={name}
-                onChangeText={text => setName(text)}
-                placeholder="Name"
-                placeholderTextColor="white"
-                style={{color: 'white'}}
-                className="w-2/5 px-4  rounded border border-gray-300 "
-              />
-              <LanguageSelector language={language} setLanguage={setLanguage} />
-            </View>
+            <Text className="text-white mb-1" style={{fontSize: wp(4)}}>
+              Story language:
+            </Text>
+            <LanguageSelector language={language} setLanguage={setLanguage} />
           </View>
 
           <View>
