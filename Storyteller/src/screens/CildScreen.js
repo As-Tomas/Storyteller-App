@@ -79,7 +79,7 @@ export default function CildScreen() {
     setRecording(true);
     Tts.stop();
     try {
-      await Voice.start('en-GB'); // en-US
+      await Voice.start('locale'); // en-GB
     } catch (error) {
       console.log('error', error);
     }
