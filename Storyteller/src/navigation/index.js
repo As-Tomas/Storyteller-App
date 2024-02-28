@@ -21,19 +21,7 @@ function AppNavigation() {
   // }
 
   useEffect(() => {
-    (async () => {
-      // Check for internet connectivity
-      // const netInfo = await NetInfo.fetch();
-      // if (!netInfo.isConnected) {
-      //   console.log('No internet connection');
-      //   Alert.alert(
-      //     'No internet connection',
-      //     'Please check your internet connection and try again.',
-      //   );
-
-      //   return;
-      // }
-
+    (async () => {     
       const storedData = await readData('userData');
       console.log('storedData1', storedData);
       setUserSettings(storedData);

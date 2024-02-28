@@ -100,7 +100,6 @@ const LanguageSelector = ({language, setLanguage}) => {
           />
         ))}
       </Picker>
-      <Text style={styles.text}>Sel Lang: {selectedLanguage}</Text>
     </View>
   );
 };
@@ -108,6 +107,8 @@ const LanguageSelector = ({language, setLanguage}) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f5f5',
+    borderWidth: 1,
+    borderColor: '#fff',
   },
   picker: {
     color: '#fff',

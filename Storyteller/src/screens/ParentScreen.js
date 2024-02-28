@@ -8,6 +8,7 @@ import {
   ScrollView,
   Keyboard,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect, useContext} from 'react';
 import {
@@ -19,6 +20,9 @@ import Slider from '@react-native-community/slider';
 import LanguageSelector from '../components/languageSelect';
 import DataContext from '../components/DataContext';
 import {writeData} from '../components/readWriteData';
+import UserTextInput from '../components/TextInput';
+import NetInfo from "@react-native-community/netinfo";
+import {getImagePrompt, chatgptApiCall} from '../api/openAI';
 
 export default function ParentScreen() {
   const navigation = useNavigation();
@@ -28,10 +32,13 @@ export default function ParentScreen() {
   const [length, setLength] = useState(1);
   const [motivation, setMotivation] = useState('');
   const [storyComponents, setStoryComponents] = useState('');
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);  
+  const [userInputText, setUserInputText] = useState('');
 
-  // const settingsData = settingsData;
-  // console.log('first', settingsData)
+  const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [story, setStory] = useState('');
+
   const {userSettings, update: updateUserSettings} = useContext(DataContext);
   console.log('userSettings*', userSettings);
 
@@ -45,6 +52,22 @@ export default function ParentScreen() {
         setLength(userSettings.length);
         setMotivation(userSettings.motivation);
         setStoryComponents(userSettings.storyComponents);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      // Check for internet connectivity
+      const netInfo = await NetInfo.fetch();
+      if (!netInfo.isConnected) {
+        console.log('No internet connection');
+        Alert.alert(
+          'No internet connection',
+          'Please check your internet connection and try again.',
+        );
+        
+        return;
       }
     })();
   }, []);
@@ -98,11 +121,53 @@ export default function ParentScreen() {
     };
   }, []);
 
+  const fetchResponse = userInput => {
+    if (userInput.trim().length > 0) {
+      setLoading(true);
+      let newUserRequest = userInput.trim();
+      let prompt = generatePrompt(newUserRequest);
+
+      chatgptApiCall(prompt).then(res => {
+        setLoading(false);
+        if (res.success) {
+          setStory(res.data);
+          //startTextToSpeach(res.data);
+        } else {
+          Alert.alert('Error', res.msg);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (result) {
+      fetchResponse(result);
+    }
+  }, [result]);
+
+  useEffect(() => {
+    if (userInputText) {
+      fetchResponse(userInputText);
+    }
+  }, [userInputText]);
+
+  useEffect(() => {
+    if (story) {
+      console.log('first')
+      writeData('history', {title:'title', story: story, image:'image'});
+      console.log('done writing')
+      navigation.navigate('Story', { story: story });
+    }
+  }, [story]);
+
+  const generatePrompt = userReq => {
+    return `Please tell me a fairy tale about ${userReq}`;
+  };
+
   return (
-    <KeyboardAvoidingView //! not finished, doesn't work
-      style={{flex: 1}}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
+    // <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === "ios" ? "padding" : "height"}>
+    //   <ScrollView className='flex-1 bg-fuchsia-800' contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+       
       <View className="flex-1 bg-fuchsia-800 items-center justify-center relative">
         <TouchableOpacity
           onPress={() => navigation.navigate('Welcome')}
@@ -120,12 +185,12 @@ export default function ParentScreen() {
           className="text-white text-center font-bold absolute top-6"
           style={{fontSize: wp(6)}}>
           Define your story
-        </Text>
+        </Text>        
 
         {!keyboardVisible && (
           <View className="absolute bottom-6 items-center justify-center  ">
             <TouchableOpacity
-              onPress={() => navigation.navigate('Story')}
+              onPress={() => navigation.navigate('Story', { userInput: userInputText })}
               className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
               style={{width: wp(55)}}>
               <Text
@@ -145,6 +210,8 @@ export default function ParentScreen() {
                 Create random story
               </Text>
             </TouchableOpacity>
+
+            
           </View>
         )}
 
@@ -181,6 +248,7 @@ export default function ParentScreen() {
                 style={{width: wp(90), height: 40}}
                 minimumValue={1}
                 maximumValue={10}
+                value={userSettings.age || 2}
                 onValueChange={value => setAge(Math.round(value))}
                 minimumTrackTintColor="#D9D9D9"
                 maximumTrackTintColor="#000000"
@@ -198,7 +266,8 @@ export default function ParentScreen() {
               <Slider
                 style={{width: wp(90), height: 40}}
                 minimumValue={1}
-                maximumValue={3}
+                maximumValue={3}                
+                value={userSettings.length || 1}
                 onValueChange={value => setLength(Math.round(value))}
                 minimumTrackTintColor="#D9D9D9"
                 maximumTrackTintColor="#000000"
@@ -234,8 +303,10 @@ export default function ParentScreen() {
             style={{color: 'white', marginHorizontal: 10}}
             className="px-4 rounded border border-gray-300 "
           />
+          <UserTextInput setUserInputText={setUserInputText}/>
         </ScrollView>
       </View>
-    </KeyboardAvoidingView>
+    //   </ScrollView>
+    // </KeyboardAvoidingView>
   );
 }

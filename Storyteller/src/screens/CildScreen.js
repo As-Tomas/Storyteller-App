@@ -205,7 +205,9 @@ export default function CildScreen() {
   //-------------------------------
 
   useEffect(() => {
-    console.log('userInputText', userInputText)
+    if (userInputText) {
+      fetchResponse(userInputText);
+    }
   }, 
   [userInputText]);
 

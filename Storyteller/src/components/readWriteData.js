@@ -27,11 +27,45 @@ export async function readData(key) {
     console.log(e);
   }
 }
+// old writeData function
+// export async function writeData(key, userSettings) {
+//   try {
+//     const jsonValue = JSON.stringify(userSettings);
+//     await AsyncStorage.setItem(key, jsonValue);
+//   } catch (e) {
+//     console.log('writing Error');
+//     console.log(e);
+//   }
+// }
 
-export async function writeData(key, userSettings) {
+export async function writeData(key, value) {
   try {
-    const jsonValue = JSON.stringify(userSettings);
-    await AsyncStorage.setItem(key, jsonValue);
+    if (key === 'history') {
+      // Read existing history the object should look like this: {creationDate, title, story, image}
+      const jsonValue = await AsyncStorage.getItem(key);
+      let history = JSON.parse(jsonValue);
+
+      // Check if history is an array, if not, initialize it as an empty array
+      if (!Array.isArray(history)) {
+        console.log('Error: history data is not an array');
+        history = [];
+      }
+
+      // Add creationDate to new record
+      const newRecord = {
+        ...value,
+        creationDate: new Date().toLocaleDateString(),
+      };
+
+      // Add record to the beginning of history
+      history.unshift(newRecord);
+
+      // Write back to AsyncStorage
+      await AsyncStorage.setItem(key, JSON.stringify(history));
+    } else {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(key, jsonValue);
+    }
   } catch (e) {
     console.log('writing Error');
     console.log(e);

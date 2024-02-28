@@ -26,6 +26,7 @@ export default function UserTextInput({setUserInputText}) {
             onChangeText={setText}
             value={text}
             placeholder="Type here..."
+            placeholderTextColor="#fff"
             multiline={true}
             numberOfLines={3}
           />
