@@ -1,58 +1,72 @@
 // import * as RNLocalize from 'react-native-localize'; // GPT recomended library for localization, maybe later we can use it for the app
 
-const languageOptions = [
-  {label: 'Device Locale (Automatic)', value: 'locale'}, // Default option
-  {label: 'English (United States)', value: 'en-US'},
-  {label: 'English (Canada)', value: 'en-CA'},
-  {label: 'English (Australia)', value: 'en-AU'},
-  {label: 'English (India)', value: 'en-IN'},
-  {label: 'English (New Zealand)', value: 'en-NZ'},
-  {label: 'English (Singapore)', value: 'en-SG'},
-  {label: 'English (Ireland)', value: 'en-IE'},
-  {label: 'English (South Africa)', value: 'en-ZA'},
-  {label: 'Spanish (Spain)', value: 'es-ES'},
-  {label: 'Spanish (Mexico)', value: 'es-MX'},
-  {label: 'Spanish (United States)', value: 'es-US'},
-  {label: 'Spanish (Argentina)', value: 'es-AR'},
-  {label: 'Spanish (Chile)', value: 'es-CL'},
-  {label: 'Spanish (Colombia)', value: 'es-CO'},
-  {label: 'Spanish (Peru)', value: 'es-PE'},
-  {label: 'Spanish (Venezuela)', value: 'es-VE'},
-  {label: 'French (France)', value: 'fr-FR'},
-  {label: 'French (Canada)', value: 'fr-CA'},
-  {label: 'French (Belgium)', value: 'fr-BE'},
-  {label: 'French (Switzerland)', value: 'fr-CH'},
-  {label: 'German (Germany)', value: 'de-DE'},
-  {label: 'German (Austria)', value: 'de-AT'},
-  {label: 'German (Switzerland)', value: 'de-CH'},
-  {label: 'Chinese (Mandarin China)', value: 'zh-CN'},
-  {label: 'Chinese (Mandarin Taiwan)', value: 'zh-TW'},
-  {label: 'Chinese (Cantonese)', value: 'zh-HK'},
-  {label: 'Italian (Italy)', value: 'it-IT'},
-  {label: 'Dutch (Netherlands)', value: 'nl-NL'},
-  {label: 'Russian (Russia)', value: 'ru-RU'},
-  {label: 'Japanese (Japan)', value: 'ja-JP'},
-  {label: 'Korean (Korea)', value: 'ko-KR'},
-  {label: 'Portuguese (Portugal)', value: 'pt-PT'},
-  {label: 'Portuguese (Brazil)', value: 'pt-BR'},
-  {label: 'Arabic (Saudi Arabia)', value: 'ar-SA'},
-  {label: 'Arabic (United Arab Emirates)', value: 'ar-AE'},
-  {label: 'Hindi (India)', value: 'hi-IN'},
-  {label: 'Thai (Thailand)', value: 'th-TH'},
-  {label: 'Turkish (Turkey)', value: 'tr-TR'},
-  {label: 'Swedish (Sweden)', value: 'sv-SE'},
-  {label: 'Danish (Denmark)', value: 'da-DK'},
-  {label: 'Norwegian (Norway)', value: 'no-NO'},
-  {label: 'Finnish (Finland)', value: 'fi-FI'},
-  {label: 'Polish (Poland)', value: 'pl-PL'},
-  {label: 'Hungarian (Hungary)', value: 'hu-HU'},
-  {label: 'Czech (Czech Republic)', value: 'cs-CZ'},
-  {label: 'Slovak (Slovakia)', value: 'sk-SK'},
-  {label: 'Greek (Greece)', value: 'el-GR'},
-  {label: 'Romanian (Romania)', value: 'ro-RO'},
-  {label: 'Bulgarian (Bulgaria)', value: 'bg-BG'},
-  {label: 'Ukrainian (Ukraine)', value: 'uk-UA'},
-];
+// const languageOptions = [
+//   {label: 'Device Locale (Automatic)', value: 'locale'}, // Default option
+//   {label: 'English (United States)', value: 'en-US'},
+//   {label: 'English (Canada)', value: 'en-CA'},
+//   {label: 'English (Australia)', value: 'en-AU'},
+//   {label: 'English (India)', value: 'en-IN'},
+//   {label: 'English (New Zealand)', value: 'en-NZ'},
+//   {label: 'English (Singapore)', value: 'en-SG'},
+//   {label: 'English (Ireland)', value: 'en-IE'},
+//   {label: 'English (South Africa)', value: 'en-ZA'},
+//   {label: 'Spanish (Spain)', value: 'es-ES'},
+//   {label: 'Spanish (Mexico)', value: 'es-MX'},
+//   {label: 'Spanish (United States)', value: 'es-US'},
+//   {label: 'Spanish (Argentina)', value: 'es-AR'},
+//   {label: 'Spanish (Chile)', value: 'es-CL'},
+//   {label: 'Spanish (Colombia)', value: 'es-CO'},
+//   {label: 'Spanish (Peru)', value: 'es-PE'},
+//   {label: 'Spanish (Venezuela)', value: 'es-VE'},
+//   {label: 'French (France)', value: 'fr-FR'},
+//   {label: 'French (Canada)', value: 'fr-CA'},
+//   {label: 'French (Belgium)', value: 'fr-BE'},
+//   {label: 'French (Switzerland)', value: 'fr-CH'},
+//   {label: 'German (Germany)', value: 'de-DE'},
+//   {label: 'German (Austria)', value: 'de-AT'},
+//   {label: 'German (Switzerland)', value: 'de-CH'},
+//   {label: 'Chinese (Mandarin China)', value: 'zh-CN'},
+//   {label: 'Chinese (Mandarin Taiwan)', value: 'zh-TW'},
+//   {label: 'Chinese (Cantonese)', value: 'zh-HK'},
+//   {label: 'Italian (Italy)', value: 'it-IT'},
+//   {label: 'Dutch (Netherlands)', value: 'nl-NL'},
+//   {label: 'Russian (Russia)', value: 'ru-RU'},
+//   {label: 'Japanese (Japan)', value: 'ja-JP'},
+//   {label: 'Korean (Korea)', value: 'ko-KR'},
+//   {label: 'Portuguese (Portugal)', value: 'pt-PT'},
+//   {label: 'Portuguese (Brazil)', value: 'pt-BR'},
+//   {label: 'Arabic (Saudi Arabia)', value: 'ar-SA'},
+//   {label: 'Arabic (United Arab Emirates)', value: 'ar-AE'},
+//   {label: 'Hindi (India)', value: 'hi-IN'},
+//   {label: 'Thai (Thailand)', value: 'th-TH'},
+//   {label: 'Turkish (Turkey)', value: 'tr-TR'},
+//   {label: 'Swedish (Sweden)', value: 'sv-SE'},
+//   {label: 'Danish (Denmark)', value: 'da-DK'},
+//   {label: 'Norwegian (Norway)', value: 'no-NO'},
+//   {label: 'Finnish (Finland)', value: 'fi-FI'},
+//   {label: 'Polish (Poland)', value: 'pl-PL'},
+//   {label: 'Hungarian (Hungary)', value: 'hu-HU'},
+//   {label: 'Czech (Czech Republic)', value: 'cs-CZ'},
+//   {label: 'Slovak (Slovakia)', value: 'sk-SK'},
+//   {label: 'Greek (Greece)', value: 'el-GR'},
+//   {label: 'Romanian (Romania)', value: 'ro-RO'},
+//   {label: 'Bulgarian (Bulgaria)', value: 'bg-BG'},
+//   {label: 'Ukrainian (Ukraine)', value: 'uk-UA'},
+// ];
+
+import * as RNLocalize from 'react-native-localize';
+//this way user can choose from list of laguages he added in his device
+//alternatively we can create native module but then may not work if use tts
+const getSupportedLanguages = () => {
+  const locales = RNLocalize.getLocales();
+
+  return locales.map(locale => ({
+    label: `${locale.languageCode} (${locale.countryCode})`,
+    value: `${locale.languageTag}`,
+  }));
+};
+
+const languageOptions = getSupportedLanguages();
 
 //todo implement the following function
 // Function to get the system's current locale and set it as the default language option
@@ -75,7 +89,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const LanguageSelector = ({language, setLanguage}) => {
+const LanguageSelector = ({language, setLanguage, setLanguageLabel}) => {
   const [selectedLanguage, setSelectedLanguage] = useState(language);
   useEffect(() => {
     setSelectedLanguage(language);
@@ -84,6 +98,11 @@ const LanguageSelector = ({language, setLanguage}) => {
   const onLanguageChange = itemValue => {
     setSelectedLanguage(itemValue);
     setLanguage(itemValue);
+    const selectedItem = languageOptions.find(
+      option => option.value === itemValue,
+    );
+    const itemLabel = selectedItem ? selectedItem.label : '';
+    setLanguageLabel(itemLabel);
   };
 
   return (

@@ -13,6 +13,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {useNavigation} from '@react-navigation/native';
+import Tts from 'react-native-tts';
 
 export default function StoryScreen({ route }) {
   const [storyResponse, setStoryResponse] = useState('oOo');
@@ -21,8 +22,20 @@ export default function StoryScreen({ route }) {
   useEffect(() => {
     if (story) {
       setStoryResponse(story);
+      startTextToSpeach(story);
     }
   }, [story]);
+
+  const startTextToSpeach = story => {
+    // setSpeaking(true);
+    Tts.speak(story, {
+      androidParams: {
+        KEY_PARAM_PAN: -1,
+        KEY_PARAM_VOLUME: 1,
+        KEY_PARAM_STREAM: 'STREAM_MUSIC',
+      },
+    });
+  }; 
   
   return (
     <View className="flex-1 bg-fuchsia-800 items-center p-5 pt-8 relative">

@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const settingsData = {
   name: '',
   language: 'locale',
+  languageLabel: 'English (United States)',
   age: 1,
   length: 1,
   motivation: '',
@@ -15,7 +16,6 @@ export async function readData(key) {
     const userSettings = JSON.parse(jsonValue);
 
     if (userSettings && Object.keys(userSettings).length > 0) {
-      console.log('second', userSettings);
       return userSettings;
     } else {
       // Default values
@@ -27,16 +27,7 @@ export async function readData(key) {
     console.log(e);
   }
 }
-// old writeData function
-// export async function writeData(key, userSettings) {
-//   try {
-//     const jsonValue = JSON.stringify(userSettings);
-//     await AsyncStorage.setItem(key, jsonValue);
-//   } catch (e) {
-//     console.log('writing Error');
-//     console.log(e);
-//   }
-// }
+
 
 export async function writeData(key, value) {
   try {

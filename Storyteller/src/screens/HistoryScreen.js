@@ -34,7 +34,7 @@ export default function HistoryScreen() {
     <View className="flex-1 bg-fuchsia-800 items-center p-5 pt-8 relative">
       <TouchableOpacity
         onPress={() => navigation.navigate('Welcome')}
-        className="absolute top-6 left-4 flex-row items-center justify-center bg-gray-500 rounded-3xl">
+        className="absolute z-50 top-6 left-4 flex-row items-center justify-center bg-gray-500 rounded-3xl">
         <Image
           source={require('../../assets/elements/arrow_back.png')}
           style={{width: hp(2), height: hp(2)}}
