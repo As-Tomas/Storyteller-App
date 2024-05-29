@@ -1,9 +1,15 @@
-import { Image, StyleSheet, Platform, View, Text } from 'react-native';
+import { Image, StyleSheet, Platform, View, Text, Button } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+
+async function fetchHello() {
+  const response = await fetch('/hello');
+  const data = await response.json();
+  alert('Hello ' + data.hello);
+}
 
 export default function HomeScreen() {
   return (
@@ -20,7 +26,9 @@ export default function HomeScreen() {
         <View className=" bg-slate-400" >
           <Text className=" text-red-400">ttext</Text>  
          </View>
+
         <HelloWave />
+        <Button onPress={() => fetchHello()} title="Fetch hello" />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
