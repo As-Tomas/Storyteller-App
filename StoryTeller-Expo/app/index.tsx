@@ -4,6 +4,7 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { Link, router } from 'expo-router';
 
 async function fetchHello() {
   const response = await fetch('/hello');
@@ -12,6 +13,12 @@ async function fetchHello() {
 }
 
 export default function HomeScreen() {
+
+  const route = ()=>{
+    return router.push('/settings');
+  }
+
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -31,6 +38,15 @@ export default function HomeScreen() {
         <Button onPress={() => fetchHello()} title="Fetch hello" />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
+
+
+
+      <Link href="/ChildScreen"> Navigate to ChildScreen</Link>
+      <Link href="/settings"> Navigate to settings</Link>
+      <Text onPress={route}>here is push</Text>
+
+
+
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
           Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
