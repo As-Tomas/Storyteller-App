@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { Image,  ImageBackground, TouchableOpacity, StyleSheet, Platform, View, Text, Button } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -5,6 +6,11 @@ import {
 } from 'react-native-responsive-screen';
 
 export default function Index() {
+
+  const toChildScreenRoute = ()=>{
+    return router.push('/ChildScreen');
+  }
+
   return (
     <ImageBackground
       source={require('@/assets/images/boy_with_book.png')}
@@ -27,7 +33,7 @@ export default function Index() {
         </View>
         <View className="flex items-center mb-8">
           <TouchableOpacity
-            // onPress={() => navigation.navigate('Cild')}
+            onPress={() => toChildScreenRoute()}
             className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
             style={{width: wp(55)}}
             >

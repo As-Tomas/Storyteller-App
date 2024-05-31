@@ -5,3 +5,6 @@ finish KeyboardAvoidingView
 
 Error>
 efter refactoring branch app fluent works just in API 29 - check for emulators issues
+
+update dependences
+npx expo install --fix 
