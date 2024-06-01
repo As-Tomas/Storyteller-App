@@ -57,7 +57,7 @@ export default function Index() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            // onPress={() => navigation.navigate('History')}
+            onPress={() => router.push('HistoryScreen')}
             className="flex flex-row m-2 py-2 rounded-full items-center justify-center "
             style={{width: wp(55)}}
             >
