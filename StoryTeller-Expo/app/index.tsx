@@ -44,7 +44,7 @@ export default function Index() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            // onPress={() => router.push('ParentScreen')}
+            onPress={() => router.push('ParentScreen')}
             className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
             style={{width: wp(55)}}
             >
