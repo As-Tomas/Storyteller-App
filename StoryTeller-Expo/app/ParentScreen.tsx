@@ -17,14 +17,12 @@ import {
   } from 'react-native-responsive-screen';
   import Slider from '@react-native-community/slider';
   import LanguageSelector from '../components/languageSelect';
-  import DataContext from '../components/DataContext';
-  import {writeData} from '../components/readWriteData';
   import UserTextInput from '../components/TextInput';
   import NetInfo from '@react-native-community/netinfo';
   import {getImagePrompt, chatgptApiCall} from '../apiCalls/openAI';
   import {generatePrompt} from '../components/promptGenerator';
-import { router } from 'expo-router';
-import { UserSettingsContext } from '../components/UserSettingsContext';
+  import { router } from 'expo-router';
+  import { UserSettingsContext } from '../components/UserSettingsContext';
   
   export default function ParentScreen() {
     const [name, setName] = useState('');
@@ -42,16 +40,6 @@ import { UserSettingsContext } from '../components/UserSettingsContext';
     const [story, setStory] = useState('');
   
     const { settings, saveSettings } = useContext(UserSettingsContext);
-    // const {userSettings} = useContext(DataContext);
-    // const { userSettings } = useContext(DataContext);
-
-    const updateSettings = () => {
-        if (settings) {
-            const newSettings = { ...settings, newSetting: 'newValue' };
-            saveSettings(newSettings);
-        }
-    };
-
    
     console.log('userSettings*', settings);
   
@@ -251,7 +239,7 @@ import { UserSettingsContext } from '../components/UserSettingsContext';
                 style={{width: wp(90), height: 40}}
                 minimumValue={1}
                 maximumValue={10}
-                value={settings.age || 2}
+                value={settings?.age || 2}
                 onValueChange={value => setAge(Math.round(value))}
                 minimumTrackTintColor="#D9D9D9"
                 maximumTrackTintColor="#000000"
@@ -270,7 +258,7 @@ import { UserSettingsContext } from '../components/UserSettingsContext';
                 style={{width: wp(90), height: 40}}
                 minimumValue={1}
                 maximumValue={3}
-                value={settings.length || 1}
+                value={settings?.length || 1}
                 onValueChange={value => setLength(Math.round(value))}
                 minimumTrackTintColor="#D9D9D9"
                 maximumTrackTintColor="#000000"

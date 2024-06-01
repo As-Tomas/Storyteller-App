@@ -20,9 +20,9 @@ import Voice from "@react-native-voice/voice";
 import Tts from "react-native-tts";
 import { getImagePrompt, chatgptApiCall } from "../apiCalls/openAI";
 import { MidjourneyImg } from "../components/imgEfects";
-import DataContext from "../components/DataContext";
 import UserTextInput from "../components/TextInput";
 import { Link, router } from 'expo-router';
+import { UserSettingsContext } from "@/components/UserSettingsContext";
 
 
 export default function CildScreen() {
@@ -34,8 +34,8 @@ export default function CildScreen() {
     const [isVisible, setIsVisible] = useState(true);
     const [speaking, setSpeaking] = useState(false);
     const [imagePrompt, setImagePrompt] = useState('');
-    // const {userSettings } = useContext(DataContext); // ! Todo I think if parent set up some settings it should load them, now is empty
     const [userInputText, setUserInputText] = useState('');
+    const { settings, saveSettings } = useContext(UserSettingsContext); // ! Todo I think if parent set up some settings it should load them by default
   
     const handleScroll = (event: any) => {
       const offsetY = event.nativeEvent.contentOffset.y;
