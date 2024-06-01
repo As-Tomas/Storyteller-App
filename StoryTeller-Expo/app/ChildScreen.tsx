@@ -115,15 +115,18 @@ export default function CildScreen() {
         let newUserRequest = userInput.trim();
         let prompt = generatePrompt(newUserRequest);
   
-        chatgptApiCall(prompt).then(res => {
-          setLoading(false);
-          if (res.success) {
-            setStory(res.data);
-            startTextToSpeach(res.data);
-          } else {
-            Alert.alert('Error', res.msg);
-          }
-        });
+        //! temp disabling
+        setStory("Once upon a time in a magical kingdom, there lived a young princess named Melody.");
+        
+        // chatgptApiCall(prompt).then(res => {            
+        //   setLoading(false);
+        //   if (res.success) {
+        //     setStory(res.data);
+        //     startTextToSpeach(res.data);
+        //   } else {
+        //     Alert.alert('Error', res.msg);
+        //   }
+        // });
       }
     };
 
@@ -194,13 +197,18 @@ export default function CildScreen() {
         let prompt = preparePromptForImage(story);
   
         getImagePrompt(prompt).then(res => {
-          //setLoading(false);
-          if (res.success) {
-            console.log('res.data', res.data);
-            setImagePrompt(`${res.data}  --ar 9:16`);
-          } else {
-            Alert.alert('Error', res.msg);
-          }
+
+            //! temp disabling
+
+            console.log('getImagePrompt request disabled')
+
+        //   //setLoading(false);
+        //   if (res.success) {
+        //     console.log('res.data', res.data);
+        //     setImagePrompt(`${res.data}  --ar 9:16`);
+        //   } else {
+        //     Alert.alert('Error', res.msg);
+        //   }
         });
       }
     };
@@ -282,7 +290,7 @@ export default function CildScreen() {
   
               {imagePrompt && (
                 <View style={{alignItems: 'center'}}>
-                  <MidjourneyImg prompt={imagePrompt} />
+                  {/* <MidjourneyImg prompt={imagePrompt} /> //! temp disabling */}
                 </View>
               )}
   

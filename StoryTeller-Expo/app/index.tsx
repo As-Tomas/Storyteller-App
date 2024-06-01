@@ -7,9 +7,7 @@ import {
 
 export default function Index() {
 
-  const toChildScreenRoute = ()=>{
-    return router.push('/ChildScreen');
-  }
+  
 
   return (
     <ImageBackground
@@ -33,7 +31,7 @@ export default function Index() {
         </View>
         <View className="flex items-center mb-8">
           <TouchableOpacity
-            onPress={() => toChildScreenRoute()}
+            onPress={() => router.push('ChildScreen')}
             className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
             style={{width: wp(55)}}
             >
@@ -46,7 +44,7 @@ export default function Index() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            // onPress={() => navigation.navigate('Parent')}
+            // onPress={() => router.push('ParentScreen')}
             className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
             style={{width: wp(55)}}
             >
