@@ -24,6 +24,7 @@ import UserTextInput from "../components/TextInput";
 import { Link, router } from 'expo-router';
 import { UserSettingsContext } from "@/components/UserSettingsContext";
 
+//! I think child screen should use story screen to display the story
 
 export default function CildScreen() {
     // const navigation = useNavigation();
