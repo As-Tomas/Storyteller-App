@@ -10,7 +10,8 @@ const defaultSettingsData = {
   storyComponents: "",
 };
 
-export async function readData(key: string) {
+// todo: when finis with saving history remove this and AsyncStorage
+export async function readData(key: string) { 
   try {
     const jsonValue = await AsyncStorage.getItem(key);
     const userSettings = JSON.parse(jsonValue || "{}");

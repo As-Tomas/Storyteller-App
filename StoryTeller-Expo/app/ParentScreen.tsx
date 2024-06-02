@@ -22,7 +22,8 @@ import {
   import {getImagePrompt, chatgptApiCall} from '../apiCalls/openAI';
   import {generatePrompt} from '../components/promptGenerator';
   import { router } from 'expo-router';
-  import { UserSettingsContext } from '../components/UserSettingsContext';
+ 
+  import { useSettingsStore } from '@/utils/Store/settingsStore';
   
   export default function ParentScreen() {
     const [name, setName] = useState('');
@@ -37,25 +38,28 @@ import {
   
     const [result, setResult] = useState('');
     const [loading, setLoading] = useState(false);
-    const [story, setStory] = useState('');
-  
-    const { settings, saveSettings } = useContext(UserSettingsContext);
-   
-    console.log('userSettings*', settings);
+    const [story, setStory] = useState('');     
+
+    const { settingsData, updateSettings } = useSettingsStore((state) => ({
+        settingsData: state.settingsData,
+        updateSettings: state.updateSettings,
+      }));
+    
+    console.log('settingsData', settingsData)
   
     useEffect(() => {
-      (async () => {
-       
-        if (settings) {
-          setName(settings.name);
-          setLanguage(settings.language);
-          setLanguageLabel(settings.languageLabel);
-          setAge(settings.age);
-          setLength(settings.length);
-          setMotivation(settings.motivation);
-          setStoryComponents(settings.storyComponents);
-        }
-      })();
+
+        if (settingsData) {
+            console.log('seting new data', )
+            setName(settingsData.name);
+            setLanguage(settingsData.language);
+            setLanguageLabel(settingsData.languageLabel);
+            setAge(settingsData.age);
+            setLength(settingsData.length);
+            setMotivation(settingsData.motivation);
+            setStoryComponents(settingsData.storyComponents);
+          }
+    
     }, []);
   
     useEffect(() => {
@@ -72,10 +76,9 @@ import {
           return;
         }
       })();
-    }, []);
-  
+    }, []);  
+    
     useEffect(() => {
-      (async () => {
         const newData = {
           name,
           language,
@@ -85,13 +88,10 @@ import {
           motivation,
           storyComponents,
         };
-
-        if (settings) {            
-            saveSettings(newData);
-        }
-
-      })();
-    }, [name, language, languageLabel, age, length, motivation, storyComponents]);
+    
+        updateSettings(newData);
+      }, [name, language, languageLabel, age, length, motivation, storyComponents, updateSettings]);
+    
   
     const getStoryLengthString = (value: number) => {
         switch (Math.round(value)) {
@@ -111,7 +111,7 @@ import {
             if (userInput.trim().length > 0) {
                 setLoading(true);
                 let newUserRequest = userInput.trim();
-                let prompt = generatePrompt(newUserRequest, settings);
+                let prompt = generatePrompt(newUserRequest, settingsData);
                 console.log('prompt', prompt);
 
                 chatgptApiCall(prompt).then(res => {
@@ -177,10 +177,8 @@ import {
           <View className="absolute bottom-6 items-center justify-center  ">
             <TouchableOpacity
               onPress={() =>
-                router.push({ 
-                    pathname:'StoryScreen', 
-                    params: { userInput: userInputText},
-                })
+                router.push('StoryScreen'
+                )
               }
               className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
               style={{width: wp(55)}}>
@@ -243,7 +241,7 @@ import {
                 style={{width: wp(90), height: 40}}
                 minimumValue={1}
                 maximumValue={10}
-                value={settings?.age || 2}
+                value={age || 2}
                 onValueChange={value => setAge(Math.round(value))}
                 minimumTrackTintColor="#D9D9D9"
                 maximumTrackTintColor="#000000"
@@ -262,7 +260,7 @@ import {
                 style={{width: wp(90), height: 40}}
                 minimumValue={1}
                 maximumValue={3}
-                value={settings?.length || 1}
+                value={length || 1}
                 onValueChange={value => setLength(Math.round(value))}
                 minimumTrackTintColor="#D9D9D9"
                 maximumTrackTintColor="#000000"

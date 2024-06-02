@@ -22,7 +22,7 @@ import { getImagePrompt, chatgptApiCall } from "../apiCalls/openAI";
 import { MidjourneyImg } from "../components/imgEfects";
 import UserTextInput from "../components/TextInput";
 import { Link, router } from 'expo-router';
-import { UserSettingsContext } from "@/components/UserSettingsContext";
+import { useSettingsStore } from '@/utils/Store/settingsStore';
 
 //! I think child screen should use story screen to display the story
 
@@ -35,9 +35,12 @@ export default function CildScreen() {
     const [isVisible, setIsVisible] = useState(true);
     const [speaking, setSpeaking] = useState(false);
     const [imagePrompt, setImagePrompt] = useState('');
-    const [userInputText, setUserInputText] = useState('');
-    const { settings, saveSettings } = useContext(UserSettingsContext); // ! Todo I think if parent set up some settings it should load them by default
-  
+    const [userInputText, setUserInputText] = useState('');    
+    
+    const { settingsData } = useSettingsStore((state) => ({ // ! Todo I think if parent set up some settings it should load them by default
+        settingsData: state.settingsData,        
+      }));
+
     const handleScroll = (event: any) => {
       const offsetY = event.nativeEvent.contentOffset.y;
       const contentHeight = event.nativeEvent.contentSize.height;
