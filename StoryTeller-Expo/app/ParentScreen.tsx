@@ -142,12 +142,13 @@ import {
     useEffect(() => {
       if (story) {
         // writeData('history', {title: 'title', story: story, image: 'image'});
-        router.push('/Story');
+        router.push('StoryScreen');
       }
     }, [story]);
   
     //--------------------------------------------------------------------------------
-    
+
+  
   
     return (
       // <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -175,9 +176,12 @@ import {
         {!keyboardVisible && (
           <View className="absolute bottom-6 items-center justify-center  ">
             <TouchableOpacity
-            //   onPress={() =>
-            //     navigation.navigate('Story', {userInput: userInputText})
-            //   }
+              onPress={() =>
+                router.push({ 
+                    pathname:'StoryScreen', 
+                    params: { userInput: userInputText},
+                })
+              }
               className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
               style={{width: wp(55)}}>
               <Text
