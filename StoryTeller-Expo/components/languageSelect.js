@@ -125,13 +125,13 @@ const LanguageSelector = ({language, setLanguage, setLanguageLabel}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f5f5',
+    backgroundColor: '#8191a3',
     borderWidth: 1,
     borderColor: '#fff',
   },
   picker: {
     color: '#fff',
-    backgroundColor: '#f5f5',
+    backgroundColor: '#8191a3',
   },
   text: {
     color: '#fff',

@@ -337,7 +337,7 @@ export default function CildScreen() {
                     style={{width: hp(10), height: hp(10)}}
                   />
                 </TouchableOpacity>              
-                <UserTextInput setUserInputText={setUserInputText}/>
+                <UserTextInput setUserInputText={setUserInputText} setup={"child"}/>
                 
                 </View>
               )}

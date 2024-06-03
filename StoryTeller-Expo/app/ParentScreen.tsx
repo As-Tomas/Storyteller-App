@@ -24,6 +24,7 @@ import {
   import { router } from 'expo-router';
  
   import { useSettingsStore } from '@/utils/Store/settingsStore';
+  import { Platform } from 'react-native';
   
   export default function ParentScreen() {
     const [name, setName] = useState('');
@@ -40,9 +41,11 @@ import {
     const [loading, setLoading] = useState(false);
     const [story, setStory] = useState('');     
 
-    const { settingsData, updateSettings } = useSettingsStore((state) => ({
+    const { settingsData, updateSettings, recentStory, setRecentStory } = useSettingsStore((state) => ({
         settingsData: state.settingsData,
         updateSettings: state.updateSettings,
+        recentStory: state.recentStory,
+        setRecentStory: state.setRecentStory,
       }));
     
     console.log('settingsData', settingsData)
@@ -141,8 +144,9 @@ import {
   
     useEffect(() => {
       if (story) {
-        // writeData('history', {title: 'title', story: story, image: 'image'});
-        router.push('StoryScreen');
+          // writeData('history', {title: 'title', story: story, image: 'image'});
+          router.push('StoryScreen');
+          setRecentStory(story);
       }
     }, [story]);
   
@@ -151,10 +155,10 @@ import {
   
   
     return (
-      // <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === "ios" ? "padding" : "height"}>
-      //   <ScrollView className='flex-1 bg-fuchsia-800' contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+    // <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === "ios" ? "padding" : "height"}>
+    //     <ScrollView className='flex-1  bg-gradient-to-b from-gray-800 via-black to-gray-800' contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
   
-      <View className="flex-1 bg-fuchsia-800 items-center justify-center relative">
+      <View className="flex-1 bg-slate-500  items-center justify-center relative" >
         <TouchableOpacity
           onPress={() => router.push('/')}
           className="absolute top-6 left-4 px-2 flex-row items-center justify-center bg-gray-500 rounded-3xl">
@@ -240,7 +244,7 @@ import {
               <Slider
                 style={{width: wp(90), height: 40}}
                 minimumValue={1}
-                maximumValue={10}
+                maximumValue={7}
                 value={age || 2}
                 onValueChange={value => setAge(Math.round(value))}
                 minimumTrackTintColor="#D9D9D9"
@@ -296,11 +300,11 @@ import {
             style={{color: 'white', marginHorizontal: 10}}
             className="px-4 rounded border border-gray-300 "
           />
-          <UserTextInput setUserInputText={setUserInputText} />
+          <UserTextInput setUserInputText={setUserInputText} setup={"parent"} />
         </ScrollView>
       </View>
-      //   </ScrollView>
-      // </KeyboardAvoidingView>
+    //      </ScrollView>
+    //    </KeyboardAvoidingView>
     );
   }
   

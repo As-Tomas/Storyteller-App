@@ -14,14 +14,19 @@ import {
   } from 'react-native-responsive-screen';
   import Tts from 'react-native-tts';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useSettingsStore } from '@/utils/Store/settingsStore';
   
-  export default function StoryScreen({ route }) {
+  export default function StoryScreen() {
+
+    const {  recentStory } = useSettingsStore((state) => ({            
+        recentStory: state.recentStory,
+      }));
 
     const { userInput } = useLocalSearchParams<{userInput: string}>();
     console.log('userInput', userInput)
     const [storyResponse, setStoryResponse] = useState('oOo');
  
-    const { story } = route.params;
+    const story = recentStory;
     useEffect(() => {
       if (story) {
         setStoryResponse(story);
@@ -43,7 +48,7 @@ import { router, useLocalSearchParams } from 'expo-router';
     return (
       <View className="flex-1 bg-fuchsia-800 items-center p-5 pt-8 relative">
         <TouchableOpacity
-          onPress={() => router.push('ParentScreen')}
+          onPress={() => router.back()}
           // Todo Bug does not effects to clicks and not goes to parent screen
           className="absolute top-6 left-4 px-2 flex-row items-center justify-center bg-gray-500 rounded-3xl">
           <Image

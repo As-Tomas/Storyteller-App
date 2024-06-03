@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp,
-  } from 'react-native-responsive-screen';
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
-export default function UserTextInput({setUserInputText}) {
+interface UserTextInputProps {
+  setUserInputText: (text: string) => void;
+  setup: 'parent' | 'child' | string;
+}
+
+const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup }) => {
   const [isInputVisible, setInputVisible] = useState(false);
   const [text, setText] = useState('');
 
+  useEffect(() => {
+    if (setup === 'parent') {
+      setInputVisible(true);
+    }
+  }, [setup]);
+
   const handleSendPress = () => {
     console.log('Sending:', text);
-    setUserInputText(text);    
-    //  reset the text input and hide it after sending
+    setUserInputText(text);
+    // Reset the text input and hide it after sending
     setText('');
     setInputVisible(false);
   };
@@ -30,19 +41,21 @@ export default function UserTextInput({setUserInputText}) {
             multiline={true}
             numberOfLines={3}
           />
-          <TouchableOpacity onPress={handleSendPress} style={styles.sendButton}>
+          { setup !== 'parent' && <TouchableOpacity onPress={handleSendPress} style={styles.sendButton}>
             {/* Replace "Send" with an icon using an icon library if preferred */}
             <Text style={styles.sendButtonText}>Send</Text>
           </TouchableOpacity>
+          }
+          
         </View>
       ) : (
         <TouchableOpacity onPress={() => setInputVisible(true)} style={styles.openInputButton}>
-          <Text style={styles.openInputButton}>Tap to type...</Text>
+          <Text style={styles.openInputButtonText}>Tap to type...</Text>
         </TouchableOpacity>
       )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -53,15 +66,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   input: {
-    width: wp(80), 
+    width: wp(80),
     height: hp(10),
     borderColor: '#ccc',
     borderWidth: 1,
-    marginRight: 10,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 5,    
-    color: '#fff'
+    borderRadius: 5,
+    color: '#fff',
   },
   sendButton: {
     backgroundColor: '#007bff',
@@ -74,6 +86,10 @@ const styles = StyleSheet.create({
   },
   openInputButton: {
     padding: 10,
-    color: '#fff'
+  },
+  openInputButtonText: {
+    color: '#fff',
   },
 });
+
+export default UserTextInput;
