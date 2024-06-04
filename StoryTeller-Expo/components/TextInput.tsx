@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -11,7 +11,7 @@ interface UserTextInputProps {
 }
 
 const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup }) => {
-  const [isInputVisible, setInputVisible] = useState(false);
+  const [isInputVisible, setInputVisible] = useState(setup === 'parent');
   const [text, setText] = useState('');
 
   useEffect(() => {
@@ -20,13 +20,13 @@ const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup }
     }
   }, [setup]);
 
-  const handleSendPress = () => {
+  const handleSendPress = useCallback(() => {
     console.log('Sending:', text);
     setUserInputText(text);
     // Reset the text input and hide it after sending
     setText('');
     setInputVisible(false);
-  };
+  }, [text, setUserInputText]);
 
   return (
     <View style={styles.container}>
@@ -41,12 +41,11 @@ const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup }
             multiline={true}
             numberOfLines={3}
           />
-          { setup !== 'parent' && <TouchableOpacity onPress={handleSendPress} style={styles.sendButton}>
-            {/* Replace "Send" with an icon using an icon library if preferred */}
-            <Text style={styles.sendButtonText}>Send</Text>
-          </TouchableOpacity>
-          }
-          
+          {setup !== 'parent' && (
+            <TouchableOpacity onPress={handleSendPress} style={styles.sendButton}>
+              <Text style={styles.sendButtonText}>Send</Text>
+            </TouchableOpacity>
+          )}
         </View>
       ) : (
         <TouchableOpacity onPress={() => setInputVisible(true)} style={styles.openInputButton}>
