@@ -7,12 +7,12 @@ import * as SplashScreen from "expo-splash-screen";
 
 export default function RootLayout() {
   return (
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="ChildScreen" options={{ headerShown: false }} />
-        <Stack.Screen name="ParentScreen" options={{ headerShown: false }} />
-        <Stack.Screen name="HistoryScreen" options={{ headerShown: false }} />
-        <Stack.Screen name="StoryScreen" options={{ headerShown: false }} />
-      </Stack>    
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="ChildScreen" options={{ headerShown: false }} />
+      <Stack.Screen name="ParentScreen" options={{ headerShown: false }} />
+      <Stack.Screen name="HistoryScreen" options={{ headerShown: false }} />
+      <Stack.Screen name="StoryScreen" options={{ title: "Your story" }} />
+    </Stack>
   );
 }

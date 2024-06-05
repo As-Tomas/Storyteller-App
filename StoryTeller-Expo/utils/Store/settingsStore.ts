@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { zustandStorage } from './mmkv-storage';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { zustandStorage } from "./mmkv-storage";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface SettingsData {
   name: string;
@@ -42,33 +42,36 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       settingsData: defaultSettingsData,
-      recentStory: '',
-      storyImage: '',      
+      recentStory: "",
+      storyImage: "",
       history: [],
-      updateSettings: (newSettings) => set((state) => ({
-        settingsData: { ...state.settingsData, ...newSettings }
-      })),
-      setRecentStory: (recentStory, title) => set((state) => {
-        const newHistoryItem: HistoryItem = {
-          story: state.recentStory,
-          image: state.storyImage,
-          title: title,
-          dateSaved: new Date(),
-        };
-        return {
-          recentStory,
-          history: [...state.history, newHistoryItem]
-        };
-      }),
+      updateSettings: (newSettings) =>
+        set((state) => ({
+          settingsData: { ...state.settingsData, ...newSettings },
+        })),
+      setRecentStory: (recentStory, title) =>
+        set((state) => {
+          const newHistoryItem: HistoryItem = {
+            story: state.recentStory,
+            image: state.storyImage,
+            title: title,
+            dateSaved: new Date(),
+          };
+          return {
+            recentStory,
+            history: [...state.history, newHistoryItem],
+          };
+        }),
       setStoryImage: (image) => set({ storyImage: image }),
-      clearSettings: () => set({
-        settingsData: defaultSettingsData,
-        recentStory: '',
-        storyImage: ''
-      }),
+      clearSettings: () =>
+        set({
+          settingsData: defaultSettingsData,
+          recentStory: "",
+          storyImage: "",
+        }),
     }),
     {
-      name: 'settings-store',
+      name: "settings-store",
       storage: createJSONStorage(() => zustandStorage),
     }
   )

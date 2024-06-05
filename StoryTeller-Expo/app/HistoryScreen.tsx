@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   widthPercentageToDP as wp,
@@ -12,29 +6,27 @@ import {
 } from "react-native-responsive-screen";
 import { readData } from "../utils/storage";
 import { router } from "expo-router";
-import { useSettingsStore } from '../utils/Store/settingsStore';
+import { useSettingsStore } from "../utils/Store/settingsStore";
 
 interface Record {
-    title: string;
-    story: string;
-    dateSaved: Date;
-    image: string;
-  }
+  title: string;
+  story: string;
+  dateSaved: Date;
+  image: string;
+}
 
-
-export default function HistoryScreen() {  
-
-  const { history:storedHistory } = useSettingsStore();
+export default function HistoryScreen() {
+  const { history: storedHistory } = useSettingsStore();
 
   const [history, setHistory] = useState<Record[]>([]);
 
   //Load history
-  useEffect(() => {    
+  useEffect(() => {
     if (Array.isArray(storedHistory)) {
       setHistory(storedHistory);
     } else {
       console.log("Error: history data is not an array");
-    }    
+    }
   }, [storedHistory]);
 
   return (
@@ -70,7 +62,7 @@ export default function HistoryScreen() {
               <Text
                 style={{ color: "#FFFF00", paddingTop: 4, fontSize: wp(4.5) }}
               >
-                {record.title }
+                {record.title}
               </Text>
               <Text
                 style={{ color: "#FFFF00", paddingTop: 4, fontSize: wp(4.5) }}

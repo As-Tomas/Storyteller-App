@@ -34,6 +34,8 @@ export default function StoryScreen() {
   const startTextToSpeach = (story: any) => {
     // setSpeaking(true);
     Tts.speak(story, {
+      iosVoiceId: "", // adding whil mygrating to expo ts, not sure iosVoiceId is correct or haow to use it
+      rate: 1,
       androidParams: {
         KEY_PARAM_PAN: -1,
         KEY_PARAM_VOLUME: 1,
