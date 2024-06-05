@@ -1,8 +1,6 @@
 import {
   View,
   Text,
-  TextInput,
-  ImageBackground,
   Image,
   TouchableOpacity,
   ScrollView,
@@ -14,27 +12,30 @@ import {
 } from "react-native-responsive-screen";
 import { readData } from "../utils/storage";
 import { router } from "expo-router";
+import { useSettingsStore } from '../utils/Store/settingsStore';
 
 interface Record {
     title: string;
     story: string;
-    creationDate: string;
+    dateSaved: Date;
     image: string;
   }
 
+
 export default function HistoryScreen() {  
 
-  const [history, setHistory] = useState([]);
+  const { history:storedHistory } = useSettingsStore();
 
-  useEffect(() => {
-    readData("history").then((data) => {
-      if (Array.isArray(data)) {
-        setHistory(data);
-      } else {
-        console.log("Error: history data is not an array");
-      }
-    });
-  }, []);
+  const [history, setHistory] = useState<Record[]>([]);
+
+  //Load history
+  useEffect(() => {    
+    if (Array.isArray(storedHistory)) {
+      setHistory(storedHistory);
+    } else {
+      console.log("Error: history data is not an array");
+    }    
+  }, [storedHistory]);
 
   return (
     <View className="flex-1 bg-fuchsia-800 items-center p-5 pt-8 relative">
@@ -79,12 +80,12 @@ export default function HistoryScreen() {
               <Text
                 style={{ color: "#FFFF00", paddingTop: 4, fontSize: wp(4.5) }}
               >
-                {record.creationDate}
+                {record.dateSaved.toString()}
               </Text>
-              <Image
+              {/* <Image
                 source={{ uri: record.image }}
                 style={{ width: 100, height: 100 }}
-              />
+              /> */}
             </View>
           ))}
       </ScrollView>

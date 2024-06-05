@@ -11,13 +11,19 @@ interface SettingsData {
   motivation: string;
   storyComponents: string;
 }
-
+interface HistoryItem {
+  story: string;
+  image: string;
+  title: string;
+  dateSaved: Date;
+}
 interface SettingsState {
   settingsData: SettingsData;
   recentStory: string;
   storyImage: string;
+  history: HistoryItem[];
   updateSettings: (newSettings: Partial<SettingsData>) => void;
-  setRecentStory: (recentStory: string) => void;
+  setRecentStory: (recentStory: string, title: string) => void;
   setStoryImage: (image: string) => void;
   clearSettings: () => void;
 }
@@ -37,11 +43,23 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       settingsData: defaultSettingsData,
       recentStory: '',
-      storyImage: '',
+      storyImage: '',      
+      history: [],
       updateSettings: (newSettings) => set((state) => ({
         settingsData: { ...state.settingsData, ...newSettings }
       })),
-      setRecentStory: (recentStory) => set({ recentStory }),
+      setRecentStory: (recentStory, title) => set((state) => {
+        const newHistoryItem: HistoryItem = {
+          story: state.recentStory,
+          image: state.storyImage,
+          title: title,
+          dateSaved: new Date(),
+        };
+        return {
+          recentStory,
+          history: [...state.history, newHistoryItem]
+        };
+      }),
       setStoryImage: (image) => set({ storyImage: image }),
       clearSettings: () => set({
         settingsData: defaultSettingsData,
