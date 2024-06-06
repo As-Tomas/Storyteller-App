@@ -41,20 +41,24 @@ export default function CildScreen() {
 
   const { addHistoryItem } = useHistoryStore();
   
+  
+  const { settingsData, recentStory, setRecentStory } =
+  useSettingsStore((state) => ({
+    settingsData: state.settingsData,      
+    recentStory: state.recentStory,
+    setRecentStory: state.setRecentStory,
+  }));
+  
   const storyImage = "https://example.com/story-image.jpg";
   const title = "Story title";
 
   useEffect(() => {
-    if (story !== "") {
-      console.log('Saving story to history:', story);
-      addHistoryItem(story, storyImage, title);
+    if (recentStory !== "") {
+      console.log('Saving story to history:', recentStory);
+      addHistoryItem(recentStory, storyImage, title);
     }
-  }, [story, storyImage, title, addHistoryItem]);
+  }, []);
 
-  const { settingsData } = useSettingsStore((state) => ({
-    // ! Todo I think if parent set up some settings it should load them by default
-    settingsData: state.settingsData,
-  }));
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -124,26 +128,24 @@ export default function CildScreen() {
     return `Please tell me a fairy tale about ${userReq}`;
   };
 
-  const preparePromptForImage = (story: string) => {
-    return `Be the prompt an engineer, sumarize this story and create single promt, respond just with prompt text . Here is the story: " ${story} "`;
+  const preparePromptForImage = (recentStory: string) => {
+    
+    return `Be the prompt an engineer, sumarize this story and create single promt, respond just with prompt text . Here is the story: " ${recentStory} "`;
   };
 
   const fetchResponse = (userInput: string) => {
-    console.log("🚀 ~ fetchResponse ~ userInput:", userInput);
 
     if (userInput.trim().length > 0) {
       setLoading(true);
       let newUserRequest = userInput.trim();
-      console.log("🚀 ~ fetchResponse ~ newUserRequest:", newUserRequest);
       let prompt = generatePrompt(newUserRequest);
 
-      //! temp disabling
-      // setStory("This is hard coded story");
-
+      
       chatgptApiCall(prompt).then((res) => {
         setLoading(false);
         if (res.success) {
-          setStory(res.data);
+          // setStory(res.data);
+          setRecentStory(res.data, );
           startTextToSpeach(res.data);
         } else {
           Alert.alert("Error", res.msg);
@@ -164,9 +166,9 @@ export default function CildScreen() {
   //     });
   //   };
 
-  const startTextToSpeach = (story: string) => {
+  const startTextToSpeach = (recentStory: string) => {
     setSpeaking(true);
-    Tts.speak(story, {
+    Tts.speak(recentStory, {
       iosVoiceId: "",
       rate: 0.5,
       androidParams: {
@@ -176,6 +178,11 @@ export default function CildScreen() {
       },
     });
   };
+
+  //Todo: change text to icons play and stop, plus add pause funcionality
+  const beginSpeaking = () => {
+    startTextToSpeach(recentStory);
+  }
 
   const stopSpeaking = () => {
     Tts.stop();
@@ -214,8 +221,8 @@ export default function CildScreen() {
 
   // generate Promt for the next image
   const fetchPromptForImage = () => {
-    if (story !== "") {
-      let prompt = preparePromptForImage(story);
+    if (recentStory !== "") {
+      let prompt = preparePromptForImage(recentStory);
 
       //! temp disabling
 
@@ -235,13 +242,13 @@ export default function CildScreen() {
   };
 
   useEffect(() => {
-    if (story) {
+    if (recentStory) {
       fetchPromptForImage();
     }
-  }, [story]);
+  }, [recentStory]);
 
   // Split the story into paragraphs
-  const paragraphs = story.split("\n");
+  const paragraphs = recentStory.split("\n");
 
   // Find the middle paragraph
   const midPoint = Math.floor(paragraphs.length / 2);
@@ -259,7 +266,7 @@ export default function CildScreen() {
     <ImageBackground
       source={require("@/assets/images/ChildScrBackground.png")}
       className="flex-1 "
-      imageStyle={story === "" ? { opacity: 1 } : { opacity: 0.7 }}
+      imageStyle={recentStory === "" ? { opacity: 1 } : { opacity: 0.7 }}
       style={{ backgroundColor: "black" }}
     >
       <View className="flex-1  items-center justify-center relative">
@@ -279,7 +286,7 @@ export default function CildScreen() {
           </Text>
         </TouchableOpacity>
 
-        {story === "" ? (
+        {recentStory === "" ? (
           <Text
             className="text-yellow-100 mx-10 text-center"
             style={{ fontSize: wp(9) }}
@@ -369,6 +376,15 @@ export default function CildScreen() {
             <Text className="text-white font-semibold">Stop</Text>
           </TouchableOpacity>
         )}
+        {!speaking && recentStory !== "" && (
+          <TouchableOpacity
+            onPress={beginSpeaking}
+            className="bg-red-400 rounded-3xl p-2 absolute bottom-16  left-10"
+          >
+            <Text className="text-white font-semibold">Play</Text>
+          </TouchableOpacity>
+        )}
+        
       </View>
     </ImageBackground>
   );

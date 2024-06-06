@@ -5,9 +5,18 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import { useSettingsStore } from '../utils/Store/settingsStore';
+import { useEffect } from 'react';
+
 export default function Index() {
 
-  
+  const { setRecentStory } = useSettingsStore((state) => ({
+    setRecentStory: state.setRecentStory,
+  })); 
+
+  useEffect(() => {
+    setRecentStory('');
+  }, []);
 
   return (
     <ImageBackground

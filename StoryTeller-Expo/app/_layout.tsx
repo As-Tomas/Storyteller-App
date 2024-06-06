@@ -12,7 +12,6 @@ export default function RootLayout() {
       <Stack.Screen name="ChildScreen" options={{ headerShown: false }} />
       <Stack.Screen name="ParentScreen" options={{ headerShown: false }} />
       <Stack.Screen name="HistoryScreen" options={{ headerShown: false }} />
-      <Stack.Screen name="StoryScreen" options={{ title: "Your story" }} />
     </Stack>
   );
 }

@@ -133,18 +133,19 @@ export default function ParentScreen() {
     } catch (error) {}
   };
 
+  const trigerFetch = () => {
+    fetchResponse(userInputText);
+  };
+
   useEffect(() => {
     if (story) {
       // writeData('history', {title: 'title', story: story, image: 'image'});
       //beafore navigation to story screen save existing story to history
-      router.push("StoryScreen");
-      setRecentStory(story, "title");
+      router.push("ChildScreen");
+      setRecentStory(story);
     }
   }, [story]);
 
-  const trigerFetch = () => {
-    fetchResponse(userInputText);
-  };
 
   return (
     // <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === "ios" ? "padding" : "height"}>
