@@ -6,7 +6,7 @@ import {
 } from "react-native-responsive-screen";
 import { readData } from "../utils/storage";
 import { router } from "expo-router";
-import { useSettingsStore } from "../utils/Store/settingsStore";
+import { useHistoryStore } from "../utils/Store/historyStore";
 
 interface Record {
   title: string;
@@ -16,7 +16,7 @@ interface Record {
 }
 
 export default function HistoryScreen() {
-  const { history: storedHistory } = useSettingsStore();
+  const { history: storedHistory } = useHistoryStore ();
 
   const [history, setHistory] = useState<Record[]>([]);
 

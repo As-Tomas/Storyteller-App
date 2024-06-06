@@ -21,8 +21,9 @@ import { getImagePrompt, chatgptApiCall } from "../apiCalls/openAI";
 import { MidjourneyImg } from "../components/imgEfects";
 import UserTextInput from "../components/UserTextInput";
 import { Link, router } from "expo-router";
-import { useSettingsStore } from "@/utils/Store/settingsStore";
+import { useSettingsStore } from "../utils/Store/settingsStore";
 import { Image } from "expo-image";
+import { useHistoryStore } from "../utils/Store/historyStore";
 
 //! I think child screen should use story screen to display the story
 //Todo: generatePrompt function trigered just thru parrent screen text input, here should be too, check and voice inputs
@@ -37,6 +38,18 @@ export default function CildScreen() {
   const [speaking, setSpeaking] = useState(false);
   const [imagePrompt, setImagePrompt] = useState("");
   const [userInputText, setUserInputText] = useState("");
+
+  const { addHistoryItem } = useHistoryStore();
+  
+  const storyImage = "https://example.com/story-image.jpg";
+  const title = "Story title";
+
+  useEffect(() => {
+    if (story !== "") {
+      console.log('Saving story to history:', story);
+      addHistoryItem(story, storyImage, title);
+    }
+  }, [story, storyImage, title, addHistoryItem]);
 
   const { settingsData } = useSettingsStore((state) => ({
     // ! Todo I think if parent set up some settings it should load them by default
