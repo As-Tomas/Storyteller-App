@@ -1,15 +1,14 @@
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TextInput,
-  ImageBackground,
   TouchableOpacity,
-  ScrollView,
-  Keyboard,
-  KeyboardAvoidingView,
   Alert,
+  Keyboard,
+  StyleSheet,
 } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import { FlashList } from "@shopify/flash-list";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -18,11 +17,10 @@ import Slider from "@react-native-community/slider";
 import LanguageSelector from "../components/languageSelect";
 import UserTextInput from "../components/UserTextInput";
 import NetInfo from "@react-native-community/netinfo";
-import { getImagePrompt, chatgptApiCall } from "../apiCalls/openAI";
+import { chatgptApiCall } from "../apiCalls/openAI";
 import { generatePrompt } from "../components/promptGenerator";
 import { router } from "expo-router";
 import { useSettingsStore } from "../utils/Store/settingsStore";
-import { Platform } from "react-native";
 import { Image } from "expo-image";
 
 export default function ParentScreen() {
@@ -35,11 +33,10 @@ export default function ParentScreen() {
   const [storyComponents, setStoryComponents] = useState("");
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [userInputText, setUserInputText] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [story, setStory] = useState("");
 
-  const { settingsData, updateSettings, recentStory, setRecentStory } =
+  const { settingsData, updateSettings, recentStory, setRecentStory } =    
     useSettingsStore((state) => ({
       settingsData: state.settingsData,
       updateSettings: state.updateSettings,
@@ -48,8 +45,7 @@ export default function ParentScreen() {
     }));
 
   useEffect(() => {
-    (async () => {
-      // Check for internet connectivity
+    const checkInternetConnection = async () => {
       const netInfo = await NetInfo.fetch();
       if (!netInfo.isConnected) {
         console.log("No internet connection");
@@ -57,12 +53,12 @@ export default function ParentScreen() {
           "No internet connection",
           "Please check your internet connection and try again."
         );
-        return;
       }
-    })();
+    };
+
+    checkInternetConnection();
   }, []);
 
-  // Load settings data
   useEffect(() => {
     if (settingsData) {
       setName(settingsData.name);
@@ -73,9 +69,8 @@ export default function ParentScreen() {
       setMotivation(settingsData.motivation);
       setStoryComponents(settingsData.storyComponents);
     }
-  }, []);
+  }, [settingsData]);
 
-  // Save settings data
   useEffect(() => {
     const newData = {
       name,
@@ -88,7 +83,7 @@ export default function ParentScreen() {
     };
 
     updateSettings(newData);
-  }, [
+  }, [    
     name,
     language,
     languageLabel,
@@ -112,196 +107,290 @@ export default function ParentScreen() {
     }
   };
 
-  const fetchResponse = (userInput: string) => {
-    try {
-      if (userInput.trim().length > 0) {
-        setLoading(true);
-        let newUserRequest = userInput.trim();
-        let prompt = generatePrompt(newUserRequest, settingsData);
-        console.log("prompt", prompt);
+  const fetchResponse = async (userInput: string) => {
+    if (userInput.trim().length > 0) {
+      setLoading(true);
+      const newUserRequest = userInput.trim();
+      const prompt = generatePrompt(newUserRequest, settingsData);
+      console.log("prompt", prompt);
 
-        chatgptApiCall(prompt).then((res) => {
-          setLoading(false);
-          if (res.success) {
-            setStory(res.data);
-          } else {
-            Alert.alert("Error", res.msg);
-          }
-          console.log("🚀 ~ chatgptApiCall ~ res.data:", res.data);
-        });
+      try {
+        const res = await chatgptApiCall(prompt);
+        setLoading(false);
+        if (res.success) {
+          setStory(res.data);
+        } else {
+          Alert.alert("Error", res.msg);
+        }
+        console.log("🚀 ~ chatgptApiCall ~ res.data:", res.data);
+      } catch (error) {
+        setLoading(false);
+        Alert.alert("Error", "Something went wrong. Please try again.");
       }
-    } catch (error) {}
+    }
   };
 
-  const trigerFetch = () => {
+  const triggerFetch = () => {
     fetchResponse(userInputText);
   };
 
   useEffect(() => {
     if (story) {
-      // writeData('history', {title: 'title', story: story, image: 'image'});
-      //beafore navigation to story screen save existing story to history
       router.push("ChildScreen");
       setRecentStory(story);
     }
-  }, [story]);
+  }, [story, setRecentStory]);
 
-
-  return (
-    // <KeyboardAvoidingView className='flex-1' behavior={Platform.OS === "ios" ? "padding" : "height"}>
-    //     <ScrollView className='flex-1  bg-gradient-to-b from-gray-800 via-black to-gray-800' contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-
-    <View className="flex-1 bg-slate-500  items-center justify-center relative">
-      <TouchableOpacity
-        onPress={() => router.push("/")}
-        className="absolute top-6 left-4 px-2 flex-row items-center justify-center bg-gray-500 rounded-3xl"
-      >
-        <Image
-          source={require("@/assets/elements/arrow_back.png")}
-          style={{ width: hp(2), height: hp(2) }}
-        />
-        <Text className="text-white  m-2" style={{ fontSize: wp(3.5) }}>
-          Start
-        </Text>
-      </TouchableOpacity>
-
-      <Text
-        className="text-white text-center font-bold absolute top-6"
-        style={{ fontSize: wp(6) }}
-      >
-        Define your story
-      </Text>
-
-      {!keyboardVisible && (
-        <View className="absolute bottom-6 items-center justify-center  ">
-          <TouchableOpacity
-            onPress={() => trigerFetch()}
-            className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
-            style={{ width: wp(55) }}
-          >
-            <Text
-              className="text-yellow-100 font-semibold"
-              style={{ fontSize: wp(5) }}
-            >
-              Create your story
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            //   onPress={() =>
-            //     navigation.navigate('Story', {userInput: ' random story'})
-            //   }
-            className="bg-[#F3A467] m-2 py-2 rounded-full flex items-center justify-center"
-            style={{ width: wp(55) }}
-          >
-            <Text
-              className="text-yellow-100 font-semibold"
-              style={{ fontSize: wp(5) }}
-            >
-              Create random story
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      <ScrollView bounces={false} className="absolute top-20 flex-1 w-11/12 ">
-        <View className="">
-          <View className="flex-row  ">
-            <Text className="text-white mb-1" style={{ fontSize: wp(4) }}>
-              Child’s name:
-            </Text>
-            <View className="flex-row  ">
+  const renderListItem = ({ item }: { item: any }) => {
+    switch (item.type) {
+      case "title":
+        return (
+          <Text style={styles.title}>Define your story</Text>
+        );
+      case "input":
+        return (
+          <View style={styles.row}>
+            <Text style={[styles.text, styles.label]}>Child’s name:</Text>
+            <View style={styles.row}>
               <TextInput
                 value={name}
-                onChangeText={(text) => setName(text)}
+                onChangeText={setName}
                 placeholder="Name"
                 placeholderTextColor="white"
-                style={{ color: "white" }}
-                className="w-3/5 px-4  rounded border border-gray-300 "
+                style={styles.textInput}
               />
             </View>
           </View>
-          <Text className="text-white mb-1" style={{ fontSize: wp(4) }}>
-            Story language:
-          </Text>
-          <LanguageSelector
-            language={language}
-            setLanguage={setLanguage}
-            setLanguageLabel={setLanguageLabel}
-          />
-        </View>
-
-        <View>
-          <Text className="text-white mt-4 ml-4" style={{ fontSize: wp(4) }}>
-            Child’s age: {Math.round(age)} year
-          </Text>
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Slider
-              style={{ width: wp(90), height: 40 }}
-              minimumValue={1}
-              maximumValue={7}
-              value={age || 2}
-              onValueChange={(value) => setAge(Math.round(value))}
-              minimumTrackTintColor="#D9D9D9"
-              maximumTrackTintColor="#000000"
-              thumbTintColor="#D9D9D9"
+        );
+      case "language":
+        return (
+          <>
+            <Text style={[styles.text, styles.label]}>Story language:</Text>
+            <LanguageSelector
+              language={language}
+              setLanguage={setLanguage}
+              setLanguageLabel={setLanguageLabel}
             />
-          </View>
-        </View>
-
-        <View>
-          <Text className="text-white mt-4 ml-4" style={{ fontSize: wp(4) }}>
-            Story length: {getStoryLengthString(length)}
-          </Text>
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Slider
-              style={{ width: wp(90), height: 40 }}
-              minimumValue={1}
-              maximumValue={3}
-              value={length || 1}
-              onValueChange={(value) => setLength(Math.round(value))}
-              minimumTrackTintColor="#D9D9D9"
-              maximumTrackTintColor="#000000"
-              thumbTintColor="#D9D9D9"
+          </>
+        );
+      case "age":
+        return (
+          <>
+            <Text style={[styles.text, styles.label, { marginTop: 16 }]}>
+              Child’s age: {Math.round(age)} year
+            </Text>
+            <View style={styles.sliderContainer}>
+              <Slider
+                style={styles.slider}
+                minimumValue={1}
+                maximumValue={7}
+                value={age || 2}
+                onValueChange={(value) => setAge(Math.round(value))}
+                minimumTrackTintColor="#D9D9D9"
+                maximumTrackTintColor="#000000"
+                thumbTintColor="#D9D9D9"
+              />
+            </View>
+          </>
+        );
+      case "length":
+        return (
+          <>
+            <Text style={[styles.text, styles.label, { marginTop: 16 }]}>
+              Story length: {getStoryLengthString(length)}
+            </Text>
+            <View style={styles.sliderContainer}>
+              <Slider
+                style={styles.slider}
+                minimumValue={1}
+                maximumValue={3}
+                value={length || 1}
+                onValueChange={(value) => setLength(Math.round(value))}
+                minimumTrackTintColor="#D9D9D9"
+                maximumTrackTintColor="#000000"
+                thumbTintColor="#D9D9D9"
+              />
+            </View>
+          </>
+        );
+      case "motivation":
+        return (
+          <>
+            <Text style={[styles.text, styles.label, { marginTop: 16 }]}>
+              What do you want to motivate the child?
+            </Text>
+            <Text style={[styles.text, styles.label, { marginTop: 16 }]}>
+              State the motivation:
+            </Text>
+            <TextInput
+              value={motivation}
+              onChangeText={setMotivation}
+              placeholder="To do homework"
+              placeholderTextColor="white"
+              style={[styles.textInput, { marginHorizontal: 10 }]}
             />
-          </View>
-        </View>
+          </>
+        );
+      case "storyComponents":
+        return (
+          <>
+            <Text style={[styles.text, styles.label, { marginTop: 16 }]}>
+              Describe story characters, location, actions and etc...
+            </Text>
+            <TextInput
+              value={storyComponents}
+              onChangeText={setStoryComponents}
+              placeholder="Spiderman in Bergen"
+              placeholderTextColor="white"
+              style={[styles.textInput, { marginHorizontal: 10 }]}
+            />
+          </>
+        );
+      case "userInput":
+        return (
+          <UserTextInput setUserInputText={setUserInputText} setup={"parent"} />
+        );
+      case "userInputu":
+        return (
+          <>
+          {!keyboardVisible && (
+                <View style={styles.buttonsContainer}>
+                  <TouchableOpacity
+                    onPress={() => triggerFetch()}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>Create your story</Text>
+                  </TouchableOpacity>
+        
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Create random story</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+          </>
+        );
+      
+        
+      default:
+        return null;
+    }
+  };
 
-        <Text className="text-white mt-4 ml-4" style={{ fontSize: wp(4) }}>
-          What do you want to motivate the child?
-        </Text>
+  const data = [
+    { type: "title" },
+    { type: "input" },
+    { type: "language" },
+    { type: "age" },
+    { type: "length" },
+    { type: "motivation" },
+    { type: "storyComponents" },
+    { type: "userInput" },
+    { type: "userInputu" },
+  ];
 
-        <Text className="text-white mt-4 ml-4" style={{ fontSize: wp(4) }}>
-          State the motivation:
-        </Text>
-        <TextInput
-          value={motivation}
-          onChangeText={(text) => setMotivation(text)}
-          placeholder="To do homework"
-          placeholderTextColor="white"
-          style={{ color: "white", marginHorizontal: 10 }}
-          className="px-4  rounded border border-gray-300 "
-        />
-
-        <Text className="text-white mt-4 ml-4" style={{ fontSize: wp(4) }}>
-          Describe story characters, location, actions and etc...
-        </Text>
-        <TextInput
-          value={storyComponents}
-          onChangeText={(text) => setStoryComponents(text)}
-          placeholder="Spiderman in Bergen"
-          placeholderTextColor="white"
-          style={{ color: "white", marginHorizontal: 10 }}
-          className="px-4 rounded border border-gray-300 "
-        />
-        <UserTextInput setUserInputText={setUserInputText} setup={"parent"} />
-      </ScrollView>
-    </View>
-    //      </ScrollView>
-    //    </KeyboardAvoidingView>
+  return (    
+    <View style={styles.container}>
+      <FlashList
+        data={data}
+        renderItem={renderListItem}
+        estimatedItemSize={200}
+        contentContainerStyle={styles.flashListContent}
+        keyExtractor={(item, index) => index.toString()}
+        onScrollBeginDrag={() => Keyboard.dismiss()}
+        style={{ flex: 1 }}
+      />
+      </View>
   );
 }
+    
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "slategray",
+    // alignItems: "center",
+    // justifyContent: "center",
+    paddingTop: hp(6), // Ensure enough top padding for the title
+    paddingLeft: wp(3),
+    paddingRight: wp(3),
+  },
+  backButton: {
+    position: "absolute",
+    top: hp(6),
+    left: wp(4),
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "gray",
+    borderRadius: 24,
+    padding: 4,
+  },
+  backIcon: {
+    width: hp(2),
+    height: hp(2),
+  },
+  backText: {
+    color: "white",
+    marginLeft: 8,
+    fontSize: wp(3.5),
+  },
+  title: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: wp(6),
+    // position: "absolute",
+    // top: hp(6),
+  },
+  buttonsContainer: {
+    // position: "absolute",
+    // bottom: hp(6),
+    alignItems: "center",
+    // justifyContent: "center",
+  },
+  button: {
+    backgroundColor: "#F3A467",
+    marginVertical: 8,
+    paddingVertical: 12,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    width: wp(55),
+  },
+  buttonText: {
+    color: "#FFFFE0",
+    fontWeight: "600",
+    fontSize: wp(5),
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 8,
+  },
+  text: {
+    color: "white",
+  },
+  label: {
+    fontSize: wp(4),
+  },
+  textInput: {
+    width: wp(60),
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    borderColor: "gray",
+    borderWidth: 1,
+    color: "white",
+  },
+  sliderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  slider: {
+    width: wp(90),
+    height: 40,
+  },
+  flashListContent: {
+    backgroundColor: "slategray",
+    // paddingTop: hp(6),
+  },
+});
