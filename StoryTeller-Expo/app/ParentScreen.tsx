@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -44,6 +44,9 @@ export default function ParentScreen() {
       setRecentStory: state.setRecentStory,
     }));
 
+    const initialRender = useRef(true);
+
+    // Check for internet connectivity
   useEffect(() => {
     const checkInternetConnection = async () => {
       const netInfo = await NetInfo.fetch();
@@ -59,6 +62,7 @@ export default function ParentScreen() {
     checkInternetConnection();
   }, []);
 
+  // Load settings data
   useEffect(() => {
     if (settingsData) {
       setName(settingsData.name);
@@ -71,18 +75,23 @@ export default function ParentScreen() {
     }
   }, [settingsData]);
 
+  // Save settings data
   useEffect(() => {
-    const newData = {
-      name,
-      language,
-      languageLabel,
-      age,
-      length,
-      motivation,
-      storyComponents,
-    };
+    if (initialRender.current) {
+      initialRender.current = false;
+    } else {
+      const newData = {
+        name,
+        language,
+        languageLabel,
+        age,
+        length,
+        motivation,
+        storyComponents,
+      };
 
-    updateSettings(newData);
+      updateSettings(newData);
+    }
   }, [    
     name,
     language,
@@ -124,7 +133,7 @@ export default function ParentScreen() {
         }
         console.log("🚀 ~ chatgptApiCall ~ res.data:", res.data);
       } catch (error) {
-        setLoading(false);
+        
         Alert.alert("Error", "Something went wrong. Please try again.");
       }
     }
@@ -136,17 +145,16 @@ export default function ParentScreen() {
 
   useEffect(() => {
     if (story) {
-      router.push("ChildScreen");
       setRecentStory(story);
+      router.push("ChildScreen");
+      setStory("");
+      setLoading(false);
     }
   }, [story, setRecentStory]);
 
+
   const renderListItem = ({ item }: { item: any }) => {
-    switch (item.type) {
-      case "title":
-        return (
-          <Text style={styles.title}>Define your story</Text>
-        );
+    switch (item.type) {      
       case "input":
         return (
           <View style={styles.row}>
@@ -248,12 +256,17 @@ export default function ParentScreen() {
         );
       case "userInput":
         return (
-          <UserTextInput setUserInputText={setUserInputText} setup={"parent"} />
+          <UserTextInput setUserInputText={setUserInputText} setup={"parent"} fetchResponse={triggerFetch} />
         );
       case "userInputu":
         return (
           <>
-          {!keyboardVisible && (
+          {loading ? ( 
+            <Image
+            source={require("@/assets/elements/loading.gif")}
+            style={styles.loadingGif}
+          />
+          ) : (
                 <View style={styles.buttonsContainer}>
                   <TouchableOpacity
                     onPress={() => triggerFetch()}
@@ -266,7 +279,10 @@ export default function ParentScreen() {
                     <Text style={styles.buttonText}>Create random story</Text>
                   </TouchableOpacity>
                 </View>
-              )}
+          )}
+
+                
+              
           </>
         );
       
@@ -277,7 +293,6 @@ export default function ParentScreen() {
   };
 
   const data = [
-    { type: "title" },
     { type: "input" },
     { type: "language" },
     { type: "age" },
@@ -288,7 +303,7 @@ export default function ParentScreen() {
     { type: "userInputu" },
   ];
 
-  return (    
+  return (  
     <View style={styles.container}>
       <FlashList
         data={data}
@@ -296,10 +311,9 @@ export default function ParentScreen() {
         estimatedItemSize={200}
         contentContainerStyle={styles.flashListContent}
         keyExtractor={(item, index) => index.toString()}
-        onScrollBeginDrag={() => Keyboard.dismiss()}
-        style={{ flex: 1 }}
+        // onScrollBeginDrag={() => Keyboard.dismiss()}
       />
-      </View>
+    </View>
   );
 }
     
@@ -392,5 +406,12 @@ const styles = StyleSheet.create({
   flashListContent: {
     backgroundColor: "slategray",
     // paddingTop: hp(6),
+  },
+  loadingGif: {    
+    borderRadius: 9999,  
+    alignSelf: "center",
+    marginTop: 20,
+    width: hp(10), 
+    height: hp(10) 
   },
 });
