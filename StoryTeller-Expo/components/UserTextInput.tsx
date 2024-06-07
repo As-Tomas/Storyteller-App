@@ -1,38 +1,23 @@
-import React, { useEffect, useState, useCallback } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 interface UserTextInputProps {
   setUserInputText: (text: string) => void;
-  setup: "parent" | "child" | string;
+  setup: 'parent' | 'child' | string;
   fetchResponse?: (text: string) => void;
 }
 
-const UserTextInput: React.FC<UserTextInputProps> = ({
-  setUserInputText,
-  setup,
-  fetchResponse,
-}) => {
-  const [isInputFieldVisible, setInputFieldIsVisible] = useState(
-    setup === "parent"
-  );
-  const [text, setText] = useState("");
+const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup, fetchResponse }) => {
+  const [isInputFieldVisible, setInputFieldIsVisible] = useState(setup === 'parent');
+  const [text, setText] = useState('');
 
   const handleClickSendBtn = useCallback(() => {
     if (fetchResponse) {
       fetchResponse(text);
     }
     setUserInputText(text);
-    setText("");
+    setText('');
     setInputFieldIsVisible(false);
   }, [text, setUserInputText, fetchResponse]);
 
@@ -56,20 +41,14 @@ const UserTextInput: React.FC<UserTextInputProps> = ({
             numberOfLines={3}
             onSubmitEditing={handleClickSendBtn}
           />
-          {setup !== "parent" && (
-            <TouchableOpacity
-              onPress={handleClickSendBtn}
-              style={styles.sendButton}
-            >
+          {setup !== 'parent' && (
+            <TouchableOpacity onPress={handleClickSendBtn} style={styles.sendButton}>
               <Text style={styles.sendButtonText}>Send</Text>
             </TouchableOpacity>
           )}
         </View>
       ) : (
-        <TouchableOpacity
-          onPress={() => setInputFieldIsVisible(true)}
-          style={styles.openInputButton}
-        >
+        <TouchableOpacity onPress={() => setInputFieldIsVisible(true)} style={styles.openInputButton}>
           <Text style={styles.openInputButtonText}>Tap to type...</Text>
         </TouchableOpacity>
       )}
@@ -82,33 +61,33 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   inputContainer: {
-    flexDirection: "column",
-    alignItems: "center",
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   input: {
     width: wp(80),
     height: hp(10),
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,
-    color: "#fff",
+    color: '#fff',
   },
   sendButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: '#007bff',
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
   },
   sendButtonText: {
-    color: "#fff",
+    color: '#fff',
   },
   openInputButton: {
     padding: 10,
   },
   openInputButtonText: {
-    color: "#fff",
+    color: '#fff',
   },
 });
 

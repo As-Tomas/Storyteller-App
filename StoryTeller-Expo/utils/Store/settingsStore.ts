@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { zustandStorage } from "./mmkv-storage";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { zustandStorage } from './mmkv-storage';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface SettingsData {
   name: string;
@@ -23,38 +23,37 @@ interface SettingsState {
 }
 
 const defaultSettingsData: SettingsData = {
-  name: "",
-  language: "locale",
-  languageLabel: "English (United States)",
+  name: '',
+  language: 'locale',
+  languageLabel: 'English (United States)',
   age: 1,
   length: 1,
-  motivation: "",
-  storyComponents: "",
+  motivation: '',
+  storyComponents: '',
 };
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       settingsData: defaultSettingsData,
-      recentStory: "",
-      storyImage: "",
+      recentStory: '',
+      storyImage: '',
       updateSettings: (newSettings) =>
         set((state) => ({
           settingsData: { ...state.settingsData, ...newSettings },
         })),
-      setRecentStory: (recentStory) =>
-        set({ recentStory }),
+      setRecentStory: (recentStory) => set({ recentStory }),
       setStoryImage: (image) => set({ storyImage: image }),
       clearSettings: () =>
         set({
           settingsData: defaultSettingsData,
-          recentStory: "",
-          storyImage: "",
+          recentStory: '',
+          storyImage: '',
         }),
     }),
     {
-      name: "settings-store",
+      name: 'settings-store',
       storage: createJSONStorage(() => zustandStorage),
-    }
-  )
+    },
+  ),
 );

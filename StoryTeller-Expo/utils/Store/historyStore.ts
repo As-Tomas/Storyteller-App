@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { zustandStorage } from "./mmkv-storage";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { zustandStorage } from './mmkv-storage';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface HistoryItem {
   story: string;
@@ -12,7 +12,7 @@ interface HistoryItem {
 interface HistoryStore {
   history: HistoryItem[];
   addHistoryItem: (story: string, image: string, title: string) => void;
-  removeHistoryItem: (index: number) => void; 
+  removeHistoryItem: (index: number) => void;
   clearHistory: () => void;
 }
 
@@ -22,10 +22,7 @@ export const useHistoryStore = create<HistoryStore>()(
       history: [],
       addHistoryItem: (story, image, title) =>
         set((state) => ({
-          history: [
-            ...state.history,
-            { story, image, title, dateSaved: new Date() },
-          ],
+          history: [...state.history, { story, image, title, dateSaved: new Date() }],
         })),
       removeHistoryItem: (index) =>
         set((state) => ({
@@ -37,8 +34,8 @@ export const useHistoryStore = create<HistoryStore>()(
         }),
     }),
     {
-      name: "history-store",
+      name: 'history-store',
       storage: createJSONStorage(() => zustandStorage),
-    }
-  )
+    },
+  ),
 );

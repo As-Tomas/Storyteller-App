@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
 
 export default function ChildScreen() {
   return (
@@ -7,7 +7,7 @@ export default function ChildScreen() {
       <Text>here is</Text>
       <Text>ChildScreen</Text>
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

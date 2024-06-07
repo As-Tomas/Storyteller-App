@@ -55,12 +55,17 @@
 // ];
 
 import * as RNLocalize from 'react-native-localize';
+
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 //this way user can choose from list of laguages he added in his device
 //alternatively we can create native module but then may not work if use tts
 const getSupportedLanguages = () => {
   const locales = RNLocalize.getLocales();
 
-  return locales.map(locale => ({
+  return locales.map((locale) => ({
     label: `${locale.languageCode} (${locale.countryCode})`,
     value: `${locale.languageTag}`,
   }));
@@ -81,42 +86,25 @@ const getCurrentLocale = () => {
 // Example of how to set the default value for your dropdown
 const defaultLanguageValue = getCurrentLocale();
 
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
-
-const LanguageSelector = ({language, setLanguage, setLanguageLabel}) => {
+const LanguageSelector = ({ language, setLanguage, setLanguageLabel }) => {
   const [selectedLanguage, setSelectedLanguage] = useState(language);
   useEffect(() => {
     setSelectedLanguage(language);
   }, [language]);
 
-  const onLanguageChange = itemValue => {
+  const onLanguageChange = (itemValue) => {
     setSelectedLanguage(itemValue);
     setLanguage(itemValue);
-    const selectedItem = languageOptions.find(
-      option => option.value === itemValue,
-    );
+    const selectedItem = languageOptions.find((option) => option.value === itemValue);
     const itemLabel = selectedItem ? selectedItem.label : '';
     setLanguageLabel(itemLabel);
   };
 
   return (
     <View style={styles.container}>
-      <Picker
-        selectedValue={selectedLanguage}
-        onValueChange={onLanguageChange}
-        style={styles.picker}>
-        {languageOptions.map(option => (
-          <Picker.Item
-            key={option.value}
-            label={option.label}
-            value={option.value}
-          />
+      <Picker selectedValue={selectedLanguage} onValueChange={onLanguageChange} style={styles.picker}>
+        {languageOptions.map((option) => (
+          <Picker.Item key={option.value} label={option.label} value={option.value} />
         ))}
       </Picker>
     </View>
