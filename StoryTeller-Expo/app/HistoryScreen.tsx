@@ -73,16 +73,11 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "slategray",
-    // paddingTop: 16,
   },
   background: {
-    // flex: 1,
-    // backgroundColor: '#fff',
     left: 0,
     right: 0,
     top: 0,
-    // height: 100,
   },
   button: {
     padding: 15,
