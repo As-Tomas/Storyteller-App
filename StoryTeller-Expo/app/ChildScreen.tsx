@@ -24,6 +24,7 @@ import { Link, router } from "expo-router";
 import { useSettingsStore } from "../utils/Store/settingsStore";
 import { Image } from "expo-image";
 import { useHistoryStore } from "../utils/Store/historyStore";
+import { generatePrompt } from "@/components/promptGenerator";
 
 //! I think child screen should use story screen to display the story
 //Todo: generatePrompt function trigered just thru parrent screen text input, here should be too, check and voice inputs
@@ -122,11 +123,7 @@ export default function CildScreen() {
     } catch (error) {
       console.log("error", error);
     }
-  };
-
-  const generatePrompt = (userReq: string) => {
-    return `Please tell me a fairy tale about ${userReq}`;
-  };
+  };  
 
   const preparePromptForImage = (recentStory: string) => {
     
@@ -138,8 +135,7 @@ export default function CildScreen() {
     if (userInput.trim().length > 0) {
       setLoading(true);
       let newUserRequest = userInput.trim();
-      let prompt = generatePrompt(newUserRequest);
-
+      let prompt = generatePrompt(newUserRequest, settingsData);
       
       chatgptApiCall(prompt).then((res) => {
         setLoading(false);
