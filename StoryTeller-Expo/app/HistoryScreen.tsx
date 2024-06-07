@@ -7,6 +7,7 @@ import {
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useHistoryStore } from "../utils/Store/historyStore";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface Record {
   title: string;
@@ -36,17 +37,24 @@ export default function HistoryScreen() {
 
   return (
     <View style={styles.container}>      
+    <LinearGradient
+        // Background Linear Gradient
+        colors={['#2e304e', '#213f6a', '#301e51',]}
+        style={styles.background}
+      >
+      
+
       <ScrollView bounces={false} contentContainerStyle={{ paddingTop: headerHeight }}>
         {Array.isArray(history) && history.length > 0 ? (
           history.map((record: Record, index: number) => (
             <View key={index} style={styles.recordContainer}>
               <View style={styles.recordTextContainer}>
-                <Text style={styles.recordTitle}>{record.title}</Text>
                 <View style={styles.iconContainer}>
                   <TouchableOpacity onPress={() => handleDelete(index)}>
                     <Ionicons name="trash-bin-outline" size={20} color={'#fff'} style={styles.binIcon}/>
                   </TouchableOpacity>
                 </View>
+                <Text style={styles.recordTitle}>{record.title}</Text>
                 <Text style={styles.recordStory}>{record.story}</Text>
                 <Text style={styles.recordDate}>{record.dateSaved.toString()}</Text>
               </View>
@@ -56,6 +64,7 @@ export default function HistoryScreen() {
           <Text style={styles.noHistoryText}>No history records found.</Text>
         )}
       </ScrollView>
+      </LinearGradient>
     </View>
 
   );
@@ -64,8 +73,26 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "slategray",
-    paddingTop: 16,
+    // backgroundColor: "slategray",
+    // paddingTop: 16,
+  },
+  background: {
+    // flex: 1,
+    // backgroundColor: '#fff',
+    left: 0,
+    right: 0,
+    top: 0,
+    // height: 100,
+  },
+  button: {
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  text: {
+    backgroundColor: 'transparent',
+    fontSize: 15,
+    color: '#fff',
   },
   recordContainer: {
     flexDirection: "row",
@@ -77,24 +104,27 @@ const styles = StyleSheet.create({
   },
   recordTextContainer: {
     flex: 1,
+    borderBottomWidth: 1,
+    paddingBottom: 10
   },
   recordTitle: {
-    color: "#FFFF00",
-    fontSize: wp(4.5),
-    textAlign: 'center'
+    color: "#FFFFff",
+    fontSize: wp(8.5),
+    textAlign: 'center',
+    fontWeight: "bold",
   },
   iconContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
   },
   recordStory: {
-    color: "#FFFF00",
+    color: "#FFFFff",
     paddingTop: 4,
     fontSize: wp(4.5),
     textAlign: 'justify',
   },
   recordDate: {
-    color: "#FFFF00",
+    color: "#FFFFFF",
     paddingTop: 4,
     fontSize: wp(4.5),
   },
@@ -103,7 +133,7 @@ const styles = StyleSheet.create({
     height: 24,
   },
   noHistoryText: {
-    color: "#FFFF00",
+    color: "#FFFFff",
     textAlign: "center",
     fontSize: wp(5),
   },

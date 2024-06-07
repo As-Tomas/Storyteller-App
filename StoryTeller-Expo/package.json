@@ -48,7 +48,8 @@
     "zustand": "^4.5.2",
     "expo-image": "~1.12.10",
     "@shopify/flash-list": "1.6.4",
-    "expo-blur": "~13.0.2"
+    "expo-blur": "~13.0.2",
+    "expo-linear-gradient": "~13.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
