@@ -24,6 +24,7 @@ import { useSettingsStore } from "../utils/Store/settingsStore";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useHeaderHeight } from '@react-navigation/elements';
+import ButtonActionStyled from "@/components/buttonActionStyled";
 
 export default function ParentScreen() {
   const [name, setName] = useState("");
@@ -271,17 +272,11 @@ export default function ParentScreen() {
             style={styles.loadingGif}
           />
           ) : (
-                <View style={styles.buttonsContainer}>
-                  <TouchableOpacity
-                    onPress={() => triggerFetch()}
-                    style={styles.button}
-                  >
-                    <Text style={styles.buttonText}>Create your story</Text>
-                  </TouchableOpacity>
-        
-                  <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Create random story</Text>
-                  </TouchableOpacity>
+                <View style={styles.buttonsContainer}>  
+                  <ButtonActionStyled text="Create your story" onPress={() => triggerFetch()} />
+
+                  {/* //Todo: implement call predefined stories */}
+                  <ButtonActionStyled text="Create random story" onPress={() => triggerFetch()} /> 
                 </View>
           )}
 
@@ -351,20 +346,6 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     alignItems: "center",
   },
-  button: {
-    backgroundColor: "#F3A467",
-    marginVertical: 8,
-    paddingVertical: 12,
-    borderRadius: 24,
-    alignItems: "center",
-    justifyContent: "center",
-    width: wp(55),
-  },
-  buttonText: {
-    color: "#FFFFE0",
-    fontWeight: "600",
-    fontSize: wp(5),
-  },
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -392,9 +373,6 @@ const styles = StyleSheet.create({
   slider: {
     width: wp(90),
     height: 40,
-  },
-  flashListContent: {
-    // paddingTop: hp(6),
   },
   loadingGif: {    
     borderRadius: 9999,  
