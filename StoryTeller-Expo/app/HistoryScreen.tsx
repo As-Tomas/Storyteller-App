@@ -6,6 +6,7 @@ import {
 } from "react-native-responsive-screen";
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useHistoryStore } from "../utils/Store/historyStore";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Record {
   title: string;
@@ -41,15 +42,14 @@ export default function HistoryScreen() {
             <View key={index} style={styles.recordContainer}>
               <View style={styles.recordTextContainer}>
                 <Text style={styles.recordTitle}>{record.title}</Text>
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity onPress={() => handleDelete(index)}>
+                    <Ionicons name="trash-bin-outline" size={20} color={'#fff'} style={styles.binIcon}/>
+                  </TouchableOpacity>
+                </View>
                 <Text style={styles.recordStory}>{record.story}</Text>
                 <Text style={styles.recordDate}>{record.dateSaved.toString()}</Text>
               </View>
-              <TouchableOpacity onPress={() => handleDelete(index)}>
-                {/* <Image
-                  source={require("@/assets/elements/bin_icon.png")} // Ensure you have a bin_icon.png in your assets
-                  style={styles.binIcon}
-                /> */}
-              </TouchableOpacity>
             </View>
           ))
         ) : (
@@ -81,11 +81,17 @@ const styles = StyleSheet.create({
   recordTitle: {
     color: "#FFFF00",
     fontSize: wp(4.5),
+    textAlign: 'center'
+  },
+  iconContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
   recordStory: {
     color: "#FFFF00",
     paddingTop: 4,
     fontSize: wp(4.5),
+    textAlign: 'justify',
   },
   recordDate: {
     color: "#FFFF00",

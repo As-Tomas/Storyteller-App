@@ -54,6 +54,7 @@ const UserTextInput: React.FC<UserTextInputProps> = ({
             placeholderTextColor="#fff"
             multiline={true}
             numberOfLines={3}
+            onSubmitEditing={handleClickSendBtn}
           />
           {setup !== "parent" && (
             <TouchableOpacity

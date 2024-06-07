@@ -12,6 +12,7 @@ interface HistoryItem {
 interface HistoryStore {
   history: HistoryItem[];
   addHistoryItem: (story: string, image: string, title: string) => void;
+  removeHistoryItem: (index: number) => void; 
   clearHistory: () => void;
 }
 
@@ -19,12 +20,16 @@ export const useHistoryStore = create<HistoryStore>()(
   persist(
     (set) => ({
       history: [],
-      addHistoryItem: (story, image, title) => 
+      addHistoryItem: (story, image, title) =>
         set((state) => ({
           history: [
-            ...state.history, 
-            { story, image, title, dateSaved: new Date() }
+            ...state.history,
+            { story, image, title, dateSaved: new Date() },
           ],
+        })),
+      removeHistoryItem: (index) =>
+        set((state) => ({
+          history: state.history.filter((_, i) => i !== index),
         })),
       clearHistory: () =>
         set({
