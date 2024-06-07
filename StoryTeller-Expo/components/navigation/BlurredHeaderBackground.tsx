@@ -13,6 +13,7 @@ const BlurredHeaderBackground = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+    //   borderBottomWidth: 1, borderBlockColor: '#d2d2d2', 
     },
    
   });

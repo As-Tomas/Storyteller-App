@@ -22,6 +22,8 @@ import { generatePrompt } from "../components/promptGenerator";
 import { router } from "expo-router";
 import { useSettingsStore } from "../utils/Store/settingsStore";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { useHeaderHeight } from '@react-navigation/elements';
 
 export default function ParentScreen() {
   const [name, setName] = useState("");
@@ -35,6 +37,8 @@ export default function ParentScreen() {
   const [userInputText, setUserInputText] = useState("");
   const [loading, setLoading] = useState(false);
   const [story, setStory] = useState("");
+
+  const headerHeight = useHeaderHeight();
 
   const { settingsData, updateSettings, recentStory, setRecentStory } =    
     useSettingsStore((state) => ({
@@ -305,14 +309,21 @@ export default function ParentScreen() {
 
   return (  
     <View style={styles.container}>
-      <FlashList
-        data={data}
-        renderItem={renderListItem}
-        estimatedItemSize={200}
-        contentContainerStyle={styles.flashListContent}
-        keyExtractor={(item, index) => index.toString()}
-        // onScrollBeginDrag={() => Keyboard.dismiss()}
-      />
+      <LinearGradient
+        // Background Linear Gradient
+        colors={['#2e304e', '#213f6a', '#301e51',]}
+        style={styles.background}
+      >
+        <FlashList
+          data={data}
+          renderItem={renderListItem}
+          estimatedItemSize={200}
+          contentContainerStyle={{paddingTop:headerHeight}}
+          keyExtractor={(item, index) => index.toString()}
+          // onScrollBeginDrag={() => Keyboard.dismiss()}
+        />
+
+      </LinearGradient>
     </View>
   );
 }
@@ -320,46 +331,25 @@ export default function ParentScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "slategray",
-    // alignItems: "center",
-    // justifyContent: "center",
-    paddingTop: hp(6), // Ensure enough top padding for the title
+  },
+  background: {
+    flex: 1,    
+    paddingTop: hp(2), 
     paddingLeft: wp(3),
     paddingRight: wp(3),
-  },
-  backButton: {
-    position: "absolute",
-    top: hp(6),
-    left: wp(4),
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "gray",
-    borderRadius: 24,
-    padding: 4,
-  },
-  backIcon: {
-    width: hp(2),
-    height: hp(2),
-  },
-  backText: {
-    color: "white",
-    marginLeft: 8,
-    fontSize: wp(3.5),
-  },
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },    
   title: {
     color: "white",
     textAlign: "center",
     fontWeight: "bold",
     fontSize: wp(6),
-    // position: "absolute",
-    // top: hp(6),
   },
   buttonsContainer: {
-    // position: "absolute",
-    // bottom: hp(6),
     alignItems: "center",
-    // justifyContent: "center",
   },
   button: {
     backgroundColor: "#F3A467",
@@ -404,7 +394,6 @@ const styles = StyleSheet.create({
     height: 40,
   },
   flashListContent: {
-    backgroundColor: "slategray",
     // paddingTop: hp(6),
   },
   loadingGif: {    

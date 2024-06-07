@@ -14,6 +14,7 @@ export default function RootLayout() {
       <Stack.Screen
         name="ParentScreen"
         options={{
+          headerBackground: () => <BlurredHeaderBackground />,
           title: "Define your story",
           headerTitleAlign: "center",
           headerTransparent: true,
@@ -28,7 +29,7 @@ export default function RootLayout() {
       <Stack.Screen
         name="HistoryScreen"
         options={{
-          headerBackground: () => <BlurredHeaderBackground />, //Todo: Blur doesnt work
+          headerBackground: () => <BlurredHeaderBackground />, 
           
           title: "Your History",
           headerTitleAlign: "center",
