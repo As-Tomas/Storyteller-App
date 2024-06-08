@@ -16,6 +16,7 @@ import { useHistoryStore } from '../utils/Store/historyStore';
 import { generatePrompt } from '@/components/promptGenerator';
 import { useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function CildScreen() {
   // const navigation = useNavigation();
@@ -162,6 +163,11 @@ export default function CildScreen() {
     startTextToSpeach(recentStory);
   };
 
+  const pauseSpeaking = () => {
+    Tts.pause(); //Todo: not implemented jet
+    setSpeaking(false);
+  };
+
   const stopSpeaking = () => {
     Tts.stop();
     setSpeaking(false);
@@ -231,7 +237,7 @@ export default function CildScreen() {
       return () => {
         Tts.stop();
       };
-    }, [])
+    }, []),
   );
 
   // Split the story into paragraphs
@@ -243,7 +249,7 @@ export default function CildScreen() {
   // Join the paragraphs back together
   const firstHalf = paragraphs.slice(0, midPoint).join('\n');
   const secondHalf = paragraphs.slice(midPoint).join('\n');
-  
+
   return (
     <ImageBackground
       source={require('@/assets/images/ChildScrBackground.png')}
@@ -254,10 +260,10 @@ export default function CildScreen() {
         <TouchableOpacity
           onPress={() => {
             // Tts.stop(); // Stop the voice before navigation
-            router.push('/'); 
+            router.push('/');
           }}
           className="absolute z-10 top-6 left-4 flex-row items-center justify-center px-2 rounded-3xl "
-          style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)'}}>
+          style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)' }}>
           <Image source={require('@/assets/elements/arrow_back.png')} style={{ width: hp(2), height: hp(2) }} />
           <Text className="text-yellow-100 m-2 " style={{ fontSize: wp(3.5) }}>
             Start
@@ -334,15 +340,19 @@ export default function CildScreen() {
             )}
           </View>
         )}
+
         {speaking && (
-          <TouchableOpacity onPress={stopSpeaking} className="bg-red-400 rounded-3xl p-2 absolute bottom-16  left-10">
-            <Text className="text-white font-semibold">Stop</Text>
-          </TouchableOpacity>
+          <View className="flex flex-row space-x-2 p-2 absolute bottom-16 left-10">
+            <FontAwesome name="stop-circle" size={30} color="#FEF9C3" onPress={stopSpeaking} />
+            <FontAwesome name="pause-circle" size={30} color="#FEF9C3" onPress={pauseSpeaking} />
+          </View>
         )}
         {!speaking && recentStory !== '' && (
-          <TouchableOpacity onPress={beginSpeaking} className="bg-red-400 rounded-3xl p-2 absolute bottom-16  left-10">
-            <Text className="text-white font-semibold">Play</Text>
-          </TouchableOpacity>
+          <>
+            <View className="flex flex-row space-x-2 p-2 absolute bottom-16 left-10">
+              <FontAwesome name="play-circle" size={30} color="#FEF9C3" onPress={beginSpeaking} />
+            </View>
+          </>
         )}
       </View>
     </ImageBackground>

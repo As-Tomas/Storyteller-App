@@ -38,8 +38,13 @@ export default function Index() {
             <Text className="text-yellow-100 font-semibold " style={{ fontSize: wp(5) }}>
               View history
             </Text>
-            
-            <AntDesign name="arrowright" size={24} color="#FEF9C3" style={{marginLeft:8, marginRight:8, marginTop:'auto', marginBottom:'auto'}} />
+
+            <AntDesign
+              name="arrowright"
+              size={24}
+              color="#FEF9C3"
+              style={{ marginLeft: 8, marginRight: 8, marginTop: 'auto', marginBottom: 'auto' }}
+            />
           </TouchableOpacity>
         </View>
       </View>
