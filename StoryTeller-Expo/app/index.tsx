@@ -5,6 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { useSettingsStore } from '../utils/Store/settingsStore';
 import { useEffect } from 'react';
 import ButtonActionStyled from '@/components/ButtonActionStyled';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function Index() {
   const { setRecentStory } = useSettingsStore((state) => ({
@@ -34,10 +35,11 @@ export default function Index() {
             onPress={() => router.push('HistoryScreen')}
             className="flex flex-row m-2 py-2 rounded-full items-center justify-center "
             style={{ width: wp(55) }}>
-            <Text className="text-white font-semibold " style={{ fontSize: wp(5) }}>
+            <Text className="text-yellow-100 font-semibold " style={{ fontSize: wp(5) }}>
               View history
             </Text>
-            <Image source={require('@/assets/elements/arrow_forward.png')} className=" mx-2 my-auto" />
+            
+            <AntDesign name="arrowright" size={24} color="#FEF9C3" style={{marginLeft:8, marginRight:8, marginTop:'auto', marginBottom:'auto'}} />
           </TouchableOpacity>
         </View>
       </View>

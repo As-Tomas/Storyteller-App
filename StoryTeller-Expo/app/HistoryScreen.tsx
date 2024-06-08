@@ -78,11 +78,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
   },
-  text: {
-    backgroundColor: 'transparent',
-    fontSize: 15,
-    color: '#fff',
-  },
   recordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -97,7 +92,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   recordTitle: {
-    color: '#FFFFff',
+    color: '#FEF9C3',
     fontSize: wp(8.5),
     textAlign: 'center',
     fontWeight: 'bold',
@@ -107,13 +102,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   recordStory: {
-    color: '#FFFFff',
+    color: '#FEF9C3',
     paddingTop: 4,
     fontSize: wp(4.5),
     textAlign: 'justify',
   },
   recordDate: {
-    color: '#FFFFFF',
+    color: '#FEF9C3',
     paddingTop: 4,
     fontSize: wp(4.5),
   },
@@ -122,7 +117,7 @@ const styles = StyleSheet.create({
     height: 24,
   },
   noHistoryText: {
-    color: '#FFFFff',
+    color: '#FEF9C3',
     textAlign: 'center',
     fontSize: wp(5),
   },

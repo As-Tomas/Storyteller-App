@@ -14,9 +14,8 @@ import { useSettingsStore } from '../utils/Store/settingsStore';
 import { Image } from 'expo-image';
 import { useHistoryStore } from '../utils/Store/historyStore';
 import { generatePrompt } from '@/components/promptGenerator';
-
-//! I think child screen should use story screen to display the story
-//Todo: generatePrompt function trigered just thru parrent screen text input, here should be too, check and voice inputs
+import { useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 
 export default function CildScreen() {
   // const navigation = useNavigation();
@@ -42,7 +41,6 @@ export default function CildScreen() {
 
   useEffect(() => {
     if (recentStory !== '') {
-      console.log('Saving story to history:', recentStory);
       addHistoryItem(recentStory, storyImage, title);
     }
   }, []);
@@ -227,6 +225,15 @@ export default function CildScreen() {
     }
   }, [recentStory]);
 
+  // Stop TTS when screen loses focus
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        Tts.stop();
+      };
+    }, [])
+  );
+
   // Split the story into paragraphs
   const paragraphs = recentStory.split('\n');
 
@@ -246,7 +253,7 @@ export default function CildScreen() {
       <View className="flex-1  items-center justify-center relative">
         <TouchableOpacity
           onPress={() => {
-            Tts.stop(); // Stop the voice before navigation
+            // Tts.stop(); // Stop the voice before navigation
             router.push('/'); 
           }}
           className="absolute z-10 top-6 left-4 flex-row items-center justify-center px-2 rounded-3xl "

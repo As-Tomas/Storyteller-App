@@ -15,7 +15,7 @@ export default function RootLayout() {
         name="ParentScreen"
         options={{
           headerBackground: () => <BlurredHeaderBackground />,
-          title: 'Define your story',
+          title: 'Define stories settings',
           headerTitleAlign: 'center',
           headerTransparent: true,
           headerTitleStyle: {
@@ -34,7 +34,7 @@ export default function RootLayout() {
           title: 'Your History',
           headerTitleAlign: 'center',
           headerTransparent: true,
-          headerTitleStyle: { fontSize: 30, color: 'white' },
+          headerTitleStyle: { fontSize: 30, color: '#FEF9C3' },
           headerTintColor: 'white',
         }}
       />
