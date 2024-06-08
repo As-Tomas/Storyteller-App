@@ -236,12 +236,7 @@ export default function CildScreen() {
   // Join the paragraphs back together
   const firstHalf = paragraphs.slice(0, midPoint).join('\n');
   const secondHalf = paragraphs.slice(midPoint).join('\n');
-  //-------------------------------
-
-  const homeRoute = () => {
-    return router.push('/');
-  };
-
+  
   return (
     <ImageBackground
       source={require('@/assets/images/ChildScrBackground.png')}
@@ -252,11 +247,12 @@ export default function CildScreen() {
         <TouchableOpacity
           onPress={() => {
             Tts.stop(); // Stop the voice before navigation
-            homeRoute(); // Navigate to the home screen
+            router.push('/'); 
           }}
-          className="absolute z-10 top-6 left-4 flex-row items-center justify-center bg-gray-500 rounded-3xl ">
+          className="absolute z-10 top-6 left-4 flex-row items-center justify-center px-2 rounded-3xl "
+          style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)'}}>
           <Image source={require('@/assets/elements/arrow_back.png')} style={{ width: hp(2), height: hp(2) }} />
-          <Text className="text-yellow-100 m-2" style={{ fontSize: wp(3.5) }}>
+          <Text className="text-yellow-100 m-2 " style={{ fontSize: wp(3.5) }}>
             Start
           </Text>
         </TouchableOpacity>
