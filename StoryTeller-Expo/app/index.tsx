@@ -4,7 +4,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 import { useSettingsStore } from '../utils/Store/settingsStore';
 import { useEffect } from 'react';
-import ButtonActionStyled from '@/components/buttonActionStyled';
+import ButtonActionStyled from '@/components/ButtonActionStyled';
 
 export default function Index() {
   const { setRecentStory } = useSettingsStore((state) => ({

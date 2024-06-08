@@ -13,7 +13,7 @@ import { useSettingsStore } from '../utils/Store/settingsStore';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useHeaderHeight } from '@react-navigation/elements';
-import ButtonActionStyled from '@/components/buttonActionStyled';
+import ButtonActionStyled from '@/components/ButtonActionStyled';
 
 export default function ParentScreen() {
   const [name, setName] = useState('');
