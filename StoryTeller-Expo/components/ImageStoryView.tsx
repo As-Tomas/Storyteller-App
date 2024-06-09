@@ -25,8 +25,8 @@ const ImageStoryView: React.FC<Props> = ({ image }) => {
   return (
     <View style={styles.container}>
       {image ? (
-        <Animated.Image
-          source={{ uri: image }}
+        <Animated.Image source={{ uri: image }}
+          resizeMode="contain"
           style={[
             styles.image,
             {
@@ -43,8 +43,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: wp(100), // Ensure full width for centering
-    height: hp(85),
     shadowColor: '#90ebf1',
     shadowOffset: {
       width: 0,
@@ -55,8 +53,8 @@ const styles = StyleSheet.create({
     elevation: 14,
   },
   image: {
-    width: wp(85),
-    height: hp(85),
+    width: '100%',
+    height: 400,
     borderWidth: 2,
     borderColor: 'white',
     borderRadius: 4,
