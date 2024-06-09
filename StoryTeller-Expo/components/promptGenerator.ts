@@ -25,3 +25,10 @@ export function generatePrompt(userReq: string, userSettings: UserSettings): str
     storyComponents ? 'The story should include ' + storyComponents + '.' : ''
   }`;
 }
+
+export function adjustImagePrompt(prompt: string): string {
+  console.log('🚀 ~ adjustImagePrompt ~ generatePrompt:-----------------------------------------------');
+  const addAdjustments = "Image should not include text.";
+
+  return `${prompt} ${addAdjustments}`;
+}
