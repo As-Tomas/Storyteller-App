@@ -6,17 +6,18 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 // import Image from 'expo-fast-image';
 import Voice from '@react-native-voice/voice';
 import Tts from 'react-native-tts';
-import { getImagePrompt, chatgptApiCall } from '../apiCalls/openAI';
+import { getImagePrompt, chatgptApiCall, dalleApiCall } from '../apiCalls/openAI';
 import { MidjourneyImg } from '../components/imgEfects';
 import UserTextInput from '../components/UserTextInput';
 import { Link, router } from 'expo-router';
 import { useSettingsStore } from '../utils/Store/settingsStore';
 import { Image } from 'expo-image';
 import { useHistoryStore } from '../utils/Store/historyStore';
-import { generatePrompt } from '@/components/promptGenerator';
+import { adjustImagePrompt, generatePrompt } from '@/components/promptGenerator';
 import { useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
+import ImageStoryView from '@/components/ImageStoryView';
 
 export default function CildScreen() {
   // const navigation = useNavigation();
@@ -26,8 +27,9 @@ export default function CildScreen() {
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [speaking, setSpeaking] = useState(false);
-  const [imagePrompt, setImagePrompt] = useState('');
+  const [storyImage, setStoryImage] = useState('');
   const [userInputText, setUserInputText] = useState('');
+
 
   const { addHistoryItem } = useHistoryStore();
 
@@ -37,7 +39,7 @@ export default function CildScreen() {
     setRecentStory: state.setRecentStory,
   }));
 
-  const storyImage = 'https://example.com/story-image.jpg';
+
   const title = 'Story title';
 
   useEffect(() => {
@@ -201,27 +203,33 @@ export default function CildScreen() {
       // destroy the voice instance after component unmounts
       Voice.destroy().then(Voice.removeAllListeners);
     };
-  }, []);
+  }, []);  
 
-  // generate Promt for the next image
+  // generate Promt for the next image and after generate image
   const fetchPromptForImage = () => {
     if (recentStory !== '') {
       let prompt = preparePromptForImage(recentStory);
 
-      //! temp disabling
+      getImagePrompt(prompt).then(res => {
+        //setLoading(false);
+        if (res.success) {
 
-      console.log('getImagePrompt request disabled');
+          const adjustedPrompt = adjustImagePrompt(res.data);
 
-      // getImagePrompt(prompt).then(res => {
+          dalleApiCall(adjustedPrompt).then(res => {
+            if (res.success) {
+              setStoryImage(`data:image/png;base64,${res.image}`);
+            } else {
+              Alert.alert('Error', res.msg);
+            }
+          }).catch(err => {
+            console.log("Error during DALL-E API call:", err.message);
+          });
 
-      //   //setLoading(false);
-      //   if (res.success) {
-      //     console.log('res.data', res.data);
-      //     setImagePrompt(`${res.data}  --ar 9:16`);
-      //   } else {
-      //     Alert.alert('Error', res.msg);
-      //   }
-      // });
+        } else {
+          Alert.alert('Error', res.msg);
+        }
+      });
     }
   };
 
@@ -289,12 +297,12 @@ export default function CildScreen() {
               }}>
               {firstHalf}
             </Text>
+            
+            {storyImage ? (
+              <ImageStoryView image={storyImage} />
+              //Todo: add some drowing animation
+            ) : null} 
 
-            {imagePrompt && (
-              <View style={{ alignItems: 'center' }}>
-                {/* <MidjourneyImg prompt={imagePrompt} /> //! temp disabling */}
-              </View>
-            )}
 
             <Text
               className="text-yellow-100 mx-2 pb-40 pt-8  "
