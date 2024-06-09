@@ -28,7 +28,7 @@ export function generatePrompt(userReq: string, userSettings: UserSettings): str
 
 export function adjustImagePrompt(prompt: string): string {
   console.log('🚀 ~ adjustImagePrompt ~ generatePrompt:-----------------------------------------------');
-  const addAdjustments = "Image should not include text.";
+  const addAdjustments = "The image should be purely visual, Do not include any text or words or inscriptions in the image!";
 
-  return `${prompt} ${addAdjustments}`;
+  return ` ${addAdjustments} Here is Image description: ${prompt}`;
 }

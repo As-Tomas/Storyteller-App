@@ -28,8 +28,8 @@ export default function HistoryScreen() {
     }
   }, [storedHistory]);
 
-  const handleDelete = (index: number) => {
-    removeHistoryItem(index);
+  const handleDelete = (originalIndex: number) => {
+    removeHistoryItem(originalIndex);
   };
 
   return (
@@ -38,22 +38,36 @@ export default function HistoryScreen() {
         // Background Linear Gradient
         colors={['#2e304e', '#213f6a', '#301e51']}
         style={styles.background}>
+          <Text className=' absolute text-white text-3xl pt-20'>tottal recors: {history.length}</Text>
         <ScrollView bounces={false} contentContainerStyle={{ paddingTop: headerHeight }}>
           {Array.isArray(history) && history.length > 0 ? (
-            history.map((record: Record, index: number) => (
-              <View key={index} style={styles.recordContainer}>
-                <View style={styles.recordTextContainer}>
-                  <View style={styles.iconContainer}>
-                    <TouchableOpacity onPress={() => handleDelete(index)}>
-                      <Ionicons name="trash-bin-outline" size={20} color={'#fff'} style={styles.binIcon} />
-                    </TouchableOpacity>
+            history.slice().reverse().map((record: Record, index: number) => {
+              const originalIndex = history.length - 1 - index; // Map reversed index to original index
+              return (
+                <View key={originalIndex} style={styles.recordContainer}>
+                  <View style={styles.recordTextContainer}>
+                    <View style={styles.iconContainer}>
+                      <TouchableOpacity onPress={() => handleDelete(originalIndex)}>
+                        <Ionicons name="trash-bin-outline" size={20} color={'#fff'} style={styles.binIcon} />
+                      </TouchableOpacity>
+                    </View>
+                    <Text style={styles.recordTitle}>{record.title}</Text>
+                    
+                    {record.image ? (
+                      <Image
+                        source={{ uri: record.image }}
+                        style={[
+                          styles.image,
+                        ]}
+                      />
+                    ) : null}
+
+                    <Text style={styles.recordStory}>{record.story}</Text>
+                    <Text style={styles.recordDate}>{record.dateSaved.toString()}</Text>
                   </View>
-                  <Text style={styles.recordTitle}>{record.title}</Text>
-                  <Text style={styles.recordStory}>{record.story}</Text>
-                  <Text style={styles.recordDate}>{record.dateSaved.toString()}</Text>
                 </View>
-              </View>
-            ))
+              );
+            })
           ) : (
             <Text style={styles.noHistoryText}>No history records found.</Text>
           )}
@@ -96,6 +110,13 @@ const styles = StyleSheet.create({
     fontSize: wp(8.5),
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  image: {
+    width: wp(25),
+    height: hp(25),
+    borderWidth: 2,
+    borderColor: 'white',
+    borderRadius: 4,
   },
   iconContainer: {
     flexDirection: 'row',
