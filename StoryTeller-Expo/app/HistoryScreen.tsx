@@ -18,7 +18,7 @@ interface Record {
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
-
+// todo: add loading spinner
 export default function HistoryScreen() {
   const { history: storedHistory, removeHistoryItem } = useHistoryStore();
   const headerHeight = useHeaderHeight();
@@ -63,7 +63,7 @@ export default function HistoryScreen() {
                           <Ionicons name="trash-bin-outline" size={20} color={'#fff'} style={styles.binIcon} />
                         </TouchableOpacity>
                       </View>
-                      <Text style={styles.recordTitle}>{record.title}</Text>
+                      <Text numberOfLines={2}  style={styles.recordTitle}>{record.title}</Text>
                       
                       {/* {record.image ? (
                         <Image
@@ -73,18 +73,22 @@ export default function HistoryScreen() {
                           ]}
                         />
                       ) : null} */}
-                      {record.image ? (
-                        <Image
-                          style={styles.image}
-                          source={{ uri: record.image }}
-                          placeholder={{ blurhash }}
-                          contentFit="cover"
-                          transition={1000}
-                        />
-                      
-                      ) : null}
-
-                      <Text style={styles.recordStory}>{record.story}</Text>
+                      <View style={styles.storyContainer}>
+      <View style={styles.imageContainer}>
+        {record.image ? (
+          <Image
+            style={styles.image}
+            source={{ uri: record.image }}
+            placeholder={{ blurhash: 'LKO2?U%2Tw=w]~RBVZRi};RPxuwH' }}
+            contentFit="cover"
+            transition={1000}
+          />
+        ) : null}
+      </View>
+      <View style={styles.textContainer}>
+        <Text numberOfLines={7} style={styles.recordStory}>{record.story}</Text>
+      </View>
+    </View>
                       <Text style={styles.recordDate}>{new Date(record.dateSaved).toLocaleString()}</Text>
                     </View>
                   </View>
@@ -132,20 +136,19 @@ const styles = StyleSheet.create({
   },
   recordTitle: {
     color: '#FEF9C3',
-    fontSize: wp(8.5),
+    fontSize: wp(6.5),
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  // image: {
-  //   width: wp(25),
-  //   height: hp(25),
-  //   borderWidth: 2,
-  //   borderColor: 'white',
-  //   borderRadius: 4,
-  // },
+  storyColumn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   image: {
-    width: 100,
-    height: 100,
+    width: '100%',
+    height: undefined,
+    aspectRatio: 1,
+    marginTop: 10,
     borderWidth: 2,
     borderColor: 'white',
     borderRadius: 4,
@@ -157,13 +160,13 @@ const styles = StyleSheet.create({
   recordStory: {
     color: '#FEF9C3',
     paddingTop: 4,
-    fontSize: wp(4.5),
+    fontSize: wp(3.5),
     textAlign: 'justify',
   },
   recordDate: {
     color: '#FEF9C3',
     paddingTop: 4,
-    fontSize: wp(4.5),
+    fontSize: wp(3.5),
   },
   binIcon: {
     width: 24,
@@ -180,4 +183,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: wp(5),
   },
+  storyContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    margin: 10,
+  },
+  imageContainer: {
+    flexBasis: '25%',
+  },
+  textContainer: {
+    flexBasis: '75%',
+    paddingLeft: 10,
+  },
+  
+  
 });
