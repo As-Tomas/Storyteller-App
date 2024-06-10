@@ -22,7 +22,7 @@ export const useHistoryStore = create<HistoryStore>()(
       history: [],
       addHistoryItem: (story, image, title) =>
         set((state) => ({
-          history: [...state.history, { story, image, title, dateSaved: new Date() }],
+          history: [{ story, image, title, dateSaved: new Date() }, ...state.history],
         })),
       removeHistoryItem: (index) =>
         set((state) => ({
