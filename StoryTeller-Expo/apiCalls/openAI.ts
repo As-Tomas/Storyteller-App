@@ -76,15 +76,22 @@ console.log("🚀 ~ dalleApiCall ~ prompt:", prompt)
       throw new Error("Prompt for image is required");
     }
 
-    image = await client.post(dalleUrl, {
-      model: 'dall-e-3',
-      prompt: prompt,
-      response_format: "b64_json",
-      size: "1024x1792",
-      quality: "hd",
-      style: "vivid",
-    });
+    if (prompt.length > 1000) {
+      // The maximum length is 1000 characters for dall-e-2 and 4000 characters for dall-e-3
+      prompt = prompt.substring(0, 1000);
+    }
 
+    // https://openai.com/api/pricing/
+    // https://platform.openai.com/docs/api-reference/images/create
+    image = await client.post(dalleUrl, {
+      model: 'dall-e-2',  //dall-e-2 or dall-e-3
+      prompt: prompt,  
+      response_format: "b64_json",
+      size: "256x256",  //1024x1024 or 1024x1792 or 512x512 256x256
+      // quality: "hd",
+      // style: "vivid",  //dall-e-2 doesn't support style
+    });
+    
     // // Log the entire response for debugging
     // console.log("Full API Response:", image);
 
