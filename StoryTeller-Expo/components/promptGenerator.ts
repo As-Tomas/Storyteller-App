@@ -27,7 +27,9 @@ export function generatePrompt(userReq: string, userSettings: UserSettings): str
 }
 
 export function adjustImagePrompt(prompt: string): string {
-  console.log('🚀 ~ adjustImagePrompt ~ generatePrompt:-----------------------------------------------');
+  
+  prompt = prompt.replace(/Prompt:|Prompt|prompt:|prompt/g, '');
+  
   const addAdjustments = "The image should be purely visual, Do not include any text or words or inscriptions in the image!";
 
   return ` ${addAdjustments} Here is Image description: ${prompt}`;
