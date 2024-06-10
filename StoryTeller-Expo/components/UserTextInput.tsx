@@ -3,12 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 interface UserTextInputProps {
-  setUserInputText: (text: string) => void;
+  setStoryTitle: (text: string) => void;
   setup: 'parent' | 'child' | string;
   fetchResponse?: (text: string) => void;
 }
 
-const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup, fetchResponse }) => {
+const UserTextInput: React.FC<UserTextInputProps> = ({ setStoryTitle, setup, fetchResponse }) => {
   const [isInputFieldVisible, setInputFieldIsVisible] = useState(setup === 'parent');
   const [text, setText] = useState('');
 
@@ -16,16 +16,10 @@ const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup, 
     if (fetchResponse) {
       fetchResponse(text);
     }
-    setUserInputText(text);
+    setStoryTitle(text);
     setText('');
     setInputFieldIsVisible(false);
-  }, [text, setUserInputText, fetchResponse]);
-
-  useEffect(() => {
-    setUserInputText(text);
-  }, [text, setUserInputText]);
-
-  useEffect(() => {}, [isInputFieldVisible]);
+  }, [text, setStoryTitle, fetchResponse]);
 
   return (
     <View style={styles.container}>

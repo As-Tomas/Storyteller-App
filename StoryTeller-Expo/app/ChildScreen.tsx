@@ -9,27 +9,26 @@ import Tts from 'react-native-tts';
 import { getImagePrompt, chatgptApiCall, dalleApiCall } from '../apiCalls/openAI';
 import { MidjourneyImg } from '../components/imgEfects';
 import UserTextInput from '../components/UserTextInput';
-import { Link, router } from 'expo-router';
+import { Link, router,  } from 'expo-router';
 import { useSettingsStore } from '../utils/Store/settingsStore';
 import { Image } from 'expo-image';
 import { useHistoryStore } from '../utils/Store/historyStore';
 import { adjustImagePrompt, generatePrompt } from '@/components/promptGenerator';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams  } from 'expo-router';
 import { useCallback } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import ImageStoryView from '@/components/ImageStoryView';
+import PlaybackControls from '@/components/navigation/PlaybackControls';
 
-export default function CildScreen() {
-  // const navigation = useNavigation();
+export default function CildScreen() {  
+
   const [recording, setRecording] = useState(false);
   const [result, setResult] = useState('');
-  const [story, setStory] = useState('');
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [speaking, setSpeaking] = useState(false);
   const [storyImage, setStoryImage] = useState('');
-  const [userInputText, setUserInputText] = useState('');
-
+  const [storyTitle, setStoryTitle] = useState('');
 
   const { addHistoryItem } = useHistoryStore();
 
@@ -40,13 +39,12 @@ export default function CildScreen() {
   }));
 
 
-  const title = 'Story title';
 
   useEffect(() => {
     if (recentStory !== '') {
-      addHistoryItem(recentStory, storyImage, title);
+      addHistoryItem(recentStory, storyImage, storyTitle);
     }
-  }, []);
+  }, [storyImage]);
 
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -160,7 +158,7 @@ export default function CildScreen() {
     });
   };
 
-  //Todo: change text to icons play and stop, plus add pause funcionality
+  //Todo: plus add pause funcionality
   const beginSpeaking = () => {
     startTextToSpeach(recentStory);
   };
@@ -175,8 +173,10 @@ export default function CildScreen() {
     setSpeaking(false);
   };
 
+  //this one for STT
   useEffect(() => {
     if (result) {
+      setStoryTitle(result);
       fetchResponse(result);
     }
   }, [result]);
@@ -218,7 +218,7 @@ export default function CildScreen() {
 
           dalleApiCall(adjustedPrompt).then(res => {
             if (res.success) {
-              setStoryImage(`data:image/png;base64,${res.image}`);
+              setStoryImage(res.image);
             } else {
               Alert.alert('Error', res.msg);
             }
@@ -284,9 +284,14 @@ export default function CildScreen() {
           </Text>
         ) : (
           <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
-            <Text className="text-yellow-100 mx-auto pt-10 text-center" style={{ fontSize: wp(7) }}>
-              Once upon a time
-            </Text>
+            <Text 
+            className="text-yellow-100 mx-auto pt-10 text-center " style={{ fontSize: wp(7)}}
+            numberOfLines={2} 
+            >
+              {storyTitle}
+            </Text>  
+             
+
 
             <Text
               className="text-yellow-100 mx-2 pb-8 "
@@ -300,7 +305,7 @@ export default function CildScreen() {
             
             {storyImage ? (
               <ImageStoryView image={storyImage} />
-              //Todo: add some drowing animation
+              //Todo: add some drawing animation
             ) : null} 
 
 
@@ -343,25 +348,19 @@ export default function CildScreen() {
                     style={{ width: hp(10), height: hp(10) }}
                   />
                 </TouchableOpacity>
-                <UserTextInput setUserInputText={setUserInputText} setup={'child'} fetchResponse={fetchResponse} />
+                <UserTextInput setStoryTitle={setStoryTitle} setup={'child'} fetchResponse={fetchResponse} />
               </View>
             )}
           </View>
         )}
 
-        {speaking && (
-          <View className="flex flex-row space-x-2 p-2 absolute bottom-16 left-10">
-            <FontAwesome name="stop-circle" size={30} color="#FEF9C3" onPress={stopSpeaking} />
-            <FontAwesome name="pause-circle" size={30} color="#FEF9C3" onPress={pauseSpeaking} />
-          </View>
-        )}
-        {!speaking && recentStory !== '' && (
-          <>
-            <View className="flex flex-row space-x-2 p-2 absolute bottom-16 left-10">
-              <FontAwesome name="play-circle" size={30} color="#FEF9C3" onPress={beginSpeaking} />
-            </View>
-          </>
-        )}
+        <PlaybackControls
+          speaking={speaking}
+          recentStory={recentStory}
+          stopSpeaking={stopSpeaking}
+          pauseSpeaking={pauseSpeaking}
+          beginSpeaking={beginSpeaking}
+        />
       </View>
     </ImageBackground>
   );
