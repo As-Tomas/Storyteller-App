@@ -1,4 +1,4 @@
-import { View, Text,  TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -38,19 +38,19 @@ export default function HistoryScreen() {
     removeHistoryItem(originalIndex);
   };
 
-  const handleRecordPress = (index: number) => {    
+  const handleRecordPress = (index: number) => {
     router.push({
       pathname: `/${index}`,
-  });
+    });
   };
-
+//todo: scrollView replace to flashList or flatList
   return (
     <View style={styles.container}>
       <LinearGradient
         // Background Linear Gradient
         colors={['#2e304e', '#213f6a', '#301e51']}
         style={styles.background}>
-          {/* <Text className=' absolute text-white text-3xl pt-20'>tottal recors: {history.length}</Text> */}
+        {/* <Text className=' absolute text-white text-3xl pt-20'>tottal recors: {history.length}</Text> */}
         <ScrollView bounces={false} contentContainerStyle={{ paddingTop: headerHeight }}>
           {Array.isArray(history) && history.length > 0 ? (
             history.slice().map((record: Record, index: number) => {
@@ -63,8 +63,10 @@ export default function HistoryScreen() {
                           <Ionicons name="trash-bin-outline" size={20} color={'#fff'} style={styles.binIcon} />
                         </TouchableOpacity>
                       </View>
-                      <Text numberOfLines={2}  style={styles.recordTitle}>{record.title}</Text>
-                      
+                      <Text numberOfLines={2} style={styles.recordTitle}>
+                        {record.title}
+                      </Text>
+
                       {/* {record.image ? (
                         <Image
                           source={{ uri: record.image }}
@@ -74,21 +76,23 @@ export default function HistoryScreen() {
                         />
                       ) : null} */}
                       <View style={styles.storyContainer}>
-      <View style={styles.imageContainer}>
-        {record.image ? (
-          <Image
-            style={styles.image}
-            source={{ uri: record.image }}
-            placeholder={{ blurhash: 'LKO2?U%2Tw=w]~RBVZRi};RPxuwH' }}
-            contentFit="cover"
-            transition={1000}
-          />
-        ) : null}
-      </View>
-      <View style={styles.textContainer}>
-        <Text numberOfLines={7} style={styles.recordStory}>{record.story}</Text>
-      </View>
-    </View>
+                        <View style={styles.imageContainer}>
+                          {record.image ? (
+                            <Image
+                              style={styles.image}
+                              source={{ uri: record.image }}
+                              placeholder={{ blurhash: 'LKO2?U%2Tw=w]~RBVZRi};RPxuwH' }}
+                              contentFit="cover"
+                              transition={1000}
+                            />
+                          ) : null}
+                        </View>
+                        <View style={styles.textContainer}>
+                          <Text numberOfLines={7} style={styles.recordStory}>
+                            {record.story}
+                          </Text>
+                        </View>
+                      </View>
                       <Text style={styles.recordDate}>{new Date(record.dateSaved).toLocaleString()}</Text>
                     </View>
                   </View>
@@ -195,6 +199,4 @@ const styles = StyleSheet.create({
     flexBasis: '75%',
     paddingLeft: 10,
   },
-  
-  
 });

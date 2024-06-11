@@ -38,6 +38,12 @@ export default function RootLayout() {
           headerTintColor: 'white',
         }}
       />
+      <Stack.Screen
+        name="[id]"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

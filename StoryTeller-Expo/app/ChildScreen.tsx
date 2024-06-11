@@ -294,7 +294,7 @@ export default function CildScreen() {
 
 
             <Text
-              className="text-yellow-100 mx-2 pb-8 "
+              className="text-yellow-100 mx-2 pb-8 text-justify"
               style={{
                 fontSize: wp(4.5),
                 textShadowColor: 'black',
@@ -310,7 +310,7 @@ export default function CildScreen() {
 
 
             <Text
-              className="text-yellow-100 mx-2 pb-40 pt-8  "
+              className="text-yellow-100 mx-2 pb-40 pt-8 text-justify "
               style={{
                 fontSize: wp(4.5),
                 textShadowColor: 'black',
