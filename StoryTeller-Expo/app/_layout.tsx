@@ -1,12 +1,20 @@
-import { Stack } from 'expo-router';
+import { Stack, useNavigationContainerRef } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import BlurredHeaderBackground from '../components/navigation/BlurredHeaderBackground';
+import { useReactNavigationDevTools } from '@dev-plugins/react-navigation/build/useReactNavigationDevTools';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();
 
+
+
 export default function RootLayout() {
+
+  // navigation debug plugin
+  const navigationRef = useNavigationContainerRef();
+  useReactNavigationDevTools(navigationRef);
+
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
