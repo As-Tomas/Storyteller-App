@@ -19,7 +19,7 @@ interface Record {
 const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
 export default function HistoryScreen() {
-  const { history: storedHistory, removeHistoryItem, clearHistory } = useHistoryStore();
+  const { history: storedHistory, removeHistoryItem } = useHistoryStore();
   const headerHeight = useHeaderHeight();
   const [history, setHistory] = useState<Record[]>([]);
 
@@ -36,9 +36,7 @@ export default function HistoryScreen() {
   };
 
   const handleRecordPress = (index: number) => {
-    router.push({
-      pathname: `/${index}`,
-    });
+    router.push(`/${index}`);
   };
 
   const renderItem = ({ item, index }: { item: Record; index: number }) => (
