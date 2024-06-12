@@ -1,11 +1,17 @@
 import React from 'react';
 import { BlurView } from 'expo-blur';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
+//! Todo: Bug (white scr) fix for android cos Experimental
 const BlurredHeaderBackground = () => {
   return (
     <View style={[StyleSheet.absoluteFill, styles.container]}>
-      <BlurView intensity={30} tint="light" style={StyleSheet.absoluteFill} experimentalBlurMethod="dimezisBlurView" />
+      <BlurView 
+      intensity={Platform.OS === 'ios' ? 30 : 100} 
+      tint={Platform.OS === 'ios' ? 'light' : 'dark'}
+      experimentalBlurMethod={Platform.OS === 'ios' ? 'dimezisBlurView' : 'none'}
+      style={StyleSheet.absoluteFill} 
+      />
     </View>
   );
 };
