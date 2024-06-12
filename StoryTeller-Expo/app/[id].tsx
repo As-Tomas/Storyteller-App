@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useHistoryStore } from '@/utils/Store/historyStore';
 import PlaybackControls from '@/components/navigation/PlaybackControls';
 import ImageStoryView from '@/components/ImageStoryView';
@@ -78,6 +78,15 @@ const HistoryRecord = () => {
     Tts.pause(); //Todo: not implemented jet
     setSpeaking(false);
   };
+
+  // Stop TTS when screen loses focus
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        Tts.stop();
+      };
+    }, []),
+  );
 
   return (
     <View className='flex-1'>
