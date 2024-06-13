@@ -14,13 +14,14 @@ import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useHeaderHeight } from '@react-navigation/elements';
 import ButtonActionStyled from '@/components/ButtonActionStyled';
+import { SegmentedControl } from '@/components/SettingsComponents/SegmentedControl';
 
 export default function ParentScreen() {
   const [name, setName] = useState('');
   const [language, setLanguage] = useState('');
   const [languageLabel, setLanguageLabel] = useState('');
   const [age, setAge] = useState(1);
-  const [length, setLength] = useState(1);
+  const [length, setLength] = useState(0);
   const [motivation, setMotivation] = useState('');
   const [storyComponents, setStoryComponents] = useState('');
   const [keyboardVisible, setKeyboardVisible] = useState(false);
@@ -84,19 +85,6 @@ export default function ParentScreen() {
     }
   }, [name, language, languageLabel, age, length, motivation, storyComponents, updateSettings]);
 
-  const getStoryLengthString = (value: number) => {
-    switch (Math.round(value)) {
-      case 1:
-        return 'Short';
-      case 2:
-        return 'Medium';
-      case 3:
-        return 'Large';
-      default:
-        return 'Short';
-    }
-  };
-
   const fetchResponse = async (userInput: string) => {
     if (userInput.trim().length > 0) {
       setLoading(true);
@@ -134,7 +122,7 @@ export default function ParentScreen() {
 
   const renderListItem = ({ item }: { item: any }) => {
     switch (item.type) {
-      case 'input':
+      case 'inputChildName':
         return (
           <View style={styles.row}>
             <Text style={[styles.text, styles.label]}>Child’s name:</Text>
@@ -143,7 +131,7 @@ export default function ParentScreen() {
                 value={name}
                 onChangeText={setName}
                 placeholder="Name"
-                placeholderTextColor="white"
+                placeholderTextColor="gray"
                 style={styles.textInput}
               />
             </View>
@@ -177,21 +165,14 @@ export default function ParentScreen() {
       case 'length':
         return (
           <>
-            <Text style={[styles.text, styles.label, { marginTop: 16 }]}>
-              Story length: {getStoryLengthString(length)}
+           <Text style={[styles.text, styles.label, { marginTop: 16 }]}>
+              Story length
             </Text>
-            <View style={styles.sliderContainer}>
-              <Slider
-                style={styles.slider}
-                minimumValue={1}
-                maximumValue={3}
-                value={length || 1}
-                onValueChange={(value) => setLength(Math.round(value))}
-                minimumTrackTintColor="#D9D9D9"
-                maximumTrackTintColor="#000000"
-                thumbTintColor="#D9D9D9"
-              />
-            </View>
+           <SegmentedControl
+          values={['short', 'medium', 'large']}
+          selectedIndex={length}
+          onChange={(event) => setLength(event.nativeEvent.selectedSegmentIndex)}
+        />
           </>
         );
       case 'motivation':
@@ -203,7 +184,7 @@ export default function ParentScreen() {
               value={motivation}
               onChangeText={setMotivation}
               placeholder="To do homework"
-              placeholderTextColor="white"
+              placeholderTextColor="gray"
               style={[styles.textInput, { marginHorizontal: 10 }]}
             />
           </>
@@ -218,14 +199,14 @@ export default function ParentScreen() {
               value={storyComponents}
               onChangeText={setStoryComponents}
               placeholder="Spiderman in Bergen"
-              placeholderTextColor="white"
+              placeholderTextColor="gray"
               style={[styles.textInput, { marginHorizontal: 10 }]}
             />
           </>
         );
       case 'userInput':
         return <UserTextInput setUserInputText={setUserInputText} setup={'parent'} fetchResponse={triggerFetch} />;
-      case 'userInputu':
+      case 'actionButtons':
         return (
           <>
             {loading ? (
@@ -247,14 +228,14 @@ export default function ParentScreen() {
   };
 
   const data = [
-    { type: 'input' },
-    { type: 'language' },
+    { type: 'language' },    
     { type: 'age' },
     { type: 'length' },
+    { type: 'inputChildName' },
     { type: 'motivation' },
     { type: 'storyComponents' },
     { type: 'userInput' },
-    { type: 'userInputu' },
+    { type: 'actionButtons' },
   ];
 
   return (
@@ -308,7 +289,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   label: {
-    fontSize: wp(4),
+    fontSize: wp(3.5),
   },
   textInput: {
     width: wp(60),
