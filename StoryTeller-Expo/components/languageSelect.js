@@ -113,19 +113,15 @@ const LanguageSelector = ({ language, setLanguage, setLanguageLabel }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#8191a3',
-    borderWidth: 1,
-    borderColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 10,
+    overflow: 'hidden',
   },
   picker: {
     color: '#fff',
-    backgroundColor: '#8191a3',
-  },
-  text: {
-    color: '#fff',
-    marginBottom: 1,
-    fontSize: wp(4),
-  },
+    backgroundColor: '(rgba(255, 255, 255, 0.3)',
+    
+  },  
 });
 
 export default LanguageSelector;
