@@ -13,7 +13,7 @@ export function generatePrompt(userReq: string, userSettings: UserSettings): str
   console.log('🚀 ~ generatePrompt ~ generatePrompt:-----------------------------------------------');
   const age = userSettings.age || 5;
   const language = userSettings.language || 'locale';
-  const length = (userSettings.length || 3) * 100;
+  const length = Math.pow(userSettings.length || 1, 2) * 100;
   const motivation = userSettings.motivation || '';
   const name = userSettings.name || '';
   const storyComponents = userSettings.storyComponents || '';
@@ -27,7 +27,7 @@ export function generatePrompt(userReq: string, userSettings: UserSettings): str
 }
 
 export function adjustImagePrompt(prompt: string): string {
-  
+
   prompt = prompt.replace(/Prompt:|Prompt|prompt:|prompt/g, '');
   
   const addAdjustments = "The image should be purely visual, Do not include any text or words or inscriptions in the image!";
