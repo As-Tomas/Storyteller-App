@@ -7,10 +7,7 @@ import { useReactNavigationDevTools } from '@dev-plugins/react-navigation/build/
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 // SplashScreen.preventAutoHideAsync();
 
-
-
 export default function RootLayout() {
-
   // navigation debug plugin
   const navigationRef = useNavigationContainerRef();
   useReactNavigationDevTools(navigationRef);
@@ -34,6 +31,7 @@ export default function RootLayout() {
           headerTintColor: 'white',
         }}
       />
+
       <Stack.Screen
         name="HistoryScreen"
         options={{
@@ -46,6 +44,9 @@ export default function RootLayout() {
           headerTintColor: 'white',
         }}
       />
+
+      <Stack.Screen name="LibraryScreen" options={{ headerShown: false }} />
+
       <Stack.Screen
         name="[id]"
         options={{

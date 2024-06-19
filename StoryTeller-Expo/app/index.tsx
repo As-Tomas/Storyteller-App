@@ -30,6 +30,7 @@ export default function Index() {
         <View className="flex items-center mb-8">
           <ButtonActionStyled text="I’m child" onPress={() => router.push('ChildScreen')} />
           <ButtonActionStyled text="I’m parent" onPress={() => router.push('ParentScreen')} />
+          <ButtonActionStyled text="Library" onPress={() => router.push('LibraryScreen')} />
 
           <TouchableOpacity
             onPress={() => router.push('HistoryScreen')}
