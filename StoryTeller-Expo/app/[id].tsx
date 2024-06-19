@@ -8,6 +8,7 @@ import ImageStoryView from '@/components/ImageStoryView';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import Tts from 'react-native-tts';
+import ErrorHandler from '@/components/ErrorHandler';
 
 const HistoryRecord = () => {
   const [speaking, setSpeaking] = useState(false);
@@ -22,14 +23,7 @@ const HistoryRecord = () => {
 
   if (!record) {
     return (
-        <LinearGradient
-        className='flex-1 left-0 top-0 right-0 bottom-0'
-        colors={['#2e304e', '#213f6a', '#301e51']}
-        >
-          <View className='flex-1 flex items-center justify-center '>
-            <Text className='text-yellow-100' style={{ fontSize: wp(6) }}>Record not found</Text>
-          </View>
-        </LinearGradient>
+      <ErrorHandler label='Record not found' />        
     );
   }
 
