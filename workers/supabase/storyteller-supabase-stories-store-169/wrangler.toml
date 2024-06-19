@@ -1,0 +1,4 @@
+name = "storyteller-supabase-stories-store-169"
+main = "src/worker.js"
+compatibility_date = "2024-06-19"
+workers_dev = true
