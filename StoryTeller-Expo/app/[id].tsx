@@ -22,9 +22,14 @@ const HistoryRecord = () => {
 
   if (!record) {
     return (
-      <View>
-        <Text>Record not found</Text>
-      </View>
+        <LinearGradient
+        className='flex-1 left-0 top-0 right-0 bottom-0'
+        colors={['#2e304e', '#213f6a', '#301e51']}
+        >
+          <View className='flex-1 flex items-center justify-center '>
+            <Text className='text-yellow-100' style={{ fontSize: wp(6) }}>Record not found</Text>
+          </View>
+        </LinearGradient>
     );
   }
 
