@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Button, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Audio } from 'expo-av';
-import { getTTSAudio } from '@/apiCalls/ElevenLabs';
+import { getTTSAudio, getVoices } from '@/apiCalls/ElevenLabs';
 import { fromByteArray } from 'base64-js';
 
 const TTSAudioComponent: React.FC = () => {
@@ -21,17 +21,21 @@ const TTSAudioComponent: React.FC = () => {
     }
   };
 
+
   return (
-    <View style={styles.container} className=' w-4/5'>
+    <View style={styles.container} className=" w-4/5">
       <TextInput
         style={styles.input}
         placeholder="Enter text"
         value={text}
         onChangeText={setText}
-        className=' text-white'
+        className=" text-white"
       />
-      <TouchableOpacity onPress={handlePlayTTS} className=' h-5 bg-slate-400'>
-        <Text className='text-white'>Play TTS</Text>
+      <TouchableOpacity onPress={handlePlayTTS} className=" h-5 bg-slate-400">
+        <Text className="text-white">Play TTS</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={getVoices} className=" h-5 mt-4 bg-slate-400">
+        <Text className="text-white">Get voices</Text>
       </TouchableOpacity>
     </View>
   );
