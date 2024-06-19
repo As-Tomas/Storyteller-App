@@ -5,7 +5,7 @@ export const getLibraryChunk = async ({ page, pageSize }: { page: number; pageSi
     const response = await fetch(`${baseUrl}/api/stories?page=${page}&pageSize=${pageSize}`);
     const data = await response.json();
     if (response.ok) {
-      console.log('data', data);
+    //   console.log('data', data);
       return { success: true, data };
     }
   } catch (err: any) {

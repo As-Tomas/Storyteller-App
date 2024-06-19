@@ -10,11 +10,28 @@
 
 import { createClient } from '@supabase/supabase-js';
 
+const corsHeaders = {
+	'Access-Control-Allow-Origin': '*',
+	'Access-Control-Allow-Methods': 'POST, OPTIONS',
+	'Access-Control-Allow-Headers': 'Content-Type',
+};
+
 export default {
 	async fetch(request, env) {
+		const cache = env.STORY_CACHE; // Access the KV namespace
 		const url = new URL(request.url);
 		const path = url.pathname;
 		const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_KEY);
+
+		// Handle CORS preflight requests
+		if (request.method === 'OPTIONS') {
+			return new Response(null, { headers: corsHeaders });
+		}
+
+		// Only process POST and GET requests
+		if (request.method !== 'POST' && request.method !== 'GET') {
+			return new Response(JSON.stringify({ error: `${request.method} method not allowed.` }), { status: 405, headers: corsHeaders });
+		}
 
 		if (path === '/api/stories') {
 			if (request.method === 'GET') {
@@ -22,42 +39,55 @@ export default {
 				const pageSize = parseInt(url.searchParams.get('pageSize')) || 6;
 				const startRange = (page - 1) * pageSize;
 				const endRange = startRange + pageSize - 1;
+				const cacheKey = `stories-${page}-${pageSize}`;
+
+				// Check if data is in cache
+				const cachedResponse = await cache.get(cacheKey);
+				if (cachedResponse) {
+					return new Response(cachedResponse, { headers: corsHeaders });
+				}
 
 				const { data, error } = await supabase.from('stories').select('*').range(startRange, endRange);
 
 				if (error) {
+					console.error('Supabase error:', error.message);
 					return new Response(JSON.stringify({ error: error.message }), {
 						status: 500,
-						headers: {
-							'Content-Type': 'application/json',
-						},
+						headers: corsHeaders,
 					});
 				}
 
-				return new Response(JSON.stringify(data), {
-					headers: {
-						'Content-Type': 'application/json',
-					},
+				const responseJson = JSON.stringify(data);
+				await cache.put(cacheKey, responseJson, { expirationTtl: 3600 }); // Cache for 1 hour
+
+				return new Response(responseJson, {
+					headers: corsHeaders,
 				});
 			} else if (request.method === 'POST') {
-				const body = await request.json();
+				let body;
+				try {
+					body = await request.json();
+				} catch (err) {
+					console.error('Error parsing JSON:', err);
+					return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
+						status: 400,
+						headers: corsHeaders,
+					});
+				}
 
 				const { data, error } = await supabase.from('stories').insert([body]);
 
 				if (error) {
+					console.error('Supabase error:', error.message);
 					return new Response(JSON.stringify({ error: error.message }), {
 						status: 500,
-						headers: {
-							'Content-Type': 'application/json',
-						},
+						headers: corsHeaders,
 					});
 				}
 
 				return new Response(JSON.stringify(data), {
 					status: 201,
-					headers: {
-						'Content-Type': 'application/json',
-					},
+					headers: corsHeaders,
 				});
 			}
 		}
