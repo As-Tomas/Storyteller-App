@@ -128,10 +128,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  storyColumn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   image: {
     width: '100%',
     height: undefined,
