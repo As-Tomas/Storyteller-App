@@ -5,5 +5,6 @@ module.exports = {
   rules: {
     'prettier/prettier': 'warn',
     'import/no-unresolved': 'warn',
+    'Delete `␍`eslintprettier/prettier': 'ignore',
   },
 };
