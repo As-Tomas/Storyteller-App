@@ -9,18 +9,30 @@ import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import Tts from 'react-native-tts';
 import ErrorHandler from '@/components/ErrorHandler';
+import { useLibraryStoryStore } from '@/utils/Store/libraryPrevStory';
 
 const HistoryRecord = () => {
   const [speaking, setSpeaking] = useState(false);
   const { id: index } = useLocalSearchParams<{ id: string }>();
   const history = useHistoryStore((state) => state.history);
 
+  const {libStory} = useLibraryStoryStore((state) => ({
+    libStory: state.libStory,
+  }));
+
   const [isVisible, setIsVisible] = useState(true);
 
   const recordId = index ? parseInt(index, 10) : undefined;
 
-  const record = recordId !== undefined ? history[recordId] : undefined;
+  let record;
+  // library items id starts from 100 000 so we load from state
+  if (recordId && recordId >= 99999) {
+    record = libStory;
+  } else {
+    record = recordId !== undefined ? history[recordId] : undefined;
+  }
 
+  
   if (!record) {
     return (
       <ErrorHandler label='Record not found' />        
@@ -39,7 +51,8 @@ const HistoryRecord = () => {
     }
   };
 
-  const { title, story, image, dateSaved } = record;
+  const { title, story, image } = record;
+  const dateSaved = 'dateSaved' in record ? record.dateSaved : undefined;
 
   // Split the story into paragraphs
   const paragraphs = story.split('\n');
@@ -110,7 +123,7 @@ const HistoryRecord = () => {
         </Text>
 
         <Text className="text-yellow-100 mx-auto pb-10 text-center" style={{ fontSize: wp(4), textShadowColor: 'black', textShadowRadius: 5 }}>
-          {new Date(dateSaved).toLocaleString()}
+          { dateSaved && new Date(dateSaved).toLocaleString()}
         </Text>
       </ScrollView>
 
