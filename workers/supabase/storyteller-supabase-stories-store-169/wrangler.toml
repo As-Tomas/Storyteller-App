@@ -3,5 +3,6 @@ main = "src/worker.js"
 compatibility_date = "2024-06-19"
 workers_dev = true
 kv_namespaces = [
-  { binding = "STORY_CACHE", id = "cc871fba5fe04580bc1403e334d2c8d1" }
+  { binding = "STORY_CACHE", id = "cc871fba5fe04580bc1403e334d2c8d1" },
+  { binding = "SECRET_CACHE", id = "118c57c55c6340868e82458efccebb24" }
 ]
