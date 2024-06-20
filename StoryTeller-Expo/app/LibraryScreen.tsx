@@ -5,7 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { getLibraryChunk } from '@/apiCalls/supaWorker';
 import ErrorHandler from '@/components/ErrorHandler';
 import { router } from 'expo-router';
-import { useLibraryStoryStore } from '@/utils/Store/libraryPrewStory';
+import { useLibraryStoryStore } from '@/utils/Store/libraryPrevStory';
 interface LibraryItem {
   id: number;
   story: string;
@@ -101,7 +101,7 @@ export default function LibraryScreen() {
             data={stories}
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
-            // onEndReached={handleLoadMore}
+            onEndReached={handleLoadMore}
             onEndReachedThreshold={0.5}
             style={{ paddingTop: 48 }}
           />

@@ -21,6 +21,7 @@ import ImageStoryView from '@/components/ImageStoryView';
 import PlaybackControls from '@/components/navigation/PlaybackControls';
 
 export default function CildScreen() {  
+  //! todo: known bug: when user does not return to main screen but creates new story, it is not saved to history
 
   const [recording, setRecording] = useState(false);
   const [result, setResult] = useState('');
