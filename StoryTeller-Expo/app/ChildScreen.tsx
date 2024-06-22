@@ -40,13 +40,11 @@ export default function CildScreen() {
 
   // safe to history
   useEffect(() => {
-    //! todo: known bug: when user does not return to main screen but creates new story, it is not saved to history
-    //! it is fixed but not tested yet.
-    if (recentStory !== '' && storySaved !== recentStory) {
+    if (recentStory !== '' && storySaved !== recentStory && storyImage !== '' && storyTitle !== '') {
       addHistoryItem(recentStory, storyImage, storyTitle);
       setStorySaved(recentStory);
     }
-  }, [storyImage]);
+  }, [ storyImage,]);
 
   // show mic at the end
   const handleScroll = (event: any) => {
@@ -178,7 +176,7 @@ export default function CildScreen() {
     Voice.onSpeechError = speechErrorHandler;
 
     // tts handlers
-    Tts.addEventListener('tts-start', (event) => console.log('start', event));
+    // Tts.addEventListener('tts-start', (event) => console.log('start', event));
     // Tts.addEventListener('tts-progress', event =>
     //   console.log('progress', event),
     // );
@@ -186,7 +184,7 @@ export default function CildScreen() {
       console.log('finish', event);
       setSpeaking(false);
     });
-    Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
+    // Tts.addEventListener('tts-cancel', (event) => console.log('cancel', event));
 
     return () => {
       // destroy the voice instance after component unmounts

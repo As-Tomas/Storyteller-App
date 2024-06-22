@@ -23,41 +23,30 @@ export const useHistoryStore = create<HistoryStore>()(
   persist(
     (set) => ({
       history: [],
-/* tempt triger to store to supabase
-      addHistoryItem: (story, image, title) =>
-        set((state) => {
-          const newHistory = [{ story, image, title, dateSaved: new Date() }, ...state.history];
-          if (newHistory.length > MAX_HISTORY_SIZE) {
-            newHistory.pop(); // Remove the oldest item if history exceeds the maximum size
-          }
-          return { history: newHistory };
-        }),
-*/
       addHistoryItem: (story, image, title) => {
         const newHistoryItem = { story, image, title, dateSaved: new Date() };
 
-        // Trigger the addLibraryItem function to save the item in Supabase
-        addLibraryItem({
-          story,
-          image,
-          title,
-          date: new Date(), // Make sure this matches the format expected by Supabase
-          audio_file_url: 'url to autio file', // Add appropriate value if necessary
-        }).then((result) => {
-          if (result.success) {
-            console.log('Item successfully added to Supabase:');
-          } else {
-            console.log('Failed to add item to Supabase:', result.msg);
-          }
-        });
-
-        // Update the state
         set((state) => {
           const newHistory = [newHistoryItem, ...state.history];
           if (newHistory.length > MAX_HISTORY_SIZE) {
             newHistory.pop(); // Remove the oldest item if history exceeds the maximum size
           }
           return { history: newHistory };
+        });
+
+        // Trigger the addLibraryItem function to save the item in Supabase temporary
+        addLibraryItem({
+          story,
+          image,
+          title,
+          date: new Date(), // Make sure this matches the format expected by Supabase
+          audio_file_url: 'url to audio file', // Add appropriate value if necessary
+        }).then((result) => {
+          if (result.success) {
+            console.log('Item successfully added to Supabase');
+          } else {
+            console.log('Failed to add item to Supabase:', result.msg);
+          }
         });
       },
       removeHistoryItem: (index) =>
@@ -79,3 +68,5 @@ export const useHistoryStore = create<HistoryStore>()(
     },
   ),
 );
+
+
