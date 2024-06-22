@@ -6,9 +6,10 @@ interface UserTextInputProps {
   setStoryTitle: (text: string) => void;
   setup: 'parent' | 'child' | string;
   fetchResponse?: (text: string) => void;
+  resetScreenState: () => void;
 }
 
-const UserTextInput: React.FC<UserTextInputProps> = ({ setStoryTitle, setup, fetchResponse }) => {
+const UserTextInput: React.FC<UserTextInputProps> = ({ setStoryTitle, setup, fetchResponse, resetScreenState }) => {
   const [isInputFieldVisible, setInputFieldIsVisible] = useState(setup === 'parent');
   const [text, setText] = useState('');
 
@@ -20,6 +21,11 @@ const UserTextInput: React.FC<UserTextInputProps> = ({ setStoryTitle, setup, fet
     setText('');
     setInputFieldIsVisible(false);
   }, [text, setStoryTitle, fetchResponse]);
+
+  const resetScreen = () => {
+    setInputFieldIsVisible(true);
+    resetScreenState(); 
+  };
 
   return (
     <View style={styles.container}>
@@ -42,7 +48,7 @@ const UserTextInput: React.FC<UserTextInputProps> = ({ setStoryTitle, setup, fet
           )}
         </View>
       ) : (
-        <TouchableOpacity onPress={() => setInputFieldIsVisible(true)} style={styles.openInputButton}>
+        <TouchableOpacity onPress={ resetScreen } style={styles.openInputButton}>
           <Text style={styles.openInputButtonText}>Tap to type...</Text>
         </TouchableOpacity>
       )}

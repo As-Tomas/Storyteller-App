@@ -20,9 +20,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import ImageStoryView from '@/components/ImageStoryView';
 import PlaybackControls from '@/components/navigation/PlaybackControls';
 
-export default function CildScreen() {  
-  //! todo: known bug: when user does not return to main screen but creates new story, it is not saved to history
-
+export default function CildScreen() {    
   const [recording, setRecording] = useState(false);
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,6 +28,7 @@ export default function CildScreen() {
   const [speaking, setSpeaking] = useState(false);
   const [storyImage, setStoryImage] = useState('');
   const [storyTitle, setStoryTitle] = useState('');
+  const [storySaved, setStorySaved] = useState('');
 
   const { addHistoryItem } = useHistoryStore();
 
@@ -39,25 +38,26 @@ export default function CildScreen() {
     setRecentStory: state.setRecentStory,
   }));
 
-
-
+  // safe to history
   useEffect(() => {
-    if (recentStory !== '') {
+    //! todo: known bug: when user does not return to main screen but creates new story, it is not saved to history
+    //! it is fixed but not tested yet.
+    if (recentStory !== '' && storySaved !== recentStory) {
       addHistoryItem(recentStory, storyImage, storyTitle);
+      setStorySaved(recentStory);
     }
   }, [storyImage]);
 
+  // show mic at the end
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const contentHeight = event.nativeEvent.contentSize.height;
-    const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;
-
-    // Check if user has reached the end of the ScrollView
-    if (offsetY + scrollViewHeight >= contentHeight) {
-      // Hide the view
+    const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;    
+    const threshold = 35;  
+    
+    if (offsetY + scrollViewHeight + threshold >= contentHeight) {
       setIsVisible(true);
     } else {
-      // Show the view
       setIsVisible(false);
     }
   };
@@ -96,7 +96,7 @@ export default function CildScreen() {
     Tts.stop();
     try {
       //! set language from userSettings.language to use devices local language
-      await Voice.start('en-GB'); // en-GB | userSettings.language
+      await Voice.start(settingsData.language); // en-GB | settingsData.language and todo: display languageLabel is sotored in user settings
     } catch (error) {
       console.log('error', error);
     }
@@ -111,10 +111,6 @@ export default function CildScreen() {
     }
   };
 
-  const preparePromptForImage = (recentStory: string) => {
-    return `Be the prompt an engineer, sumarize this story and create single promt, respond just with prompt text . Here is the story: " ${recentStory} "`;
-  };
-
   const fetchResponse = (userInput: string) => {
     if (userInput.trim().length > 0) {
       setLoading(true);
@@ -124,9 +120,9 @@ export default function CildScreen() {
       chatgptApiCall(prompt).then((res) => {
         setLoading(false);
         if (res.success) {
-          // setStory(res.data);
           setRecentStory(res.data);
           startTextToSpeach(res.data);
+          setIsVisible(false);
         } else {
           Alert.alert('Error', res.msg);
         }
@@ -134,17 +130,9 @@ export default function CildScreen() {
     }
   };
 
-  // for note beafore migration to expo
-  // const startTextToSpeach = (story: string) => {
-  //     setSpeaking(true);
-  //     Tts.speak(story, {
-  //       androidParams: {
-  //         KEY_PARAM_PAN: -1,
-  //         KEY_PARAM_VOLUME: 0.5,
-  //         KEY_PARAM_STREAM: 'STREAM_MUSIC',
-  //       },
-  //     });
-  //   };
+  const preparePromptForImage = (recentStory: string) => {
+    return `Be the prompt an engineer, sumarize this story and create single promt, respond just with prompt text . Here is the story: " ${recentStory} "`;
+  };
 
   const startTextToSpeach = (recentStory: string) => {
     setSpeaking(true);
@@ -259,6 +247,12 @@ export default function CildScreen() {
   const firstHalf = paragraphs.slice(0, midPoint).join('\n');
   const secondHalf = paragraphs.slice(midPoint).join('\n');
 
+  const resetScreenState = () => {
+    setStoryTitle('');
+    setStoryImage('');
+    setRecentStory('');
+  };
+
   return (
     <ImageBackground
       source={require('@/assets/images/ChildScrBackground.png')}
@@ -349,7 +343,7 @@ export default function CildScreen() {
                     style={{ width: hp(10), height: hp(10) }}
                   />
                 </TouchableOpacity>
-                <UserTextInput setStoryTitle={setStoryTitle} setup={'child'} fetchResponse={fetchResponse} />
+                <UserTextInput setStoryTitle={setStoryTitle} setup={'child'} fetchResponse={fetchResponse} resetScreenState={resetScreenState} />
               </View>
             )}
           </View>
