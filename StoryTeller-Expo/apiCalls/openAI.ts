@@ -15,6 +15,9 @@ const dalleUrl = 'https://api.openai.com/v1/images/generations';
 //! Error Response: {"error": {"code": "insufficient_quota", "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.", "param": null, "type": "insufficient_quota"}}
  
 export const chatgptApiCall = async (prompt: string) => {
+
+  console.log("🚀 ~ chatgptApiCall ~ answer trigered --------------------------------------")
+  
   let answer=`Once upon a time, in a land not too far from here, there was a magical forest called Whispering Woods. This forest was unlike any other, filled with ancient trees that seemed to touch the sky, vibrant flowers that glowed in the dark, and streams that sang melodious tunes as they flowed.
 
   In the heart of Whispering Woods lived a curious young elf named Elara. Elara had sparkling green eyes and a heart full of wonder. She was known for her adventurous spirit and her ability to communicate with all the creatures of the forest. Her best friend was a wise old owl named Ollie, who had seen many things in his long life.
@@ -32,7 +35,7 @@ export const chatgptApiCall = async (prompt: string) => {
   With a heart full of happiness, Elara and Ollie made their way back home, knowing that their beloved forest would always be protected. And so, the magic of Whispering Woods continued to thrive, inspiring generations of adventurers to come.
   
   The end.`;
-  return Promise.resolve({ success: true, data: answer });
+    return Promise.resolve({ success: true, data: answer });
   console.log('🚀 ~ chatgptApiCall ~ INCOMING prompt: ', prompt);
   try {
     const res = await client.post(chatgptUrl, {
