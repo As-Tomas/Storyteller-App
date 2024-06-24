@@ -6,7 +6,6 @@ import { useSettingsStore } from '../utils/Store/settingsStore';
 import { useEffect } from 'react';
 import ButtonActionStyled from '@/components/ButtonActionStyled';
 import { AntDesign } from '@expo/vector-icons';
-import TTSAudioComponent from './ElevTestScr';
 
 export default function Index() {
   const { setRecentStory } = useSettingsStore((state) => ({
@@ -47,8 +46,7 @@ export default function Index() {
               color="#FEF9C3"
               style={{ marginLeft: 8, marginRight: 8, marginTop: 'auto', marginBottom: 'auto' }}
             />
-          </TouchableOpacity>          
-          <TTSAudioComponent />
+          </TouchableOpacity>   
         </View>
       </View>
     </ImageBackground>

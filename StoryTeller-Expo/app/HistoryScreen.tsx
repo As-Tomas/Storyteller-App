@@ -12,8 +12,9 @@ import { FlashList } from '@shopify/flash-list';
 interface Record {
   title: string;
   story: string;
-  dateSaved: Date;
   image: string;
+  dateSaved: Date;
+  audioData?: ArrayBuffer; 
 }
 
 const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -36,7 +37,8 @@ export default function HistoryScreen() {
   };
 
   const handleRecordPress = (index: number) => {
-    router.push(`/${index}`);
+    // router.push(`/${index}`);
+    router.navigate(`/${index}`);
   };
 
   const renderItem = ({ item, index }: { item: Record; index: number }) => (
@@ -62,6 +64,9 @@ export default function HistoryScreen() {
               />
             ) : null}
           </View>
+          {item.audioData ? (
+              <Text style={styles.recordStory}>🔊</Text>
+            ) : null}
           <View style={styles.textContainer}>
             <Text numberOfLines={7} style={styles.recordStory}>
               {item.story}

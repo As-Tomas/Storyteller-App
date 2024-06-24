@@ -1,5 +1,5 @@
 import { View, Text, ImageBackground, ScrollView, TouchableOpacity, Alert, Animated } from 'react-native';
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext, useCallback } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 // import { useNavigation } from "@react-navigation/native";
@@ -15,10 +15,10 @@ import { Image } from 'expo-image';
 import { useHistoryStore } from '../utils/Store/historyStore';
 import { adjustImagePrompt, generatePrompt } from '@/components/promptGenerator';
 import { useFocusEffect, useLocalSearchParams  } from 'expo-router';
-import { useCallback } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import ImageStoryView from '@/components/ImageStoryView';
 import PlaybackControls from '@/components/navigation/PlaybackControls';
+import TTSAudioComponent from '@/components/navigation/TTSAudioComponent';
 
 export default function CildScreen() {    
   const [recording, setRecording] = useState(false);
@@ -119,7 +119,7 @@ export default function CildScreen() {
         setLoading(false);
         if (res.success) {
           setRecentStory(res.data);
-          startTextToSpeach(res.data);
+          // startTextToSpeach(res.data);
           setIsVisible(false);
         } else {
           Alert.alert('Error', res.msg);
@@ -147,6 +147,7 @@ export default function CildScreen() {
 
   //Todo: plus add pause funcionality
   const beginSpeaking = () => {
+
     startTextToSpeach(recentStory);
   };
 
@@ -347,13 +348,18 @@ export default function CildScreen() {
           </View>
         )}
 
+               
+        {recentStory !== '' && <TTSAudioComponent recentStory={recentStory}/>}
+{/* 
+trhis one maybe will use for free version 
+todo: export to separate component
         <PlaybackControls
           speaking={speaking}
           recentStory={recentStory}
           stopSpeaking={stopSpeaking}
           pauseSpeaking={pauseSpeaking}
           beginSpeaking={beginSpeaking}
-        />
+        /> */}
       </View>
     </ImageBackground>
   );

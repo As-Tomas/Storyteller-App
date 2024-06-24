@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Tts from 'react-native-tts';
 import ErrorHandler from '@/components/ErrorHandler';
 import { useLibraryStoryStore } from '@/utils/Store/libraryPrevStory';
+import TTSAudioComponent from '@/components/navigation/TTSAudioComponent';
 
 const HistoryRecord = () => {
   const [speaking, setSpeaking] = useState(false);
@@ -63,42 +64,42 @@ const HistoryRecord = () => {
   // Join the paragraphs back together
   const firstHalf = paragraphs.slice(0, midPoint).join('\n');
   const secondHalf = paragraphs.slice(midPoint).join('\n');
-  
-  const startTextToSpeach = (recentStory: string) => {
-    setSpeaking(true);
-    Tts.speak(recentStory, {
-      iosVoiceId: '',
-      rate: 0.5,
-      androidParams: {
-        KEY_PARAM_PAN: -1,
-        KEY_PARAM_VOLUME: 0.5,
-        KEY_PARAM_STREAM: 'STREAM_MUSIC',
-      },
-    });
-  };
+ // todo: use this for TTS for free tier users 
+  // const startTextToSpeach = (recentStory: string) => {
+  //   setSpeaking(true);
+  //   Tts.speak(recentStory, {
+  //     iosVoiceId: '',
+  //     rate: 0.5,
+  //     androidParams: {
+  //       KEY_PARAM_PAN: -1,
+  //       KEY_PARAM_VOLUME: 0.5,
+  //       KEY_PARAM_STREAM: 'STREAM_MUSIC',
+  //     },
+  //   });
+  // };
 
-  const stopSpeaking = () => {
-    Tts.stop();
-    setSpeaking(false);
-  };
+  // const stopSpeaking = () => {
+  //   Tts.stop();
+  //   setSpeaking(false);
+  // };
 
-  const beginSpeaking = () => {
-    startTextToSpeach(story);
-  };
+  // const beginSpeaking = () => {
+  //   startTextToSpeach(story);
+  // };
 
-  const pauseSpeaking = () => {
-    Tts.pause(); //Todo: not implemented jet
-    setSpeaking(false);
-  };
+  // const pauseSpeaking = () => {
+  //   Tts.pause(); //Todo: not implemented jet
+  //   setSpeaking(false);
+  // };
 
-  // Stop TTS when screen loses focus
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        Tts.stop();
-      };
-    }, []),
-  );
+  // // Stop TTS when screen loses focus
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     return () => {
+  //       Tts.stop();
+  //     };
+  //   }, []),
+  // );
 
   return (
     <View className='flex-1'>
@@ -125,15 +126,17 @@ const HistoryRecord = () => {
         <Text className="text-yellow-100 mx-auto pb-10 text-center" style={{ fontSize: wp(4), textShadowColor: 'black', textShadowRadius: 5 }}>
           { dateSaved && new Date(dateSaved).toLocaleString()}
         </Text>
-      </ScrollView>
+      </ScrollView>    
 
-       <PlaybackControls
+        <TTSAudioComponent recentStory={story} />
+
+        {/* <PlaybackControls
           speaking={speaking}
           recentStory={story}
           stopSpeaking={stopSpeaking}
           pauseSpeaking={pauseSpeaking}
           beginSpeaking={beginSpeaking}
-        />
+        /> */}
       </LinearGradient>
 
     </View>
@@ -141,13 +144,3 @@ const HistoryRecord = () => {
 };
 
 export default HistoryRecord;
-
-// {isVisible && <View></View>}
-
-{/* <PlaybackControls
-          speaking={speaking}
-          recentStory={recentStory}
-          stopSpeaking={stopSpeaking}
-          pauseSpeaking={pauseSpeaking}
-          beginSpeaking={beginSpeaking}
-        /> */}

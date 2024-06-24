@@ -8,11 +8,12 @@ interface HistoryItem {
   image: string;
   title: string;
   dateSaved: Date;
+  audioData?: ArrayBuffer; 
 }
 
 interface HistoryStore {
   history: HistoryItem[];
-  addHistoryItem: (story: string, image: string, title: string) => void;
+  addHistoryItem: (story: string, image: string, title: string, audioData?: ArrayBuffer) => void;
   removeHistoryItem: (index: number) => void;
   clearHistory: () => void;
   // doubleHistory: () => void;
@@ -23,16 +24,32 @@ export const useHistoryStore = create<HistoryStore>()(
   persist(
     (set) => ({
       history: [],
-      addHistoryItem: (story, image, title) => {
-        const newHistoryItem = { story, image, title, dateSaved: new Date() };
-
+      addHistoryItem: (story, image, title, audioData) => {
         set((state) => {
-          const newHistory = [newHistoryItem, ...state.history];
-          if (newHistory.length > MAX_HISTORY_SIZE) {
-            newHistory.pop(); // Remove the oldest item if history exceeds the maximum size
+          const existingItemIndex = state.history.findIndex(item => item.story === story);
+
+          if (existingItemIndex !== -1) {
+            // Update existing item
+            const updatedHistory = [...state.history];
+            updatedHistory[existingItemIndex] = {
+              ...updatedHistory[existingItemIndex],
+              image,
+              title,
+              dateSaved: new Date(),
+              audioData,
+            };
+            return { history: updatedHistory };
+          } else {
+            // Add new item
+            const newHistoryItem = { story, image, title, dateSaved: new Date(), audioData };
+            const newHistory = [newHistoryItem, ...state.history];
+            if (newHistory.length > MAX_HISTORY_SIZE) {
+              newHistory.pop(); // Remove the oldest item if history exceeds the maximum size
+            }
+            return { history: newHistory };
           }
-          return { history: newHistory };
         });
+
 
         // Trigger the addLibraryItem function to save the item in Supabase temporary
         addLibraryItem({
