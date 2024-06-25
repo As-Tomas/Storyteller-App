@@ -65,7 +65,7 @@ export default function LibraryScreen() {
         <Text numberOfLines={2} style={styles.recordTitle}>
           {item.title}
         </Text>
-        <Text>item?.audio_file_url</Text>
+        <Text className='text-white'>{item?.audio_file_url !== "should be url" ? "yes" : " No audio"}</Text>
         <View style={styles.storyContainer}>
           <View style={styles.imageContainer}>
             {item.image ? (
