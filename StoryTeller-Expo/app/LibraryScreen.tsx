@@ -93,10 +93,8 @@ export default function LibraryScreen() {
   }
   return (
     <LinearGradient className="flex-1 left-0 top-0 right-0 bottom-0" colors={['#2e304e', '#213f6a', '#301e51']}>
-      <View className="flex-1 flex items-center justify-center ">
-        {loading ? (
-          <ActivityIndicator size="large" color="#70945f" />
-        ) : (
+      <View className=" relative flex-1 flex items-center justify-center ">
+        {loading && <ActivityIndicator className='absolute' size="large" color="#70945f" /> }        
           <FlatList
             data={stories}
             renderItem={renderItem}
@@ -105,7 +103,7 @@ export default function LibraryScreen() {
             onEndReachedThreshold={0.5}
             style={{ paddingTop: 48 }}
           />
-        )}
+        
       </View>
     </LinearGradient>
   );
