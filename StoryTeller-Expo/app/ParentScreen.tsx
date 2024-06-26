@@ -114,7 +114,7 @@ export default function ParentScreen() {
   useEffect(() => {
     if (story) {
       setRecentStory(story);
-      router.push('ChildScreen');
+      router.replace('ChildScreen');
       setStory('');
       setLoading(false);
     }

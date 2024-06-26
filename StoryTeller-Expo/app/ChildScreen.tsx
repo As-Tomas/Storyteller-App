@@ -19,8 +19,10 @@ import { FontAwesome } from '@expo/vector-icons';
 import ImageStoryView from '@/components/ImageStoryView';
 import PlaybackControls from '@/components/navigation/PlaybackControls';
 import TTSAudioComponent from '@/components/navigation/TTSAudioComponent';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function CildScreen() {    
+  const { top, bottom } = useSafeAreaInsets();
   const [recording, setRecording] = useState(false);
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
@@ -258,14 +260,14 @@ export default function CildScreen() {
       className="flex-1 "
       imageStyle={recentStory === '' ? { opacity: 1 } : { opacity: 0.7 }}
       style={{ backgroundColor: 'black' }}>
-      <View className="flex-1  items-center justify-center relative">
+      <View className="flex-1  items-center justify-center relative" >
         <TouchableOpacity
           onPress={() => {
             // Tts.stop(); // Stop the voice before navigation
             router.navigate('/');
           }}
-          className="absolute z-10 top-6 left-4 flex-row items-center justify-center px-2 rounded-3xl "
-          style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)' }}>
+          className="absolute z-10 top-1 left-4 flex-row items-center justify-center px-2 rounded-3xl "
+          style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)', marginTop: top}}>
           <Image source={require('@/assets/elements/arrow_back.png')} style={{ width: hp(2), height: hp(2) }} />
           <Text className="text-yellow-100 m-2 " style={{ fontSize: wp(3.5) }}>
             Start
@@ -279,7 +281,7 @@ export default function CildScreen() {
         ) : (
           <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
             <Text 
-            className="text-yellow-100 mx-auto pt-10 text-center " style={{ fontSize: wp(7)}}
+            className="text-yellow-100 mx-auto pt-10 text-center " style={{ fontSize: wp(7), marginTop: top-30}}
             numberOfLines={2} 
             >
               {storyTitle}
@@ -288,7 +290,7 @@ export default function CildScreen() {
 
 
             <Text
-              className="text-yellow-100 mx-2 pb-8 text-justify"
+              className="text-yellow-100 mx-2 pt-5 pb-8 text-justify"
               style={{
                 fontSize: wp(4.5),
                 textShadowColor: 'black',
