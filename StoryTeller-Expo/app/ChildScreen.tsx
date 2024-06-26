@@ -262,7 +262,7 @@ export default function CildScreen() {
         <TouchableOpacity
           onPress={() => {
             // Tts.stop(); // Stop the voice before navigation
-            router.push('/');
+            router.navigate('/');
           }}
           className="absolute z-10 top-6 left-4 flex-row items-center justify-center px-2 rounded-3xl "
           style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)' }}>
