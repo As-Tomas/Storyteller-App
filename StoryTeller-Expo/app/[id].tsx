@@ -52,7 +52,7 @@ const HistoryRecord = () => {
     }
   };
 
-  const { title, story, image } = record;
+  const { title, story, image, audioData} = record;
   const dateSaved = 'dateSaved' in record ? record.dateSaved : undefined;
 
   // Split the story into paragraphs
@@ -128,7 +128,7 @@ const HistoryRecord = () => {
         </Text>
       </ScrollView>    
 
-        <TTSAudioComponent recentStory={story} />
+        <TTSAudioComponent recentStory={story} audio_inBase64={audioData}/>
 
         {/* <PlaybackControls
           speaking={speaking}

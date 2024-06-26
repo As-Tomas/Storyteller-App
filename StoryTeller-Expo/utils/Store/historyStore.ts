@@ -2,23 +2,24 @@ import { create } from 'zustand';
 import { zustandStorage } from './mmkv-storage';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { addLibraryItem } from '@/apiCalls/supaWorker';
+import { fromByteArray } from 'base64-js';
 
 interface HistoryItem {
   story: string;
   image: string;
   title: string;
   dateSaved: Date;
-  audioData?: ArrayBuffer; 
+  audioData?: string; 
 }
 
 interface HistoryStore {
   history: HistoryItem[];
-  addHistoryItem: (story: string, image: string, title: string, audioData?: ArrayBuffer) => void;
+  addHistoryItem: (story: string, image: string, title: string, audioData?: string) => void;
   removeHistoryItem: (index: number) => void;
   clearHistory: () => void;
   // doubleHistory: () => void;
 }
-const MAX_HISTORY_SIZE = 200;
+const MAX_HISTORY_SIZE = 50;
 
 export const useHistoryStore = create<HistoryStore>()(
   persist(
@@ -56,8 +57,8 @@ export const useHistoryStore = create<HistoryStore>()(
           story,
           image,
           title,
-          date: new Date(), // Make sure this matches the format expected by Supabase
-          audio_file_url: 'url to audio file', // Add appropriate value if necessary
+          date: new Date(), 
+          audio_file_url: audioData
         }).then((result) => {
           if (result.success) {
             console.log('Item successfully added to Supabase');

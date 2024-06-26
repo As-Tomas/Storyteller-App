@@ -28,7 +28,7 @@ interface itemToLibrary {
   image: string;
   title: string;
   date: Date;
-  audio_file_url: string;
+  audio_file_url?: string;
 }
 
 export const addLibraryItem = async (item: itemToLibrary) => {

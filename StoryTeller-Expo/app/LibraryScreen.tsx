@@ -12,7 +12,26 @@ interface LibraryItem {
   image: string;
   title: string;
   date: Date;
-  audio_file_url: string;
+  audioData: string;
+}
+interface IncomingLibraryItem {
+  id: number;
+  story: string;
+  image: string;
+  title: string;
+  date: Date;
+  audio_file_url: string; // diferent incoming data property
+}
+
+function transformToLibraryItem(incomingItem: IncomingLibraryItem): LibraryItem {
+  return {
+    id: incomingItem.id,
+    story: incomingItem.story,
+    image: incomingItem.image,
+    title: incomingItem.title,
+    date: incomingItem.date,
+    audioData: incomingItem.audio_file_url, // Maping audio_file_url to audioData
+  };
 }
 
 export default function LibraryScreen() {
@@ -30,11 +49,12 @@ export default function LibraryScreen() {
     try {
       const { success, data, msg } = (await getLibraryChunk({ page, pageSize })) as {
         success: boolean;
-        data: Array<LibraryItem>;
-        msg?: undefined;
+        data: Array<IncomingLibraryItem>;
+        msg?: string;
       };
       if (success) {
-        setStories((prev) => [...prev, ...data]);
+        const libraryItems = data.map(transformToLibraryItem);
+        setStories((prev) => [...prev, ...libraryItems]);
       } else {
         //! todo: add popum message
         console.error(msg);
@@ -52,6 +72,7 @@ export default function LibraryScreen() {
     }
   };
 
+  // we use state to load library story
   const handleRecordPress = (item : LibraryItem) => {
     useLibraryStoryStore.setState({ libStory: item });
     
@@ -65,7 +86,7 @@ export default function LibraryScreen() {
         <Text numberOfLines={2} style={styles.recordTitle}>
           {item.title}
         </Text>
-        <Text className='text-white'>{item?.audio_file_url !== "should be url" ? "yes" : " No audio"}</Text>
+        <Text className='text-white'>{item?.audioData !== null ? "yes" : " No audio"}</Text>
         <View style={styles.storyContainer}>
           <View style={styles.imageContainer}>
             {item.image ? (

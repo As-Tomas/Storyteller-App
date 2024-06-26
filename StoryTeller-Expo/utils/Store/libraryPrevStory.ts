@@ -8,7 +8,7 @@ interface LibraryItem {
   image: string;
   title: string;
   date: Date;
-  audio_file_url: string;
+  audioData: string;
 }
 
 interface LibraryStoryState {
@@ -19,7 +19,7 @@ interface LibraryStoryState {
 export const useLibraryStoryStore = create<LibraryStoryState>()(
   persist(
     (set) => ({
-      libStory: { id: 0, story: '', image: '', title: '', date: new Date(), audio_file_url: '' },
+      libStory: { id: 0, story: '', image: '', title: '', date: new Date(), audioData: '' },
       setLibStory: (libStory) => set({ libStory }),
     }),
     {

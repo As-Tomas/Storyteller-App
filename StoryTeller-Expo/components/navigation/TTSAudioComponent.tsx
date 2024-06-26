@@ -9,34 +9,51 @@ import { useFocusEffect } from 'expo-router';
 
 interface TTSAudioComponentProps {
   recentStory: string;
+  audio_inBase64?: string;
 }
 
-const TTSAudioComponent: React.FC<TTSAudioComponentProps> = ({ recentStory }) => {
+const TTSAudioComponent: React.FC<TTSAudioComponentProps> = ({ recentStory, audio_inBase64 }) => {
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const { addHistoryItem, history } = useHistoryStore();
 
   const handlePlayTTS = async () => {
     try {
-      // Check if the audio data is already in the history
-      const matchingHistoryItem = history.find((item) => item.story === recentStory);
+      let data: ArrayBuffer | undefined;
+      let base64String: string | undefined;
 
-      if (!matchingHistoryItem) {
-        console.log('No matching history item found. Skipping TTS.');
-        return;
+      if (!audio_inBase64) {
+        console.log('0');
+        // Check if the audio data is already in the history
+        const matchingHistoryItem = history.find((item) => item.story === recentStory);
+        if (matchingHistoryItem?.audioData) {          
+        console.log('1');
+          
+          base64String = matchingHistoryItem.audioData;
+          // If no audio data is found, fetch new audio data
+        } else if (matchingHistoryItem && !matchingHistoryItem?.audioData) {
+          console.log('2');
+          data = await getTTSAudio(recentStory);
+          base64String = fromByteArray(new Uint8Array(data));
+          await addHistoryItem(
+            matchingHistoryItem.story,
+            matchingHistoryItem.image,
+            matchingHistoryItem.title,
+            base64String,
+          );
+        } 
+
+        // If audio data is passed in as a prop, use that instead
+      } else if (audio_inBase64) {
+        console.log('3');
+        base64String = audio_inBase64;
+        // if audio data is already in the history, use that
       }
 
-      let data = matchingHistoryItem.audioData;
-
-      // If no audio data is found, fetch new audio data
-      if (!data) {
-        data = await getTTSAudio(recentStory);
-
-        // Update the history item with the new audio data
-        addHistoryItem(matchingHistoryItem.story, matchingHistoryItem.image, matchingHistoryItem.title, data);
+      if (!base64String) {
+        throw new Error('base64String is not audio string, or library item without premade sound');
       }
 
-      const base64String = fromByteArray(new Uint8Array(data));
       const soundObject = new Audio.Sound();
       await soundObject.loadAsync({ uri: `data:audio/mp3;base64,${base64String}` });
       setSound(soundObject);
@@ -78,11 +95,11 @@ const TTSAudioComponent: React.FC<TTSAudioComponentProps> = ({ recentStory }) =>
   );
 
   return (
-    <PlaybackControls 
-      speaking={isPlaying} 
-      recentStory={recentStory} 
-      stopSpeaking={handleStopTTS} 
-      pauseSpeaking={handlePauseTTS} 
+    <PlaybackControls
+      speaking={isPlaying}
+      recentStory={recentStory}
+      stopSpeaking={handleStopTTS}
+      pauseSpeaking={handlePauseTTS}
       beginSpeaking={handlePlayTTS}
     />
   );
