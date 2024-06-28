@@ -45,7 +45,21 @@ export default function RootLayout() {
         }}
       />
 
-      <Stack.Screen name="LibraryScreen" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="LibraryScreen"
+        options={{
+          headerBackground: () => <BlurredHeaderBackground />,
+          title: 'Stories Library',
+          headerTitleAlign: 'center',
+          headerTransparent: true,
+          headerTitleStyle: {
+            fontSize: 30,
+            fontWeight: 'bold',
+            color: 'white',
+          },
+          headerTintColor: 'white',
+        }}
+      />
 
       <Stack.Screen
         name="[id]"

@@ -1,11 +1,13 @@
-import { View, Text, FlatList, Image, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, ImageBackground, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { getLibraryChunk } from '@/apiCalls/supaWorker';
 import ErrorHandler from '@/components/ErrorHandler';
 import { router } from 'expo-router';
 import { useLibraryStoryStore } from '@/utils/Store/libraryPrevStory';
+import { FontAwesome } from '@expo/vector-icons';
+
 interface LibraryItem {
   id: number;
   story: string;
@@ -14,13 +16,14 @@ interface LibraryItem {
   date: Date;
   audioData: string;
 }
+
 interface IncomingLibraryItem {
   id: number;
   story: string;
   image: string;
   title: string;
   date: Date;
-  audio_file_url: string; // diferent incoming data property
+  audio_file_url: string;
 }
 
 function transformToLibraryItem(incomingItem: IncomingLibraryItem): LibraryItem {
@@ -30,21 +33,24 @@ function transformToLibraryItem(incomingItem: IncomingLibraryItem): LibraryItem 
     image: incomingItem.image,
     title: incomingItem.title,
     date: incomingItem.date,
-    audioData: incomingItem.audio_file_url, // Maping audio_file_url to audioData
+    audioData: incomingItem.audio_file_url,
   };
 }
 
 export default function LibraryScreen() {
-  const [stories, setStories] = useState<any[]>([]);
+  const [stories, setStories] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const pageSize = 6;
+  const [hasMore, setHasMore] = useState(true); 
+  const pageSize = 12;
 
   useEffect(() => {
     fetchStories();
   }, [page]);
 
   const fetchStories = async () => {
+    if (loading || !hasMore) return; // Prevent fetching if already loading or no more items
+
     setLoading(true);
     try {
       const { success, data, msg } = (await getLibraryChunk({ page, pageSize })) as {
@@ -54,9 +60,30 @@ export default function LibraryScreen() {
       };
       if (success) {
         const libraryItems = data.map(transformToLibraryItem);
-        setStories((prev) => [...prev, ...libraryItems]);
+
+        // fetched stories
+        // console.log(
+        //   'Fetched stories:',
+        //   libraryItems.map((item) => item.id),
+        // );
+
+        // Check if there are more items to load
+        if (libraryItems.length < pageSize) {
+          setHasMore(false);
+        }
+
+        // Merge new items while ensuring no duplicates
+        const uniqueStories = Array.from(
+          new Map([...stories, ...libraryItems].map((item) => [item.id, item])).values(),
+        );
+
+        // console.log(
+        //   'Unique stories after merge:',
+        //   uniqueStories.map((item) => item.id),
+        // );
+
+        setStories(uniqueStories);
       } else {
-        //! todo: add popum message
         console.error(msg);
       }
     } catch (error) {
@@ -67,128 +94,131 @@ export default function LibraryScreen() {
   };
 
   const handleLoadMore = () => {
-    if (!loading && stories.length < 20) {
+    if (!loading && hasMore) {
       setPage((prevPage) => prevPage + 1);
     }
   };
 
-  // we use state to load library story
-  const handleRecordPress = (item : LibraryItem) => {
+  const handleRecordPress = (item: LibraryItem) => {
     useLibraryStoryStore.setState({ libStory: item });
-    
-    router.push(`/${item.id}`); // library items id starts from 100 000
+    router.push(`/${item.id}`);
   };
 
-  const renderItem = ({ item }: { item: LibraryItem;  }) => (
-    <TouchableOpacity key={item.id} onPress={() => handleRecordPress(item)} >
-      <View style={styles.recordTextContainer}>
-        
-        <Text numberOfLines={2} style={styles.recordTitle}>
-          {item.title}
-        </Text>
-        <Text className='text-white'>{item?.audioData !== null ? "yes" : " No audio"}</Text>
-        <View style={styles.storyContainer}>
-          <View style={styles.imageContainer}>
-            {item.image ? (
-              <Image
-                style={styles.image}
-                source={{ uri: item.image }}
-                contentFit="cover"
-                transition={1000}
-              />
-            ) : null}
+  const renderItem = ({ item, index }: { item: LibraryItem; index: number }) => {
+    return (
+      <TouchableOpacity key={item.id.toString()} onPress={() => handleRecordPress(item)} style={styles.itemContainer}>
+        <ImageBackground source={{ uri: item.image }} style={styles.imageBackground}>
+          <View style={styles.topLeftIcon}>
+            {item.audioData && <FontAwesome name="volume-up" size={20} color="#ffffff" />}
           </View>
-          <View style={styles.textContainer}>
-            <Text numberOfLines={7} style={styles.recordStory}>
-              {item.story}
-            </Text>
+          <View style={styles.topRightLabel}>
+            {/* // todo add content restriction */}
+            {item.audioData ? (
+              <Text style={styles.freeText}>FREE</Text>
+            ) : (
+              <FontAwesome name="lock" size={20} color="#ffffff" />
+            )}
           </View>
-        </View>
-        
-      </View>
-    </TouchableOpacity>
-  );
+          <LinearGradient colors={['transparent', 'rgba(0,0,0,0.7)']} style={styles.bottomGradient}>
+            <View style={styles.bottomLeftTitle}>
+              <Text style={styles.recordTitle} numberOfLines={2} ellipsizeMode="tail">
+                {item.title}
+              </Text>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
+      </TouchableOpacity>
+    );
+  };
 
   if (stories.length === 0 && !loading) {
     return <ErrorHandler label="Library is empty" />;
   }
+
   return (
-    <LinearGradient className="flex-1 left-0 top-0 right-0 bottom-0" colors={['#2e304e', '#213f6a', '#301e51']}>
-      <View className=" relative flex-1 flex items-center justify-center ">
-        {loading && <ActivityIndicator className='absolute' size="large" color="#70945f" /> }        
-          <FlatList
-            data={stories}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.5}
-            style={{ paddingTop: 48 }}
-          />
-        
+    <LinearGradient style={{ flex: 1 }} colors={['#2e304e', '#213f6a', '#301e51']}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
+        {loading && <ActivityIndicator size="large" color="#70945f" />}
+        <FlatList
+          data={stories}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          contentContainerStyle={styles.contentContainerStyle}
+        />
       </View>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  item: {
-    marginVertical: 8,
-    padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+  contentContainerStyle: {
+    paddingBottom: 50,
+    paddingTop: 140,
+    paddingHorizontal: wp(2),
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  }, 
-  recordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  row: {
     justifyContent: 'space-between',
-    marginVertical: 10,
-    padding: 10,
-    borderRadius: 10,
+    marginBottom: '2%',
+    marginLeft: '2%',
+    marginRight: '2%',
   },
-  recordTextContainer: {
-    flex: 1,
-    borderBottomWidth: 1,
-    paddingBottom: 10,
+  itemContainer: {
+    flexBasis: '48%',
+    margin: '1%',
+    backgroundColor: 'transparent',
+  },
+  imageBackground: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#000',
+    width: wp(44),
+    height: wp(30),
+    justifyContent: 'center',
+    resizeMode: 'cover',
+    overflow: 'hidden',
+  },
+  topLeftIcon: {
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    borderBottomRightRadius: 8,
+    padding: 5,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  topRightLabel: {
+    width: 50,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    borderBottomLeftRadius: 8,
+    padding: 5,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  freeText: {
+    color: 'white',
+    marginRight: 5,
+  },
+  bottomGradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '50%',
+  },
+  bottomLeftTitle: {
+    position: 'absolute',
+    bottom: 10,
+    left: 5,
+    right: 5,
   },
   recordTitle: {
     color: '#FEF9C3',
-    fontSize: wp(6.5),
-    textAlign: 'center',
+    fontSize: wp(4.5),
     fontWeight: 'bold',
-  },
-  image: {
-    width: '100%',
-    height: undefined,
-    aspectRatio: 1,
-    marginTop: 10,
-    borderWidth: 2,
-    borderColor: 'white',
-    borderRadius: 4,
-  },
-  recordStory: {
-    color: '#FEF9C3',
-    paddingTop: 4,
-    fontSize: wp(3.5),
-    textAlign: 'justify',
-  },
-  storyContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    margin: 10,
-  },
-  imageContainer: {
-    flexBasis: '25%',
-  },
-  textContainer: {
-    flexBasis: '75%',
-    paddingLeft: 10,
   },
 });

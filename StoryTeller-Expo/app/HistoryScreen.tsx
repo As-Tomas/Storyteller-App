@@ -79,7 +79,7 @@ export default function HistoryScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    
       <LinearGradient colors={['#2e304e', '#213f6a', '#301e51']} style={styles.background}>
         {/* <TouchableOpacity onPress={clearHistory} style={styles.button}>
         <Text className=' text-white text-3xl pt-20'>tottal recors: {history.length}</Text>
@@ -96,14 +96,11 @@ export default function HistoryScreen() {
           }
         />
       </LinearGradient>
-    </View>
+    
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   background: {
     flex: 1,  // Ensures the background takes the full size of the container
   },
