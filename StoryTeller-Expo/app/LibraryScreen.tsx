@@ -137,8 +137,7 @@ export default function LibraryScreen() {
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={['#2e304e', '#213f6a', '#301e51']}>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}>
-        {loading && <ActivityIndicator size="large" color="#70945f" />}
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignContent: 'center', position: 'relative' }}>
         <FlatList
           data={stories}
           renderItem={renderItem}
@@ -148,7 +147,8 @@ export default function LibraryScreen() {
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           contentContainerStyle={styles.contentContainerStyle}
-        />
+          />
+          {loading && <ActivityIndicator size="large" color="#70945f" style={{position: 'absolute'}}/>}
       </View>
     </LinearGradient>
   );
