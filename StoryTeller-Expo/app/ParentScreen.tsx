@@ -214,9 +214,6 @@ export default function ParentScreen() {
             ) : (
               <View style={styles.buttonsContainer}>
                 <ButtonActionStyled text="Create your story" onPress={() => triggerFetch()} />
-
-                {/* //Todo: implement call predefined stories */}
-                <ButtonActionStyled text="Create random story" onPress={() => triggerFetch()} />
               </View>
             )}
           </>
