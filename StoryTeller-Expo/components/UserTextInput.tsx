@@ -12,7 +12,6 @@ interface UserTextInputProps {
 const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup, fetchResponse, resetScreenState }) => {
   const [isInputFieldVisible, setInputFieldIsVisible] = useState(setup === 'parent');
   const [text, setText] = useState('');
-  console.log("🚀 ~ text:", text)
 
   const handleClickSendBtn = useCallback(() => {
     if (fetchResponse) {
