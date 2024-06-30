@@ -310,10 +310,7 @@ export default function CildScreen() {
               {firstHalf}
             </Text>
             
-            {storyImage ? (
-              <ImageStoryView image={storyImage} />
-              //Todo: add some drawing animation
-            ) : null} 
+            <ImageStoryView image={storyImage} />
 
 
             <Text

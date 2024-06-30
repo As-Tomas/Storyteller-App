@@ -32,5 +32,5 @@ export function adjustImagePrompt(prompt: string): string {
   
   const addAdjustments = "The image should be purely visual, Do not include any text or words or inscriptions in the image!";
 
-  return ` ${addAdjustments} Here is Image description: ${prompt}`;
+  return ` ${addAdjustments} Here is Image description: ${prompt.trim()} The image should be purely visual, Do not include any text or words or inscriptions in the image!`;
 }

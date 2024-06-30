@@ -2,6 +2,7 @@ import { View, Animated, StyleSheet } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Image } from 'expo-image';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import LottieView from 'lottie-react-native';
 
 interface Props {
   image: string;
@@ -23,7 +24,7 @@ const ImageStoryView: React.FC<Props> = ({ image }) => {
   }, [image, fadeInCurrentImage]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} >
       {image ? (
         <Animated.Image source={{ uri: image }}
           resizeMode="contain"
@@ -34,7 +35,7 @@ const ImageStoryView: React.FC<Props> = ({ image }) => {
             },
           ]}
         />
-      ) : null}
+      ) : <LottieView source={require('@/assets/animation/drawing_animation.json')} autoPlay loop style={{ width: 200, height: 200 }} />}
     </View>
   );
 };
@@ -56,8 +57,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 400,
     borderWidth: 2,
-    borderColor: 'white',
+    borderColor: 'rgb(203 213 225)',
     borderRadius: 4,
+    backgroundColor: 'rgba(33, 33, 33, 0.8)',
   },
 });
 
