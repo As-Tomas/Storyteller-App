@@ -15,9 +15,13 @@ interface SettingsData {
 interface SettingsState {
   settingsData: SettingsData;
   recentStory: string;
+  recentStoryTitle: string;
+  loading: boolean;
   storyImage: string;
   updateSettings: (newSettings: Partial<SettingsData>) => void;
   setRecentStory: (recentStory: string) => void;
+  setRecentStoryTitle: (recentStory: string) => void;
+  setLoading: (loading: boolean) => void;
   setStoryImage: (image: string) => void;
   clearSettings: () => void;
 }
@@ -37,12 +41,16 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       settingsData: defaultSettingsData,
       recentStory: '',
+      recentStoryTitle: '',
+      loading: false,
       storyImage: '',
       updateSettings: (newSettings) =>
         set((state) => ({
           settingsData: { ...state.settingsData, ...newSettings },
         })),
       setRecentStory: (recentStory) => set({ recentStory }),
+      setRecentStoryTitle: (recentStoryTitle) => set({ recentStoryTitle }),
+      setLoading: (loading) => set({ loading }),
       setStoryImage: (image) => set({ storyImage: image }),
       clearSettings: () =>
         set({

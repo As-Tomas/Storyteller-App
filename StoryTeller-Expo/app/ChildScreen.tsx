@@ -34,16 +34,18 @@ export default function CildScreen() {
 
   const { addHistoryItem } = useHistoryStore();
 
-  const { settingsData, recentStory, setRecentStory } = useSettingsStore((state) => ({
+  const { settingsData, recentStory, setRecentStory, recentStoryTitle, setRecentStoryTitle } = useSettingsStore((state) => ({
     settingsData: state.settingsData,
     recentStory: state.recentStory,
     setRecentStory: state.setRecentStory,
+    recentStoryTitle: state.recentStoryTitle,
+    setRecentStoryTitle: state.setRecentStoryTitle,
   }));
 
   // safe to history
   useEffect(() => {
-    if (recentStory !== '' && storySaved !== recentStory && storyImage !== '' && storyTitle !== '') {
-      addHistoryItem(recentStory, storyImage, storyTitle);
+    if (recentStory !== '' && storySaved !== recentStory && storyImage !== '' && recentStoryTitle !== '') {
+      addHistoryItem(recentStory, storyImage, recentStoryTitle);
       setStorySaved(recentStory);
     }
   }, [ storyImage,]);
@@ -121,6 +123,8 @@ export default function CildScreen() {
         setLoading(false);
         if (res.success) {
           setRecentStory(res.data);
+          const title = userInput.split(' ').slice(0, 5).join(' ');          
+          setRecentStoryTitle(title);
           // startTextToSpeach(res.data);
           setIsVisible(false);
         } else {
@@ -166,7 +170,6 @@ export default function CildScreen() {
   //this one for STT
   useEffect(() => {
     if (result) {
-      setStoryTitle(result);
       fetchResponse(result);
     }
   }, [result]);
@@ -254,6 +257,14 @@ export default function CildScreen() {
     setRecentStory('');
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        resetScreenState();
+      };
+    }, [])
+  );
+
   return (
     <ImageBackground
       source={require('@/assets/images/ChildScrBackground.png')}
@@ -284,7 +295,7 @@ export default function CildScreen() {
             className="text-yellow-100 mx-auto pt-10 text-center " style={{ fontSize: wp(7), marginTop: top-30}}
             numberOfLines={2} 
             >
-              {storyTitle}
+              {recentStoryTitle}
             </Text>  
              
 
@@ -306,7 +317,7 @@ export default function CildScreen() {
 
 
             <Text
-              className="text-yellow-100 mx-2 pb-40 pt-8 text-justify "
+              className="text-yellow-100 mx-2 pb-60 pt-8 text-justify "
               style={{
                 fontSize: wp(4.5),
                 textShadowColor: 'black',
@@ -344,7 +355,7 @@ export default function CildScreen() {
                     style={{ width: hp(10), height: hp(10) }}
                   />
                 </TouchableOpacity>
-                <UserTextInput setStoryTitle={setStoryTitle} setup={'child'} fetchResponse={fetchResponse} resetScreenState={resetScreenState} />
+                <UserTextInput setUserInputText={setStoryTitle} setup={'child'} fetchResponse={fetchResponse} resetScreenState={resetScreenState} />
               </View>
             )}
           </View>

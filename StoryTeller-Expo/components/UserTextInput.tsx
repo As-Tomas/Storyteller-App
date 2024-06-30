@@ -3,28 +3,36 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 interface UserTextInputProps {
-  setStoryTitle: (text: string) => void;
+  setUserInputText: (text: string) => void;
   setup: 'parent' | 'child' | string;
   fetchResponse?: (text: string) => void;
-  resetScreenState: () => void;
+  resetScreenState?: () => void;
 }
 
-const UserTextInput: React.FC<UserTextInputProps> = ({ setStoryTitle, setup, fetchResponse, resetScreenState }) => {
+const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup, fetchResponse, resetScreenState }) => {
   const [isInputFieldVisible, setInputFieldIsVisible] = useState(setup === 'parent');
   const [text, setText] = useState('');
+  console.log("🚀 ~ text:", text)
 
   const handleClickSendBtn = useCallback(() => {
     if (fetchResponse) {
       fetchResponse(text);
     }
-    setStoryTitle(text);
+    setUserInputText(text);
     setText('');
     setInputFieldIsVisible(false);
-  }, [text, setStoryTitle, fetchResponse]);
+  }, [text, setUserInputText, fetchResponse]);
 
   const resetScreen = () => {
     setInputFieldIsVisible(true);
-    resetScreenState(); 
+    if (resetScreenState) {
+      resetScreenState();
+    } 
+  };
+ 
+  const handleTextInput = (text: string) => {
+    setText(text);
+    setUserInputText(text);
   };
 
   return (
@@ -33,7 +41,7 @@ const UserTextInput: React.FC<UserTextInputProps> = ({ setStoryTitle, setup, fet
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            onChangeText={setText}
+            onChangeText={handleTextInput}
             value={text}
             placeholder="Type here..."
             placeholderTextColor="#fff"

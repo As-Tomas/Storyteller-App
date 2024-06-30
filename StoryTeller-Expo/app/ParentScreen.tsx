@@ -31,11 +31,12 @@ export default function ParentScreen() {
 
   const headerHeight = useHeaderHeight();
 
-  const { settingsData, updateSettings, recentStory, setRecentStory } = useSettingsStore((state) => ({
+  const { settingsData, updateSettings, recentStory, setRecentStory, setRecentStoryTitle } = useSettingsStore((state) => ({
     settingsData: state.settingsData,
     updateSettings: state.updateSettings,
     recentStory: state.recentStory,
     setRecentStory: state.setRecentStory,
+    setRecentStoryTitle: state.setRecentStoryTitle,
   }));
 
   const initialRender = useRef(true);
@@ -113,12 +114,14 @@ export default function ParentScreen() {
 
   useEffect(() => {
     if (story) {
+      const title = userInputText.split(' ').slice(0, 5).join(' '); // just first 5 words as title
       setRecentStory(story);
+      setRecentStoryTitle(title);
       router.replace('ChildScreen');
       setStory('');
       setLoading(false);
     }
-  }, [story, setRecentStory]);
+  }, [story, setRecentStory]);  
 
   const renderListItem = ({ item }: { item: any }) => {
     switch (item.type) {
