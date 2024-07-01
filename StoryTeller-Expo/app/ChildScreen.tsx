@@ -9,19 +9,19 @@ import Tts from 'react-native-tts';
 import { getImagePrompt, chatgptApiCall, dalleApiCall } from '../apiCalls/openAI';
 import { MidjourneyImg } from '../components/imgEfects';
 import UserTextInput from '../components/UserTextInput';
-import { Link, router,  } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useSettingsStore } from '../utils/Store/settingsStore';
 import { Image } from 'expo-image';
 import { useHistoryStore } from '../utils/Store/historyStore';
 import { adjustImagePrompt, generatePrompt } from '@/components/promptGenerator';
-import { useFocusEffect, useLocalSearchParams  } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import ImageStoryView from '@/components/ImageStoryView';
 import PlaybackControls from '@/components/navigation/PlaybackControls';
 import TTSAudioComponent from '@/components/navigation/TTSAudioComponent';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useVoiceRecognitionCheck from '@/hooks/useVoiceRecognitionCheck';
 
-export default function CildScreen() {    
+export default function CildScreen() {
   const { top, bottom } = useSafeAreaInsets();
   const [recording, setRecording] = useState(false);
   const [result, setResult] = useState('');
@@ -35,13 +35,15 @@ export default function CildScreen() {
 
   const { addHistoryItem } = useHistoryStore();
 
-  const { settingsData, recentStory, setRecentStory, recentStoryTitle, setRecentStoryTitle } = useSettingsStore((state) => ({
-    settingsData: state.settingsData,
-    recentStory: state.recentStory,
-    setRecentStory: state.setRecentStory,
-    recentStoryTitle: state.recentStoryTitle,
-    setRecentStoryTitle: state.setRecentStoryTitle,
-  }));
+  const { settingsData, recentStory, setRecentStory, recentStoryTitle, setRecentStoryTitle } = useSettingsStore(
+    (state) => ({
+      settingsData: state.settingsData,
+      recentStory: state.recentStory,
+      setRecentStory: state.setRecentStory,
+      recentStoryTitle: state.recentStoryTitle,
+      setRecentStoryTitle: state.setRecentStoryTitle,
+    }),
+  );
 
   // safe to history
   useEffect(() => {
@@ -49,15 +51,15 @@ export default function CildScreen() {
       addHistoryItem(recentStory, storyImage, recentStoryTitle);
       setStorySaved(recentStory);
     }
-  }, [ storyImage,]);
+  }, [storyImage]);
 
   // show mic at the end
   const handleScroll = (event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const contentHeight = event.nativeEvent.contentSize.height;
-    const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;    
-    const threshold = 35;  
-    
+    const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;
+    const threshold = 35;
+
     if (offsetY + scrollViewHeight + threshold >= contentHeight) {
       setIsVisible(true);
     } else {
@@ -123,7 +125,7 @@ export default function CildScreen() {
         setLoading(false);
         if (res.success) {
           setRecentStory(res.data);
-          const title = userInput.split(' ').slice(0, 5).join(' ');          
+          const title = userInput.split(' ').slice(0, 5).join(' ');
           setRecentStoryTitle(title);
           // startTextToSpeach(res.data);
           setIsVisible(false);
@@ -153,7 +155,6 @@ export default function CildScreen() {
 
   //Todo: plus add pause funcionality
   const beginSpeaking = () => {
-
     startTextToSpeach(recentStory);
   };
 
@@ -177,11 +178,10 @@ export default function CildScreen() {
   useEffect(() => {
     if (Platform.OS === 'android' && voiceAvailable !== null) {
       if (!voiceAvailable) {
-          //todo: here split to use devices voice recognition or Google Cloud Speech-to-Text
-          return;
+        //todo: here split to use devices voice recognition or Google Cloud Speech-to-Text
+        return;
       }
     }
-    
 
     // voice handler events
     Voice.onSpeechStart = speechStartHandler;
@@ -204,29 +204,29 @@ export default function CildScreen() {
       // destroy the voice instance after component unmounts
       Voice.destroy().then(Voice.removeAllListeners);
     };
-  }, []);  
+  }, []);
 
   // generate Promt for the next image and after generate image
   const fetchPromptForImage = () => {
     if (recentStory !== '') {
       let prompt = preparePromptForImage(recentStory);
 
-      getImagePrompt(prompt).then(res => {
+      getImagePrompt(prompt).then((res) => {
         //setLoading(false);
         if (res.success) {
-
           const adjustedPrompt = adjustImagePrompt(res.data);
 
-          dalleApiCall(adjustedPrompt).then(res => {
-            if (res.success) {
-              setStoryImage(res.image);
-            } else {
-              Alert.alert('Error', res.msg);
-            }
-          }).catch(err => {
-            console.log("Error during DALL-E API call:", err.message);
-          });
-
+          dalleApiCall(adjustedPrompt)
+            .then((res) => {
+              if (res.success) {
+                setStoryImage(res.image);
+              } else {
+                Alert.alert('Error', res.msg);
+              }
+            })
+            .catch((err) => {
+              console.log('Error during DALL-E API call:', err.message);
+            });
         } else {
           Alert.alert('Error', res.msg);
         }
@@ -270,7 +270,7 @@ export default function CildScreen() {
       return () => {
         resetScreenState();
       };
-    }, [])
+    }, []),
   );
 
   return (
@@ -279,14 +279,14 @@ export default function CildScreen() {
       className="flex-1 "
       imageStyle={recentStory === '' ? { opacity: 1 } : { opacity: 0.7 }}
       style={{ backgroundColor: 'black' }}>
-      <View className="flex-1  items-center justify-center relative" >
+      <View className="flex-1  items-center justify-center relative">
         <TouchableOpacity
           onPress={() => {
             // Tts.stop(); // Stop the voice before navigation
             router.navigate('/');
           }}
           className="absolute z-10 top-1 left-4 flex-row items-center justify-center px-2 rounded-3xl "
-          style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)', marginTop: top}}>
+          style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)', marginTop: top }}>
           <Image source={require('@/assets/elements/arrow_back.png')} style={{ width: hp(2), height: hp(2) }} />
           <Text className="text-yellow-100 m-2 " style={{ fontSize: wp(3.5) }}>
             Start
@@ -299,14 +299,12 @@ export default function CildScreen() {
           </Text>
         ) : (
           <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
-            <Text 
-            className="text-yellow-100 mx-auto pt-10 text-center " style={{ fontSize: wp(7), marginTop: top-30}}
-            numberOfLines={2} 
-            >
+            <Text
+              className="text-yellow-100 mx-auto pt-10 text-center "
+              style={{ fontSize: wp(7), marginTop: top - 30 }}
+              numberOfLines={2}>
               {recentStoryTitle}
-            </Text>  
-             
-
+            </Text>
 
             <Text
               className="text-yellow-100 mx-2 pt-5 pb-8 text-justify"
@@ -317,9 +315,8 @@ export default function CildScreen() {
               }}>
               {firstHalf}
             </Text>
-            
-            <ImageStoryView image={storyImage} />
 
+            <ImageStoryView image={storyImage} />
 
             <Text
               className="text-yellow-100 mx-2 pb-60 pt-8 text-justify "
@@ -360,15 +357,19 @@ export default function CildScreen() {
                     style={{ width: hp(10), height: hp(10) }}
                   />
                 </TouchableOpacity>
-                <UserTextInput setUserInputText={setStoryTitle} setup={'child'} fetchResponse={fetchResponse} resetScreenState={resetScreenState} />
+                <UserTextInput
+                  setUserInputText={setStoryTitle}
+                  setup={'child'}
+                  fetchResponse={fetchResponse}
+                  resetScreenState={resetScreenState}
+                />
               </View>
             )}
           </View>
         )}
 
-               
-        {recentStory !== '' && <TTSAudioComponent recentStory={recentStory}/>}
-{/* 
+        {recentStory !== '' && <TTSAudioComponent recentStory={recentStory} />}
+        {/* 
 trhis one maybe will use for free version 
 todo: export to separate component
         <PlaybackControls

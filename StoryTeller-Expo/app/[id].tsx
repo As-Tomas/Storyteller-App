@@ -17,7 +17,7 @@ const HistoryRecord = () => {
   const { id: index } = useLocalSearchParams<{ id: string }>();
   const history = useHistoryStore((state) => state.history);
 
-  const {libStory} = useLibraryStoryStore((state) => ({
+  const { libStory } = useLibraryStoryStore((state) => ({
     libStory: state.libStory,
   }));
 
@@ -33,11 +33,8 @@ const HistoryRecord = () => {
     record = recordId !== undefined ? history[recordId] : undefined;
   }
 
-  
   if (!record) {
-    return (
-      <ErrorHandler label='Record not found' />        
-    );
+    return <ErrorHandler label="Record not found" />;
   }
 
   const handleScroll = (event: any) => {
@@ -52,7 +49,7 @@ const HistoryRecord = () => {
     }
   };
 
-  const { title, story, image, audioData} = record;
+  const { title, story, image, audioData } = record;
   const dateSaved = 'dateSaved' in record ? record.dateSaved : undefined;
 
   // Split the story into paragraphs
@@ -64,7 +61,7 @@ const HistoryRecord = () => {
   // Join the paragraphs back together
   const firstHalf = paragraphs.slice(0, midPoint).join('\n');
   const secondHalf = paragraphs.slice(midPoint).join('\n');
- // todo: use this for TTS for free tier users 
+  // todo: use this for TTS for free tier users
   // const startTextToSpeach = (recentStory: string) => {
   //   setSpeaking(true);
   //   Tts.speak(recentStory, {
@@ -102,33 +99,38 @@ const HistoryRecord = () => {
   // );
 
   return (
-    <View className='flex-1'>
-      <LinearGradient
-        className='flex-1 left-0 top-0 right-0 bottom-0'
-        colors={['#2e304e', '#213f6a', '#301e51']}
-        >
+    <View className="flex-1">
+      <LinearGradient className="flex-1 left-0 top-0 right-0 bottom-0" colors={['#2e304e', '#213f6a', '#301e51']}>
+        <ScrollView style={{ height: hp('80%') }} onScroll={handleScroll} scrollEventThrottle={16}>
+          <Text
+            className="text-yellow-100 mx-auto pt-12 pb-7 text-center"
+            style={{ fontSize: wp(7) }}
+            numberOfLines={2}>
+            {title}
+          </Text>
 
-      <ScrollView style={{ height: hp('80%') }} onScroll={handleScroll} scrollEventThrottle={16}>
-        <Text className="text-yellow-100 mx-auto pt-12 pb-7 text-center" style={{ fontSize: wp(7) }} numberOfLines={2}>
-          {title}
-        </Text>
+          <Text
+            className="text-yellow-100 mx-2 pb-8 text-justify"
+            style={{ fontSize: wp(4.5), textShadowColor: 'black', textShadowRadius: 5 }}>
+            {firstHalf}
+          </Text>
 
-        <Text className="text-yellow-100 mx-2 pb-8 text-justify" style={{ fontSize: wp(4.5), textShadowColor: 'black', textShadowRadius: 5 }}>
-          {firstHalf}
-        </Text>
+          {image ? <ImageStoryView image={image} /> : null}
 
-        {image ? <ImageStoryView image={image} /> : null}
+          <Text
+            className="text-yellow-100 mx-2 pb-32 pt-8 text-justify"
+            style={{ fontSize: wp(4.5), textShadowColor: 'black', textShadowRadius: 5 }}>
+            {secondHalf}
+          </Text>
 
-        <Text className="text-yellow-100 mx-2 pb-32 pt-8 text-justify" style={{ fontSize: wp(4.5), textShadowColor: 'black', textShadowRadius: 5 }}>
-          {secondHalf}
-        </Text>
+          <Text
+            className="text-yellow-100 mx-auto pb-10 text-center"
+            style={{ fontSize: wp(4), textShadowColor: 'black', textShadowRadius: 5 }}>
+            {dateSaved && new Date(dateSaved).toLocaleString()}
+          </Text>
+        </ScrollView>
 
-        <Text className="text-yellow-100 mx-auto pb-10 text-center" style={{ fontSize: wp(4), textShadowColor: 'black', textShadowRadius: 5 }}>
-          { dateSaved && new Date(dateSaved).toLocaleString()}
-        </Text>
-      </ScrollView>    
-
-        <TTSAudioComponent recentStory={story} audio_inBase64={audioData}/>
+        <TTSAudioComponent recentStory={story} audio_inBase64={audioData} />
 
         {/* <PlaybackControls
           speaking={speaking}
@@ -138,7 +140,6 @@ const HistoryRecord = () => {
           beginSpeaking={beginSpeaking}
         /> */}
       </LinearGradient>
-
     </View>
   );
 };

@@ -24,9 +24,10 @@ const ImageStoryView: React.FC<Props> = ({ image }) => {
   }, [image, fadeInCurrentImage]);
 
   return (
-    <View style={styles.container} >
+    <View style={styles.container}>
       {image ? (
-        <Animated.Image source={{ uri: image }}
+        <Animated.Image
+          source={{ uri: image }}
           resizeMode="contain"
           style={[
             styles.image,
@@ -35,7 +36,14 @@ const ImageStoryView: React.FC<Props> = ({ image }) => {
             },
           ]}
         />
-      ) : <LottieView source={require('@/assets/animation/drawing_animation.json')} autoPlay loop style={{ width: 200, height: 200 }} />}
+      ) : (
+        <LottieView
+          source={require('@/assets/animation/drawing_animation.json')}
+          autoPlay
+          loop
+          style={{ width: 200, height: 200 }}
+        />
+      )}
     </View>
   );
 };

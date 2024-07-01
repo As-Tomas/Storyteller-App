@@ -2,11 +2,11 @@ import axios from 'axios';
 
 const apiKey = process.env.EXPO_PUBLIC_ELEVENLABS;
 
-const VOICE_ID = 'XB0fDUnXU5powFXDhCwa'; // 21m00Tcm4TlvDq8ikWAM ThT5KcBeYPX3keUQqHPh Charlote XB0fDUnXU5powFXDhCwa Nicole piTKgcLEGmPE4e6mEKli Mini zrHiDhphv9ZnVXBqCLjz 
+const VOICE_ID = 'XB0fDUnXU5powFXDhCwa'; // 21m00Tcm4TlvDq8ikWAM ThT5KcBeYPX3keUQqHPh Charlote XB0fDUnXU5powFXDhCwa Nicole piTKgcLEGmPE4e6mEKli Mini zrHiDhphv9ZnVXBqCLjz
 const apiUrl = `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}/stream`;
 
 export const getTTSAudio = async (text: string): Promise<ArrayBuffer> => {
-console.log("🚀 ~ getTTSAudio  elevenlabs~ triggered: ----------------------------------------",)
+  console.log('🚀 ~ getTTSAudio  elevenlabs~ triggered: ----------------------------------------');
 
   try {
     const response = await axios.post(

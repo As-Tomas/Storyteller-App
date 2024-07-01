@@ -14,10 +14,11 @@ interface Record {
   story: string;
   image: string;
   dateSaved: Date;
-  audioData?: ArrayBuffer; 
+  audioData?: ArrayBuffer;
 }
 
-const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+const blurhash =
+  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
 export default function HistoryScreen() {
   const { history: storedHistory, removeHistoryItem } = useHistoryStore();
@@ -64,9 +65,7 @@ export default function HistoryScreen() {
               />
             ) : null}
           </View>
-          {item.audioData ? (
-              <Text style={styles.recordStory}>🔊</Text>
-            ) : null}
+          {item.audioData ? <Text style={styles.recordStory}>🔊</Text> : null}
           <View style={styles.textContainer}>
             <Text numberOfLines={7} style={styles.recordStory}>
               {item.story}
@@ -79,30 +78,28 @@ export default function HistoryScreen() {
   );
 
   return (
-    
-      <LinearGradient colors={['#2e304e', '#213f6a', '#301e51']} style={styles.background}>
-        {/* <TouchableOpacity onPress={clearHistory} style={styles.button}>
+    <LinearGradient colors={['#2e304e', '#213f6a', '#301e51']} style={styles.background}>
+      {/* <TouchableOpacity onPress={clearHistory} style={styles.button}>
         <Text className=' text-white text-3xl pt-20'>tottal recors: {history.length}</Text>
         </TouchableOpacity> */}
-        <FlashList
-          data={history}
-          renderItem={renderItem}
-          estimatedItemSize={300}
-          contentContainerStyle={{ paddingTop: headerHeight }}
-          ListEmptyComponent={
-            <View style={styles.noHistoryContainer}>
-              <Text style={styles.noHistoryText}>No history records found.</Text>
-            </View>
-          }
-        />
-      </LinearGradient>
-    
+      <FlashList
+        data={history}
+        renderItem={renderItem}
+        estimatedItemSize={300}
+        contentContainerStyle={{ paddingTop: headerHeight }}
+        ListEmptyComponent={
+          <View style={styles.noHistoryContainer}>
+            <Text style={styles.noHistoryText}>No history records found.</Text>
+          </View>
+        }
+      />
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,  // Ensures the background takes the full size of the container
+    flex: 1, // Ensures the background takes the full size of the container
   },
   button: {
     padding: 15,

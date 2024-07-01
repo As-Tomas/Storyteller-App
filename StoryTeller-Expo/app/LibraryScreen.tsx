@@ -41,7 +41,7 @@ export default function LibraryScreen() {
   const [stories, setStories] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true); 
+  const [hasMore, setHasMore] = useState(true);
   const pageSize = 12;
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function LibraryScreen() {
     try {
       const { success, data, msg } = (await getLibraryChunk({ page, pageSize })) as {
         success: boolean;
-        data: Array<IncomingLibraryItem>;
+        data: IncomingLibraryItem[];
         msg?: string;
       };
       if (success) {
@@ -137,7 +137,14 @@ export default function LibraryScreen() {
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={['#2e304e', '#213f6a', '#301e51']}>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', alignContent: 'center', position: 'relative' }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          alignContent: 'center',
+          position: 'relative',
+        }}>
         <FlatList
           data={stories}
           renderItem={renderItem}
@@ -148,7 +155,7 @@ export default function LibraryScreen() {
           onEndReachedThreshold={0.5}
           contentContainerStyle={styles.contentContainerStyle}
           ListFooterComponent={loading ? <ActivityIndicator size="large" color="#70945f" /> : null}
-          />
+        />
       </View>
     </LinearGradient>
   );

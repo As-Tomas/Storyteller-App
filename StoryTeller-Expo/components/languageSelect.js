@@ -57,9 +57,8 @@
 import * as RNLocalize from 'react-native-localize';
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 //this way user can choose from list of laguages he added in his device
 //alternatively we can create native module but then may not work if use tts
 const getSupportedLanguages = () => {
@@ -120,8 +119,7 @@ const styles = StyleSheet.create({
   picker: {
     color: '#fff',
     backgroundColor: '(rgba(255, 255, 255, 0.3)',
-    
-  },  
+  },
 });
 
 export default LanguageSelector;

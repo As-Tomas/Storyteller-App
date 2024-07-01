@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Audio } from 'expo-av';
-import { getTTSAudio, getVoices } from '@/apiCalls/ElevenLabs';
+import { getTTSAudio } from '@/apiCalls/ElevenLabs';
 import { fromByteArray } from 'base64-js';
 import { useHistoryStore } from '@/utils/Store/historyStore';
 import PlaybackControls from '@/components/navigation/PlaybackControls';
@@ -26,9 +25,9 @@ const TTSAudioComponent: React.FC<TTSAudioComponentProps> = ({ recentStory, audi
         console.log('0');
         // Check if the audio data is already in the history
         const matchingHistoryItem = history.find((item) => item.story === recentStory);
-        if (matchingHistoryItem?.audioData) {          
-        console.log('1');
-          
+        if (matchingHistoryItem?.audioData) {
+          console.log('1');
+
           base64String = matchingHistoryItem.audioData;
           // If no audio data is found, fetch new audio data
         } else if (matchingHistoryItem && !matchingHistoryItem?.audioData) {
@@ -41,7 +40,7 @@ const TTSAudioComponent: React.FC<TTSAudioComponentProps> = ({ recentStory, audi
             matchingHistoryItem.title,
             base64String,
           );
-        } 
+        }
 
         // If audio data is passed in as a prop, use that instead
       } else if (audio_inBase64) {

@@ -26,9 +26,9 @@ const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup, 
     setInputFieldIsVisible(true);
     if (resetScreenState) {
       resetScreenState();
-    } 
+    }
   };
- 
+
   const handleTextInput = (text: string) => {
     setText(text);
     setUserInputText(text);
@@ -55,7 +55,7 @@ const UserTextInput: React.FC<UserTextInputProps> = ({ setUserInputText, setup, 
           )}
         </View>
       ) : (
-        <TouchableOpacity onPress={ resetScreen } style={styles.openInputButton}>
+        <TouchableOpacity onPress={resetScreen} style={styles.openInputButton}>
           <Text style={styles.openInputButtonText}>Tap to type...</Text>
         </TouchableOpacity>
       )}

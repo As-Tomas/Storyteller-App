@@ -9,7 +9,7 @@ interface HistoryItem {
   image: string;
   title: string;
   dateSaved: Date;
-  audioData?: string; 
+  audioData?: string;
 }
 
 interface HistoryStore {
@@ -27,7 +27,7 @@ export const useHistoryStore = create<HistoryStore>()(
       history: [],
       addHistoryItem: (story, image, title, audioData) => {
         set((state) => {
-          const existingItemIndex = state.history.findIndex(item => item.story === story);
+          const existingItemIndex = state.history.findIndex((item) => item.story === story);
 
           if (existingItemIndex !== -1) {
             // Update existing item
@@ -51,14 +51,13 @@ export const useHistoryStore = create<HistoryStore>()(
           }
         });
 
-
         // Trigger the addLibraryItem function to save the item in Supabase temporary
         addLibraryItem({
           story,
           image,
           title,
-          date: new Date(), 
-          audio_file_url: audioData
+          date: new Date(),
+          audio_file_url: audioData,
         }).then((result) => {
           if (result.success) {
             console.log('Item successfully added to Supabase');
@@ -86,5 +85,3 @@ export const useHistoryStore = create<HistoryStore>()(
     },
   ),
 );
-
-

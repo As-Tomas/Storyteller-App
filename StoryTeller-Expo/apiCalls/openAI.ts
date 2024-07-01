@@ -13,12 +13,11 @@ const chatgptUrl = 'https://api.openai.com/v1/completions';
 const dalleUrl = 'https://api.openai.com/v1/images/generations';
 
 //! Error Response: {"error": {"code": "insufficient_quota", "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.", "param": null, "type": "insufficient_quota"}}
- 
-export const chatgptApiCall = async (prompt: string) => {
 
-  console.log("🚀 ~ chatgptApiCall ~ answer trigered --------------------------------------")
-  
-  let answer=`Once upon a time, in a land not too far from here, there was a magical forest called Whispering Woods. This forest was unlike any other, filled with ancient trees that seemed to touch the sky, vibrant flowers that glowed in the dark, and streams that sang melodious tunes as they flowed.
+export const chatgptApiCall = async (prompt: string) => {
+  console.log('🚀 ~ chatgptApiCall ~ answer trigered --------------------------------------');
+
+  let answer = `Once upon a time, in a land not too far from here, there was a magical forest called Whispering Woods. This forest was unlike any other, filled with ancient trees that seemed to touch the sky, vibrant flowers that glowed in the dark, and streams that sang melodious tunes as they flowed.
 
   In the heart of Whispering Woods lived a curious young elf named Elara. Elara had sparkling green eyes and a heart full of wonder. She was known for her adventurous spirit and her ability to communicate with all the creatures of the forest. Her best friend was a wise old owl named Ollie, who had seen many things in his long life.
   
@@ -35,7 +34,7 @@ export const chatgptApiCall = async (prompt: string) => {
   With a heart full of happiness, Elara and Ollie made their way back home, knowing that their beloved forest would always be protected. And so, the magic of Whispering Woods continued to thrive, inspiring generations of adventurers to come.
   
   The end.`;
-    return Promise.resolve({ success: true, data: answer });
+  return Promise.resolve({ success: true, data: answer });
   console.log('🚀 ~ chatgptApiCall ~ INCOMING prompt: ', prompt);
   try {
     const res = await client.post(chatgptUrl, {
@@ -64,9 +63,9 @@ export const chatgptApiCall = async (prompt: string) => {
 };
 
 export const getImagePrompt = async (prompt: string) => {
-  let answer= "this is super duper image prompt"
+  let answer = 'this is super duper image prompt';
   return Promise.resolve({ success: true, data: answer });
-  console.log("🚀 ~ getImagePrompt ~ prompt:", prompt)
+  console.log('🚀 ~ getImagePrompt ~ prompt:', prompt);
   try {
     const res = await client.post(chatgptUrl, {
       model: 'gpt-3.5-turbo-instruct',
@@ -91,14 +90,16 @@ export const getImagePrompt = async (prompt: string) => {
 };
 
 export const dalleApiCall = async (prompt: string) => {
-  const link ="https://images.unsplash.com/photo-1618085249444-1b2342b7917b?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  // await new Promise(resolve => setTimeout(resolve, 20000)); // 2000 milliseconds = 2 seconds
+  const link =
+    'https://images.unsplash.com/photo-1618085249444-1b2342b7917b?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
   return { success: true, image: link };
-  console.log("🚀 ~ dalleApiCall ~ prompt:", prompt)
+  console.log('🚀 ~ dalleApiCall ~ prompt:', prompt);
 
   let image;
   try {
-    if (prompt === "") {
-      throw new Error("Prompt for image is required");
+    if (prompt === '') {
+      throw new Error('Prompt for image is required');
     }
 
     if (prompt.length > 1000) {
@@ -109,19 +110,20 @@ export const dalleApiCall = async (prompt: string) => {
     // https://openai.com/api/pricing/
     // https://platform.openai.com/docs/api-reference/images/create
     image = await client.post(dalleUrl, {
-      model: 'dall-e-2',  //dall-e-2 or dall-e-3
-      prompt: prompt,  
-      response_format: "b64_json",
-      size: "256x256",  //1024x1024 or 1024x1792 or 512x512 256x256
-      // quality: "hd",
-      // style: "vivid",  //dall-e-2 doesn't support style
+      model: 'dall-e-3', //dall-e-2 or dall-e-3
+      prompt: prompt,
+      response_format: 'b64_json',
+      size: '1024x1024', //1024x1024 or 1024x1792 or 512x512 256x256
+      quality: 'hd',
+      style: 'vivid', //dall-e-2 doesn't support style
     });
-    
+
     // // Log the entire response for debugging
     // console.log("Full API Response:", image);
 
     if (image.data) {
-      // console.log("Response data if", );
+      const revisedPrompt = image.data.data.revised_prompt;
+      console.log('🚀 ~ dalleApiCall ~ revised prompt from API:', revisedPrompt);
       if (Array.isArray(image.data.data)) {
         // console.log("Data array length:", image.data.data.length);
         if (image.data.data.length > 0) {
@@ -132,24 +134,22 @@ export const dalleApiCall = async (prompt: string) => {
             return { success: true, image: `data:image/png;base64,${image.data.data[0].b64_json}` };
           } else {
             // console.log("b64_json missing in first item of data array");
-            throw new Error("b64_json missing in first item of data array");
+            throw new Error('b64_json missing in first item of data array');
           }
         } else {
           // console.log("Data array is empty");
-          throw new Error("Data array is empty");
+          throw new Error('Data array is empty');
         }
       } else {
         // console.log("Data is not an array");
-        throw new Error("Data is not an array");
+        throw new Error('Data is not an array');
       }
     } else {
       // console.log("Data is missing in response");
-      throw new Error("Data is missing in response");
+      throw new Error('Data is missing in response');
     }
-   
   } catch (err) {
-    console.log("error in api call: ", err.message);
+    console.log('error in api call: ', err.message);
     return { success: false, msg: err.message };
   }
 };
-  

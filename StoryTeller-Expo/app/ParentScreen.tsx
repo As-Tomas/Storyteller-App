@@ -31,13 +31,15 @@ export default function ParentScreen() {
 
   const headerHeight = useHeaderHeight();
 
-  const { settingsData, updateSettings, recentStory, setRecentStory, setRecentStoryTitle } = useSettingsStore((state) => ({
-    settingsData: state.settingsData,
-    updateSettings: state.updateSettings,
-    recentStory: state.recentStory,
-    setRecentStory: state.setRecentStory,
-    setRecentStoryTitle: state.setRecentStoryTitle,
-  }));
+  const { settingsData, updateSettings, recentStory, setRecentStory, setRecentStoryTitle } = useSettingsStore(
+    (state) => ({
+      settingsData: state.settingsData,
+      updateSettings: state.updateSettings,
+      recentStory: state.recentStory,
+      setRecentStory: state.setRecentStory,
+      setRecentStoryTitle: state.setRecentStoryTitle,
+    }),
+  );
 
   const initialRender = useRef(true);
 
@@ -121,7 +123,7 @@ export default function ParentScreen() {
       setStory('');
       setLoading(false);
     }
-  }, [story, setRecentStory]);  
+  }, [story, setRecentStory]);
 
   const renderListItem = ({ item }: { item: any }) => {
     switch (item.type) {
@@ -168,14 +170,12 @@ export default function ParentScreen() {
       case 'length':
         return (
           <>
-           <Text style={[styles.text, styles.label, { marginTop: 16 }]}>
-              Story length
-            </Text>
-           <SegmentedControl
-          values={['short', 'medium', 'large']}
-          selectedIndex={length}
-          onChange={(event) => setLength(event.nativeEvent.selectedSegmentIndex)}
-        />
+            <Text style={[styles.text, styles.label, { marginTop: 16 }]}>Story length</Text>
+            <SegmentedControl
+              values={['short', 'medium', 'large']}
+              selectedIndex={length}
+              onChange={(event) => setLength(event.nativeEvent.selectedSegmentIndex)}
+            />
           </>
         );
       case 'motivation':
@@ -228,7 +228,7 @@ export default function ParentScreen() {
   };
 
   const data = [
-    { type: 'language' },    
+    { type: 'language' },
     { type: 'age' },
     { type: 'length' },
     { type: 'inputChildName' },

@@ -6,11 +6,11 @@ import { Platform, StyleSheet, View } from 'react-native';
 const BlurredHeaderBackground = () => {
   return (
     <View style={[StyleSheet.absoluteFill, styles.container]}>
-      <BlurView 
-      intensity={Platform.OS === 'ios' ? 30 : 100} 
-      tint={Platform.OS === 'ios' ? 'light' : 'dark'}
-      experimentalBlurMethod={Platform.OS === 'ios' ? 'dimezisBlurView' : 'none'}
-      style={StyleSheet.absoluteFill} 
+      <BlurView
+        intensity={Platform.OS === 'ios' ? 30 : 100}
+        tint={Platform.OS === 'ios' ? 'light' : 'dark'}
+        experimentalBlurMethod={Platform.OS === 'ios' ? 'dimezisBlurView' : 'none'}
+        style={StyleSheet.absoluteFill}
       />
     </View>
   );

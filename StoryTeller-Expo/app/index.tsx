@@ -46,7 +46,7 @@ export default function Index() {
               color="#FEF9C3"
               style={{ marginLeft: 8, marginRight: 8, marginTop: 'auto', marginBottom: 'auto' }}
             />
-          </TouchableOpacity>   
+          </TouchableOpacity>
         </View>
       </View>
     </ImageBackground>

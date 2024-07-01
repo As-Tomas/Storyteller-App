@@ -17,31 +17,31 @@ const PlaybackControls: React.FC<PlaybackControlsProps> = ({
   pauseSpeaking,
   beginSpeaking,
 }) => {
-  const [isPause , setIsPause] = useState(false)
+  const [isPause, setIsPause] = useState(false);
 
   const handlePause = () => {
-    setIsPause(!isPause)
-    pauseSpeaking()
-  }
+    setIsPause(!isPause);
+    pauseSpeaking();
+  };
   return (
     <>
       {speaking && (
-        <View className="flex flex-row space-x-2 p-1 absolute bottom-16 left-10  px-3 rounded-3xl"
-        style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)' }}
-        >
+        <View
+          className="flex flex-row space-x-2 p-1 absolute bottom-16 left-10  px-3 rounded-3xl"
+          style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)' }}>
           <FontAwesome name="stop-circle" size={30} color="#FEF9C3" onPress={stopSpeaking} />
           <FontAwesome name="pause-circle" size={30} color="#FEF9C3" onPress={handlePause} />
         </View>
       )}
       {!speaking && recentStory !== '' && (
-        <View className="flex flex-row space-x-2 p-1 absolute bottom-16 left-10 px-3 rounded-3xl"        
-        style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)' }}
-        >
-          {isPause ? 
-          <FontAwesome name="play-circle" size={30} color="#FEF9C3" onPress={handlePause} />
-        :
-        <FontAwesome name="play-circle" size={30} color="#FEF9C3" onPress={beginSpeaking} />}
-          
+        <View
+          className="flex flex-row space-x-2 p-1 absolute bottom-16 left-10 px-3 rounded-3xl"
+          style={{ backgroundColor: 'rgba(107, 114, 128, 0.7)' }}>
+          {isPause ? (
+            <FontAwesome name="play-circle" size={30} color="#FEF9C3" onPress={handlePause} />
+          ) : (
+            <FontAwesome name="play-circle" size={30} color="#FEF9C3" onPress={beginSpeaking} />
+          )}
         </View>
       )}
     </>
