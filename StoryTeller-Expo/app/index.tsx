@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Image, ImageBackground, TouchableOpacity, StyleSheet, Platform, View, Text, Button } from 'react-native';
+import { ImageBackground, TouchableOpacity, View, Text } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 import { useSettingsStore } from '../utils/Store/settingsStore';
@@ -28,8 +28,8 @@ export default function Index() {
           </Text>
         </View>
         <View className="flex items-center mb-8">
-          <ButtonActionStyled text="I’m child" onPress={() => router.replace('ChildScreen')} />
-          <ButtonActionStyled text="I’m parent" onPress={() => router.push('ParentScreen')} />
+          <ButtonActionStyled text="I’m child" onPress={() => router.push('ChildScreen')} />
+          <ButtonActionStyled text="Advanced" onPress={() => router.push('ParentScreen')} />
           <ButtonActionStyled text="Library" onPress={() => router.push('LibraryScreen')} />
 
           <TouchableOpacity

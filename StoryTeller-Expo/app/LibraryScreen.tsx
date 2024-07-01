@@ -147,8 +147,8 @@ export default function LibraryScreen() {
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
           contentContainerStyle={styles.contentContainerStyle}
+          ListFooterComponent={loading ? <ActivityIndicator size="large" color="#70945f" /> : null}
           />
-          {loading && <ActivityIndicator size="large" color="#70945f" style={{position: 'absolute'}}/>}
       </View>
     </LinearGradient>
   );
