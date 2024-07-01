@@ -17,15 +17,15 @@ const corsHeaders = {
 };
 
 async function validateSecret(request, cache) {
-  const secret = request.headers.get('x-secret-key');
-  console.log("🚀 ~ validateSecret ~ secret:", secret);
-  if (!secret) {
-    return false;
-  }
-  
-  const cachedSecret = await cache.get('x-secret-key');
-  console.log("🚀 ~ validateSecret ~ cachedSecret:", cachedSecret);
-  return cachedSecret === secret;
+	const secret = request.headers.get('x-secret-key');
+	//   console.log("🚀 ~ validateSecret ~ secret:", secret);
+	if (!secret) {
+		return false;
+	}
+
+	const cachedSecret = await cache.get('x-secret-key');
+	//   console.log("🚀 ~ validateSecret ~ cachedSecret:", cachedSecret);
+	return cachedSecret === secret;
 }
 
 export default {
@@ -41,11 +41,11 @@ export default {
 			return new Response(null, { headers: corsHeaders });
 		}
 
-    // Validate secret
-    const isValidSecret = await validateSecret(request, secretCache);
-    if (!isValidSecret) {
-      return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: corsHeaders });
-    }
+		// Validate secret
+		const isValidSecret = await validateSecret(request, secretCache);
+		if (!isValidSecret) {
+			return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: corsHeaders });
+		}
 
 		// Only process POST and GET requests
 		if (request.method !== 'POST' && request.method !== 'GET') {
@@ -76,8 +76,14 @@ export default {
 					});
 				}
 
+				if (data.length === 0) {
+					return new Response(JSON.stringify([]), {
+					  headers: corsHeaders,
+					});
+				  }
+
 				const responseJson = JSON.stringify(data);
-				await cache.put(cacheKey, responseJson, { expirationTtl: 3600 }); // Cache for 1 hour, 86400 for 1 day
+				await cache.put(cacheKey, responseJson, { expirationTtl: 360 }); // Cache for 1 hour, 86400 for 1 day
 
 				return new Response(responseJson, {
 					headers: corsHeaders,
