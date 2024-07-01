@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, ScrollView, TouchableOpacity, Alert, Animated } from 'react-native';
+import { View, Text, ImageBackground, ScrollView, TouchableOpacity, Alert, Animated, Platform } from 'react-native';
 import React, { useEffect, useRef, useState, useContext, useCallback } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -15,11 +15,11 @@ import { Image } from 'expo-image';
 import { useHistoryStore } from '../utils/Store/historyStore';
 import { adjustImagePrompt, generatePrompt } from '@/components/promptGenerator';
 import { useFocusEffect, useLocalSearchParams  } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
 import ImageStoryView from '@/components/ImageStoryView';
 import PlaybackControls from '@/components/navigation/PlaybackControls';
 import TTSAudioComponent from '@/components/navigation/TTSAudioComponent';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useVoiceRecognitionCheck from '@/hooks/useVoiceRecognitionCheck';
 
 export default function CildScreen() {    
   const { top, bottom } = useSafeAreaInsets();
@@ -31,6 +31,7 @@ export default function CildScreen() {
   const [storyImage, setStoryImage] = useState('');
   const [storyTitle, setStoryTitle] = useState('');
   const [storySaved, setStorySaved] = useState('');
+  const voiceAvailable = useVoiceRecognitionCheck();
 
   const { addHistoryItem } = useHistoryStore();
 
@@ -94,7 +95,6 @@ export default function CildScreen() {
 
   const startRecording = async () => {
     setRecording(true);
-    console.log('first');
     Tts.stop();
     try {
       //! set language from userSettings.language to use devices local language
@@ -175,6 +175,14 @@ export default function CildScreen() {
   }, [result]);
 
   useEffect(() => {
+    if (Platform.OS === 'android' && voiceAvailable !== null) {
+      if (!voiceAvailable) {
+          //todo: here split to use devices voice recognition or Google Cloud Speech-to-Text
+          return;
+      }
+    }
+    
+
     // voice handler events
     Voice.onSpeechStart = speechStartHandler;
     Voice.onSpeechEnd = speechEndHandler;
