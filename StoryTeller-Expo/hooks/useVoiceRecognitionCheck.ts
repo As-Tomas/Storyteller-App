@@ -13,7 +13,7 @@ const useVoiceRecognitionCheck = () => {
           const isAvailable = await Voice.isAvailable();
           const result = (await Voice.getSpeechRecognitionServices()) as string[];
 
-          if (isAvailable || result.length === 0) {
+          if (!isAvailable || result.length === 0) {
             Alert.alert(
               'Google Speech Recognizing Engine not found',
               'Your device does not have any speech recognition services installed. Please install the Google Search App to use the voice recognition feature within the app.',
