@@ -15,6 +15,7 @@ export default function Index() {
   useEffect(() => {
     setRecentStory('');
   }, []);
+  //revenueCat
 
   return (
     <ImageBackground source={require('@/assets/images/boy_with_book.png')} className="flex-1 ">
